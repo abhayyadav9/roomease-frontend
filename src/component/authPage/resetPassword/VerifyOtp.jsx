@@ -33,6 +33,10 @@ const VerifyOtp = () => {
         window.location.href = "/update-password";
       }, 2000);
     } catch (error) {
+      setTimeout(() => {
+        window.location.href = "/send-verification";
+      }, 2000);
+
       message.error(error.response?.data?.message || "Verification failed. Please try again.");
     } finally {
       setLoading(false);

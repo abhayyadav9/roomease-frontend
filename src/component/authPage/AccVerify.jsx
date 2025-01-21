@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Flex, Input, Button, Typography, message, Spin } from "antd";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -8,7 +9,7 @@ const AccVerify = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resendDisabled, setResendDisabled] = useState(false);
-
+const navigate= useNavigate()
   // Handle OTP Input Change
   const handleChange = (value) => {
     setOtp(value);
@@ -46,6 +47,7 @@ const AccVerify = () => {
       await axios.post("http://localhost:3000/api/v1/resend-verification-email"); // Adjust API as needed
       message.success("New verification code sent to your email.");
     } catch (error) {
+      navigate("/send-verification")
       message.error("Failed to resend OTP. Try again later.");
     } finally {
       setTimeout(() => setResendDisabled(false), 60 * 1000); // Enable button after 60 sec

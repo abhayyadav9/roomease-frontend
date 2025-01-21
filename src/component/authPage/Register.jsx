@@ -30,7 +30,7 @@ const Register = () => {
 
       message.success(response.data.message);
       form.resetFields();
-      navigate("/acc-verify")
+      navigate("/acc-verify");
     } catch (error) {
       console.error("Error during registration:", error);
       message.error(error.response?.data?.message || "Registration failed. Please try again.");
