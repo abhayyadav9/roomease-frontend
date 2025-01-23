@@ -8,13 +8,17 @@ import {
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../redux/slice/authSlice";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
 
 const Login = () => {
   const [form] = Form.useForm();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const onFinish = async (values) => {
     console.log("Form values:", values);
@@ -27,15 +31,17 @@ const Login = () => {
       message.success(response.data.message);
       navigate("/");
 
+
+      dispatch(setUser(response.data?.user))
     } catch (error) {
-      console.error("Error logging in:", error.response.data.message);
-      message.error("Unable to login")
+      console.error("Error logging in:",error);
+      message.error("Unable to login");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white p-8 md:p-10 lg:p-12 rounded-lg shadow-xl w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen mt-7 bg-[#bfb8a8]">
+      <div className="bg-[#a8a3a3] p-8 md:p-10 lg:p-12 rounded-lg shadow-xl w-full max-w-md">
         {/* Title */}
         <Title level={2} className="text-center text-gray-800 mb-6">
           Welcome Back
