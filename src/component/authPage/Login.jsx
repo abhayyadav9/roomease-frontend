@@ -23,21 +23,28 @@ const Login = () => {
   const onFinish = async (values) => {
     console.log("Form values:", values);
     try {
-      const response = await axios.post("http://localhost:3000/api/v1//login", {
+      // Ensure role is either passed or set to a default value
+      const response = await axios.post("http://localhost:3000/api/v1/login", {
         email: values.email,
         password: values.password,
-        role: values.role,
+        role: values.role || "tenant", // Assuming "tenant" is a default role
+      }, {
+        withCredentials: true, // Send credentials (cookies) with the request
       });
+  
       message.success(response.data.message);
+  
+      // If successful, navigate to the homepage
       navigate("/");
-
-
-      dispatch(setUser(response.data?.user))
+  
+      // Dispatch user data to the Redux store
+      dispatch(setUser(response.data?.user));
     } catch (error) {
-      console.error("Error logging in:",error);
+      console.error("Error logging in:", error);
       message.error("Unable to login");
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen mt-7 bg-[#bfb8a8]">

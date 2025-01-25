@@ -8,9 +8,11 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu, Drawer } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { CiLogout } from "react-icons/ci";
+import axios from "axios";
+import { logout as logoutAction} from '../redux/slice/authSlice';
 
 const items = [
   {
@@ -83,28 +85,45 @@ const items = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const owner = useSelector((state) => state.owner.data?.data);
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch()
+
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/api/v1/logout", {}, {
+        withCredentials: true,
+      });
+      dispatch(logoutAction())
+      
+      window.location.href = "/login"; // Redirect to login page
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while logging out");
+    }
+  };;
+
+  if (!user) {
+    return <div>Loading...</div>; // Display a loading state if user data is not available
+  }
+
   const content = (
-    <div className="flex flex-col gap-5  bg-gray-200">
+    <div className="flex flex-col gap-5 bg-gray-200">
       {/* Profile Section */}
       <Link to="/owner-profile">
         <div className="flex items-center gap-4">
-          <Avatar 
-          src={user?.userPic}
-          
-          size={35} icon={<UserOutlined />} />
+          <Avatar
+            src={owner?.ownerPic || "path_to_default_avatar.jpg"}
+            size={35}
+            icon={<UserOutlined />}
+          />
           <span className="text-lg font-medium">
             <span>Hey, </span>
-            {user
-              ? user.name
-                  .split(" ")[0] // Get first name
-                  .charAt(0) // Get first letter
-                  .toUpperCase() + user.name.split(" ")[0].slice(1) // Capitalize first letter
-              : "User"}
+            {user?.name || "Guest"}
           </span>
         </div>
       </Link>
@@ -113,7 +132,7 @@ const Navbar = () => {
       <div className="flex flex-col gap-2">
         {/* Edit Profile */}
         <Link
-          to="/edit"
+          to="/update-detail"
           className="flex items-center justify-between w-full px-2 py-1 hover:text-green-900 rounded"
         >
           <div className="flex items-center gap-3">
@@ -123,18 +142,19 @@ const Navbar = () => {
         </Link>
 
         {/* Logout */}
-        <Link
-          to="/logout"
+        <div
+          onClick={handleLogout}
           className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
         >
           <div className="flex items-center gap-3">
             <CiLogout size={24} />
             <span className="text-md">Logout</span>
           </div>
-        </Link>
+        </div>
       </div>
     </div>
   );
+
   return (
     <div>
       <nav className="bg-[#bfb8b8] shadow-md fixed top-0 left-0 w-full z-50">
@@ -151,6 +171,12 @@ const Navbar = () => {
                 className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Home
+              </Link>
+              <Link
+                to="/all-rooms"
+                className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Find Room
               </Link>
               <Link
                 to="/about"

@@ -1,93 +1,81 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import { useParams } from 'react-router-dom';
-import useGetOwnerDetails from '../../hooks/ownerHooks/useGetOwnerDetails';
-// import { useSelector } from 'react-redux';
-
-// const OwnerProfile = () => {
-//   const { id } = useParams();
-//   const [owner, setOwner] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-// //   useEffect(() => {
-// //     const fetchOwner = async () => {
-// //       try {
-// //         const { data } = await axios.get(`http://localhost:3000/api/v2/owner-details/679120f41803540b21aefc9b`);
-// //         setOwner(data);
-// //         setLoading(false);
-// //       } catch (error) {
-// //         setError(error.response && error.response.data.message ? error.response.data.message : error.message);
-// //         setLoading(false);
-// //       }
-// //     };
-
-// //     fetchOwner();
-// //   }, [id]);
-
-// //   if (loading) {
-// //     return <div className="flex justify-center items-center h-screen">Loading...</div>;
-// //   }
-
-// //   if (error) {
-// //     return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
-// //   }
-
-
-//   if (error) return <p>Error: {error}</p>;
-//   if (!owner) return <p>Loading...</p>;
-//   return (
-//     <div className="container mx-auto p-4">
-//       <div className="bg-white shadow-md rounded-lg p-6">
-//         <div className="flex items-center space-x-4">
-//           <div className="flex-shrink-0">
-//             <img className="h-16 w-16 rounded-full" src="https://via.placeholder.com/150" alt="Profile" />
-//           </div>
-//           <div>
-//             <h1 className="text-xl font-bold">{owner.name}</h1>
-//             <p className="text-gray-600">{owner.email}</p>
-//             <p className="text-gray-600">{owner.phone}</p>
-//           </div>
-//         </div>
-//         <div className="mt-6">
-//           <h2 className="text-lg font-semibold">Created Rooms</h2>
-//           {owner.createdRooms.length > 0 ? (
-//             <ul className="mt-4 space-y-2">
-//               {owner.createdRooms.map((room) => (
-//                 <li key={room._id} className="bg-gray-100 p-4 rounded-lg shadow">
-//                   <h3 className="text-lg font-bold">{room.name}</h3>
-//                   <p className="text-gray-700">{room.description}</p>
-//                 </li>
-//               ))}
-//             </ul>
-//           ) : (
-//             <p className="text-gray-700 mt-4">No rooms created yet.</p>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default OwnerProfile;
-
-
-
+import React from "react";
 import { useSelector } from "react-redux";
+import useGetOwnerDetails from "../../hooks/ownerHooks/useGetOwnerDetails";
+import { LiaUserEditSolid } from "react-icons/lia";
+import { MdAddCircleOutline } from "react-icons/md";
+import { Link } from "react-router-dom";
+import OwnerCreatedRoom from "./OwnerCreatedRoom";
 
 const OwnerProfile = () => {
-  const { loading, error } = useGetOwnerDetails();
-  const owner = useSelector((state) => state.owner.data);
+  const owner = useSelector((state) => state.owner.data?.data);
+  const loading = useSelector((state) => state.owner.loading);
+  const error = useSelector((state) => state.owner.error);
+  
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (!owner) return <p>No owner data found</p>;
+  useGetOwnerDetails(); // Fetch owner details
+
+  if (loading) {
+    return <p className="text-gray-600 text-center">Loading owner details...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500 text-center">Error: {error}</p>;
+  }
+
+  if (!owner) {
+    return <p className="text-gray-600 text-center">No owner details found.</p>;
+  }
 
   return (
-    <div>
-      <h2>Owner Details</h2>
-      <p>Name: {owner.name}</p>
-      <p>Email: {owner.email}</p>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+      <div className="bg-white relative shadow-lg rounded-lg p-6 max-w-3xl mx-auto">
+        {/* Action Buttons */}
+        <div className="absolute top-4 right-4 flex space-x-3">
+          <Link to="/update-detail" className="text-gray-600 hover:text-green-900 transition">
+            <LiaUserEditSolid size={24} />
+          </Link>
+          <Link to="/add-room" className="text-gray-600 hover:text-green-900 transition">
+            <MdAddCircleOutline size={24} />
+          </Link>
+        </div>
+
+        {/* Profile Section */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-6">
+          <img
+            className="h-20 w-20 rounded-full border border-gray-300"
+            src={owner.ownerPic || "https://via.placeholder.com/150"}
+            alt="Profile"
+          />
+          <div className="text-center sm:text-left mt-4 sm:mt-0">
+            <h1 className="text-2xl font-semibold text-gray-900">{owner.name}</h1>
+            <p className="text-gray-600">{owner.email}</p>
+            <p className="text-gray-600">{owner.phone}</p>
+            <p className="text-gray-600">{owner.address}</p>
+          </div>
+        </div>
+
+        {/* Created Rooms Section */}
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Created Rooms ({owner.createdRooms?.length || 0})
+          </h2>
+          {/* {owner.createdRooms?.length > 0 ? (
+            <ul className="mt-4 space-y-3">
+              {owner.createdRooms.map((room) => (
+                <li key={room._id} className="bg-gray-100 p-4 rounded-lg shadow">
+                  <h3 className="text-lg font-semibold">{room.name}</h3>
+                  <p className="text-gray-700">{room.description}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700 mt-4">No rooms created yet.</p>
+          )} */}
+        </div>
+        
+        {/* Owner Created Room Component */}
+        <OwnerCreatedRoom  />
+      </div>
     </div>
   );
 };

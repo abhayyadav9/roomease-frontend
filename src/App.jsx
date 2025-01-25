@@ -9,6 +9,11 @@ import VerifyOtp from "./component/authPage/resetPassword/VerifyOtp.jsx";
 import UpdatePassword from "./component/authPage/resetPassword/UpdatePassword.jsx";
 import Navbar from "./component/Navbar.jsx";
 import OwnerProfile from "./component/owner/OwnerProfile.jsx";
+import AllRooms from "./component/AllRooms.jsx";
+import AddRoom from "./component/owner/AddRoom.jsx";
+import EditRoom from "./component/owner/EditRoom.jsx";
+import ViewRoomDetail from "./component/commonPage/ViewRoomDetail.jsx";
+import UpdateOwnerDetail from "./component/owner/UpdateOwnerDetail.jsx";
 
 function App() {
   return (
@@ -30,6 +35,15 @@ function App() {
           }
 
           <Route path="/owner-profile" element={<OwnerProfile />} />
+          <Route path="/update-detail" element={<UpdateOwnerDetail />} />
+
+
+          <Route path="/all-rooms" element={<AllRooms/>}/>
+          <Route path="/add-room" element={<AddRoom/>}/>
+          <Route path="/edit-room" element={<EditRoom/>}/>
+
+          <Route path="/view-room-detail" element={<ViewRoomDetail/>}/>
+
         </Routes>
       </div>
     </Router>
