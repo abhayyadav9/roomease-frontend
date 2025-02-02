@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { CiLogout } from "react-icons/ci";
 import axios from "axios";
-import { logout as logoutAction} from '../redux/slice/authSlice';
+import { logout as logoutAction} from '../../redux/slice/authSlice';
 
 const items = [
   {
@@ -83,9 +83,9 @@ const items = [
   },
 ];
 
-const Navbar = () => {
+const TenantNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const owner = useSelector((state) => state.owner.data?.data);
+  const tenant = useSelector((state) => state.tenant.data?.data);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch()
 
@@ -112,10 +112,10 @@ const Navbar = () => {
   const content = (
     <div className="flex flex-col gap-5 bg-gray-200">
       {/* Profile Section */}
-      <Link to="/owner-profile">
+      <Link to="/tenant-profile">
         <div className="flex items-center gap-4">
           <Avatar
-            src={owner?.ownerPic || "path_to_default_avatar.jpg"}
+            src={tenant?.tenantPic || "path_to_default_avatar.jpg"}
             size={35}
             icon={<UserOutlined />}
           />
@@ -130,7 +130,7 @@ const Navbar = () => {
       <div className="flex flex-col gap-2">
         {/* Edit Profile */}
         <Link
-          to="/update-detail"
+          to="/update/tenant/detail"
           className="flex items-center justify-between w-full px-2 py-1 hover:text-green-900 rounded"
         >
           <div className="flex items-center gap-3">
@@ -177,10 +177,10 @@ const Navbar = () => {
                 Find Room
               </Link>
               <Link
-                to="/about"
+                to="/all-requirement"
                 className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
               >
-                About
+                Requirement
               </Link>
              
               {user ? (
@@ -248,4 +248,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default TenantNavbar;

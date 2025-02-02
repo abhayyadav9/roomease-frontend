@@ -1,11 +1,14 @@
 import React from "react";
 import useGetOwnerDetails from "../hooks/ownerHooks/useGetOwnerDetails";
 import useGetAllRooms from "../hooks/useGetAllRooms";
+import useGetTenantDetails from "../hooks/tenantHooks/usegetTenantDetails";
+import useGetAllRequirement from "../hooks/useGetAllRequirement";
 
 const Home = () => {
-  useGetOwnerDetails();
-
- useGetAllRooms(); // Call the hook
+  // useGetOwnerDetails();
+//  useGetAllRooms(); // Call the hook
+ useGetTenantDetails()
+ useGetAllRequirement();
 
 
   return (

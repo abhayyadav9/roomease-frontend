@@ -38,7 +38,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen mt-9 bg-gray-50">
       <div className="bg-white p-8 md:p-10 lg:p-12 rounded-lg shadow-xl w-full max-w-md">
         {/* Title */}
         <Title level={2} className="text-center text-gray-800 mb-6">
