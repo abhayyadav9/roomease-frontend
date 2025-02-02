@@ -40,7 +40,7 @@ const AllRooms = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6 mt-16">
       <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
         🏡 Available Rooms
       </h2>

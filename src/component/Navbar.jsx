@@ -107,9 +107,7 @@ const Navbar = () => {
     }
   };;
 
-  if (!user) {
-    return <div>Loading...</div>; // Display a loading state if user data is not available
-  }
+ 
 
   const content = (
     <div className="flex flex-col gap-5 bg-gray-200">

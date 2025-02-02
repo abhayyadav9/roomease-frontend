@@ -71,7 +71,7 @@ const EditRoom = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div className="max-w-2xl mt-20 mx-auto bg-white p-6 rounded-lg shadow-md">
       <Spin spinning={loading}>
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
@@ -104,8 +104,16 @@ const EditRoom = () => {
           </Form.Item>
 
           {/* Location (Disabled) */}
-          <Form.Item label={<Text strong>📍 Location</Text>} name="address">
-            <Input disabled value={selectedRoom.address} />
+
+          <Form.Item
+            label={<Text strong>🏠 House Location</Text>}
+            name="address"
+            value={selectedRoom.address}
+            rules={[
+              { required: true, message: "Please enter the house address" },
+            ]}
+          >
+            <Input placeholder="Enter Address" />
           </Form.Item>
 
           {/* Room Type */}
@@ -124,7 +132,9 @@ const EditRoom = () => {
           <Form.Item
             label={<Text strong>🏢 Number of Rooms</Text>}
             name="numberRoom"
-            rules={[{ required: true, message: "Please enter the number of rooms" }]}
+            rules={[
+              { required: true, message: "Please enter the number of rooms" },
+            ]}
           >
             <InputNumber min={1} className="w-full" />
           </Form.Item>
@@ -174,7 +184,10 @@ const EditRoom = () => {
           </Form.Item>
 
           {/* Description */}
-          <Form.Item label={<Text strong>📝 Description</Text>} name="description">
+          <Form.Item
+            label={<Text strong>📝 Description</Text>}
+            name="description"
+          >
             <Input.TextArea rows={4} placeholder="Enter description" />
           </Form.Item>
 

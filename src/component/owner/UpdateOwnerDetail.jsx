@@ -21,7 +21,6 @@ const UpdateOwnerDetail = () => {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const owner = useSelector((state) => state.owner?.data?.data);
-//   const user = useSelector((state) => state.auth?.user);
   const navigate = useNavigate();
 
   if (!owner) {
@@ -40,7 +39,7 @@ const UpdateOwnerDetail = () => {
         message.error("Owner ID is missing! Please try again.");
         return;
       }
-  
+
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("phone", values.phone);
@@ -48,15 +47,14 @@ const UpdateOwnerDetail = () => {
       formData.append("pincode", values.pincode);
       if (image) formData.append("file", image);
 
-  
       const apiUrl = `http://localhost:3000/api/v2/update-owner/${owner.user._id}`;
       console.log("Sending request to:", apiUrl);
-  
+
       await axios.put(apiUrl, formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       message.success("Owner updated successfully!");
       navigate("/owner-profile");
     } catch (error) {
@@ -66,7 +64,6 @@ const UpdateOwnerDetail = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-20">
@@ -93,7 +90,11 @@ const UpdateOwnerDetail = () => {
         {/* Form */}
         <Form layout="vertical" onFinish={onFinish} initialValues={owner}>
           {/* Owner Name */}
-          <Form.Item label={<Text strong>👤 Owner Name</Text>} name="name" rules={[{ required: true, message: "Please enter the owner's name" }]}>
+          <Form.Item
+            label={<Text strong>👤 Owner Name</Text>}
+            name="name"
+            rules={[{ required: true, message: "Please enter the owner's name" }]}
+          >
             <Input placeholder="Enter owner's name" />
           </Form.Item>
 
@@ -103,17 +104,29 @@ const UpdateOwnerDetail = () => {
           </Form.Item>
 
           {/* Phone */}
-          <Form.Item label={<Text strong>📞 Phone</Text>} name="phone" rules={[{ required: true, message: "Please enter the owner's phone number" }]}>
+          <Form.Item
+            label={<Text strong>📞 Phone</Text>}
+            name="phone"
+            rules={[{ required: true, message: "Please enter the owner's phone number" }]}
+          >
             <Input placeholder="Enter phone number" />
           </Form.Item>
 
           {/* Address */}
-          <Form.Item label={<Text strong>📍 Address</Text>} name="address" rules={[{ required: true, message: "Please enter the address" }]}>
+          <Form.Item
+            label={<Text strong>📍 Address</Text>}
+            name="address"
+            rules={[{ required: true, message: "Please enter the address" }]}
+          >
             <Input placeholder="Enter address" />
           </Form.Item>
 
           {/* Pincode */}
-          <Form.Item label={<Text strong>📮 Pincode</Text>} name="pincode" rules={[{ required: true, message: "Please enter the pincode" }]}>
+          <Form.Item
+            label={<Text strong>📮 Pincode</Text>}
+            name="pincode"
+            rules={[{ required: true, message: "Please enter the pincode" }]}
+          >
             <Input placeholder="Enter pincode" />
           </Form.Item>
 
@@ -140,7 +153,10 @@ const UpdateOwnerDetail = () => {
             <Button type="primary" htmlType="submit" loading={loading} block>
               {loading ? "Updating..." : "Update Owner"}
             </Button>
-            <Button onClick={() => navigate("/owner-profile")} className="bg-gray-500 text-white hover:bg-gray-600 w-full">
+            <Button
+              onClick={() => navigate("/owner-profile")}
+              className="bg-gray-500 text-white hover:bg-gray-600 w-full"
+            >
               Cancel
             </Button>
           </div>

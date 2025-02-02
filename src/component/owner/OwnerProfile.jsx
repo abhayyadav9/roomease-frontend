@@ -28,9 +28,13 @@ const OwnerProfile = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+      
       <div className="bg-white relative shadow-lg rounded-lg p-6 max-w-3xl mx-auto">
         {/* Action Buttons */}
-        <div className="absolute top-4 right-4 flex space-x-3">
+        <div className="mt-10">
+        <h2 className="text-3xl font-bold text-gray-900">Owner Profile</h2>
+      </div>
+        <div className="absolute top-4 right-4 flex space-x-3 mt-14">
           <Link to="/update-detail" className="text-gray-600 hover:text-green-900 transition">
             <LiaUserEditSolid size={24} />
           </Link>
@@ -40,17 +44,21 @@ const OwnerProfile = () => {
         </div>
 
         {/* Profile Section */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-6">
+        <div className="flex flex-col sm:flex-row items-center mt-10 sm:items-start sm:space-x-6">
           <img
             className="h-20 w-20 rounded-full border border-gray-300"
             src={owner.ownerPic || "https://via.placeholder.com/150"}
             alt="Profile"
           />
           <div className="text-center sm:text-left mt-4 sm:mt-0">
-            <h1 className="text-2xl font-semibold text-gray-900">{owner.name}</h1>
-            <p className="text-gray-600">{owner.email}</p>
-            <p className="text-gray-600">{owner.phone}</p>
-            <p className="text-gray-600">{owner.address}</p>
+            <h1 className="text-2xl font-semibold text-gray-900">{
+            owner.name?.toUpperCase()
+              
+              
+              }</h1>
+            <p className="text-gray-600">Email: {owner.user?.email}</p>
+            <p className="text-gray-600">Phone: {owner.phone}</p>
+            <p className="text-gray-600">Address:{owner.address}</p>
           </div>
         </div>
 
