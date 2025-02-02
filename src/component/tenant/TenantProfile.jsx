@@ -4,6 +4,7 @@ import { Button, Divider } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import AllRequirements from "./AllRequirements";
+import TenantCreateRequirement from "./TenantCreateRequirement";
 
 const TenantProfile = () => {
   const tenant = useSelector((state) => state.tenant?.data?.data);
@@ -86,7 +87,7 @@ const TenantProfile = () => {
         <h2>Total Requirements Created ({tenantRequirements.length})</h2>
 
         {/* ✅ Render `AllRequirements` only if there are requirements for this tenant */}
-        {tenantRequirements.length > 0 ? <AllRequirements /> : <p>No requirements found.</p>}
+        {tenantRequirements.length > 0 ? <TenantCreateRequirement /> : <p>No requirements found.</p>}
       </div>
     </div>
   );

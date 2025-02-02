@@ -20,16 +20,14 @@ import { useSelector } from "react-redux";
 import UpdateTenantDetail from "./component/tenant/UpdateTenantDetail.jsx";
 import AddRequirement from "./component/tenant/AddRequirement.jsx";
 import AllRequirements from "./component/tenant/AllRequirements.jsx";
+import UpdateRequirement from "./component/tenant/UpdateRequirement.jsx";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
-        {
-          user?.role ==="owner"    ?    <Navbar />: <TenantNavbar/>
-
-        }
+        {user?.role === "owner" ? <Navbar /> : <TenantNavbar />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
@@ -57,15 +55,17 @@ function App() {
             // tenant routes
           }
           <Route path="/tenant-profile" element={<TenantProfile />} />
-          <Route path="/update/tenant/detail" element={<UpdateTenantDetail />} />
-{
-  //add requirement
-}
+          <Route
+            path="/update/tenant/detail"
+            element={<UpdateTenantDetail />}
+          />
+          {
+            //add requirement
+          }
 
-<Route path="/add-requirement" element={<AddRequirement />} />
-<Route path="/all-requirement" element={<AllRequirements />} />
-
-
+          <Route path="/add-requirement" element={<AddRequirement />} />
+          <Route path="/all-requirement" element={<AllRequirements />} />
+          <Route path="/update-requirement" element={<UpdateRequirement />} />
         </Routes>
       </div>
     </Router>
