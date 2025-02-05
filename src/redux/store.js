@@ -5,7 +5,8 @@ import roomReducer from "./slice/roomSlice";
 import tenantReducer from "./slice/tenantSlice";
 import requirementReducer from "./slice/requirementSlice";
 import themeReducer from "./slice/themeSlice";
-
+import allOwnerReducer from "./slice/allOwnerSlice"; // Corrected import path
+import allTenantReducer from "./slice/allTenantSlice";
 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Uses localStorage
@@ -15,7 +16,16 @@ import { combineReducers } from "redux";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "owner", "room", "tenant", "requirement","theme"], // Only persist these slices
+  whitelist: [
+    "auth",
+    "owner",
+    "room",
+    "tenant",
+    "requirement",
+    "theme",
+    "allOwner", // Corrected the persisted state name
+    "allTenant"
+  ], // Only persist these slices
 };
 
 // Combine Reducers
@@ -26,7 +36,8 @@ const rootReducer = combineReducers({
   tenant: tenantReducer,
   requirement: requirementReducer, // Ensures the requirement slice is persisted
   theme: themeReducer,
-
+  allOwner: allOwnerReducer, // Added correct allOwner reducer
+  allTenant: allTenantReducer, 
 });
 
 // Create Persisted Reducer

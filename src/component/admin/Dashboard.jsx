@@ -1,27 +1,17 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const rooms = useSelector((state) => state.room.room);
+  const allOwners = useSelector((state) => state.allOwner?.allOwnerData);
+  const allTenants = useSelector((state) => state.allTenant?.allTenantData);
+
   const requirements = useSelector(
     (state) => state.requirement.requirements.requirement.requirements
   ); // ✅ Corrected state access
-
+  const navigate = useNavigate();
   return (
     <div>
       <SidebarProvider>
@@ -33,19 +23,26 @@ export default function Dashboard() {
 
             <div className="grid gap-4 md:grid-cols-3 auto-rows-fr">
               {/* Total Owner Card */}
-              <div className="flex flex-col justify-center items-center aspect-video rounded-xl bg-muted/50 p-6">
+              <div
+                className="flex flex-col justify-center items-center aspect-video rounded-xl bg-muted/50 p-6"
+                onClick={() => navigate("/admin/owners")}
+              >
                 <h1 className="text-4xl font-semibold">Total Owner</h1>
                 <NumberTicker
-                  value={100}
+                  value={allOwners.length}
                   className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-black dark:text-white"
                 />
               </div>
 
               {/* Total Tenant Card */}
-              <div className="flex flex-col justify-center items-center aspect-video rounded-xl bg-muted/50 p-6">
+              <div
+                className="flex flex-col justify-center items-center aspect-video rounded-xl bg-muted/50 p-6
+              "
+                onClick={() => navigate("/admin/tenants")}
+              >
                 <h1 className="text-4xl font-semibold">Total Tenant</h1>
                 <NumberTicker
-                  value={58}
+                  value={allTenants.length}
                   className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-black dark:text-white"
                 />
               </div>
@@ -63,15 +60,12 @@ export default function Dashboard() {
         </SidebarInset>
       </SidebarProvider>
 
-      
       <SidebarProvider>
         <SidebarInset>
           <div className="flex flex-1 flex-col gap-4 p-4">
             <div className="grid auto-rows-min gap-4 md:grid-cols-4">
-
-
-               {/* Requirement Card */}
-               <div className="flex flex-col justify-center items-center aspect-video rounded-xl bg-muted/50 p-6">
+              {/* Requirement Card */}
+              <div className="flex flex-col justify-center items-center aspect-video rounded-xl bg-muted/50 p-6">
                 <h1 className="text-xl font-semibold">Total Requirements</h1>
                 <NumberTicker
                   value={requirements?.length}

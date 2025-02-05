@@ -3,11 +3,16 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import AdminNavbar from "./AdminNavbar";
 import Dashboard from "./Dashboard";
 import Transaction from "./pages/Transaction";
-import AllTTenants from "./AllTTenants";
-import AllOwners from "./AllOwners";
-import Settings from "./Settings";
+import AllOwners from "./pages/AllOwners";
+import AllTTenants from "./pages/AllTTenants";
+import Settings from "./pages/Settings";
+import useGetAllOwner from "../../hooks/useGetAllOwner";
+import useGetAllTenant from "../../hooks/useGetAllTenant";
+
 
 const AdminHome = () => {
+  useGetAllOwner()
+  useGetAllTenant();
   return (
     <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900 text-black dark:text-white">
       <AdminNavbar />
