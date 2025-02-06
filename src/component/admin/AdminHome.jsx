@@ -8,6 +8,8 @@ import AllTTenants from "./pages/AllTTenants";
 import Settings from "./pages/Settings";
 import useGetAllOwner from "../../hooks/useGetAllOwner";
 import useGetAllTenant from "../../hooks/useGetAllTenant";
+import SingleTenant from "./pages/SingleTenant";
+import SingleOwner from "./pages/SingleOwner";
 
 
 const AdminHome = () => {
@@ -38,7 +40,11 @@ const AdminHomeWrapper = () => {
         <Route path="transaction" element={<Transaction />} />
 
         <Route path="owners" element={<AllOwners />} />
+        <Route path="owner" element={<SingleOwner />} />
+
+        
         <Route path="tenants" element={<AllTTenants />} />
+        <Route path="tenant" element={<SingleTenant />} />
 
         <Route path="settings" element={<Settings />} />
       </Route>

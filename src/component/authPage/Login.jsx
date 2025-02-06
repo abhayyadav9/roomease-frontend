@@ -1,14 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, Select, Typography, message } from "antd";
-import {
-  UserOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slice/authSlice";
 
 const { Option } = Select;
@@ -17,34 +12,37 @@ const { Title, Text } = Typography;
 const Login = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const onFinish = async (values) => {
     console.log("Form values:", values);
     try {
-      // Ensure role is either passed or set to a default value
-      const response = await axios.post("http://localhost:3000/api/v1/login", {
-        email: values.email,
-        password: values.password,
-        role: values.role || "tenant", // Assuming "tenant" is a default role
-      }, {
-        withCredentials: true, // Send credentials (cookies) with the request
-      });
-  
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/login",
+        {
+          email: values.email,
+          password: values.password,
+          role: values.role, // Role is required and selected by the user
+        },
+        {
+          withCredentials: true, // Send credentials (cookies) with the request
+        }
+      );
+
       message.success(response.data.message);
-  
+
       // If successful, navigate to the homepage
       navigate("/");
-  
+
       // Dispatch user data to the Redux store
       dispatch(setUser(response.data?.user));
     } catch (error) {
       console.error("Error logging in:", error);
-      message.error("Unable to login");
+      message.error(
+        error.response?.data?.message || "An error occurred during login."
+      );
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen mt-7 bg-[#bfb8a8]">
@@ -55,8 +53,6 @@ const Login = () => {
         </Title>
 
         <Form form={form} layout="vertical" onFinish={onFinish}>
-          {/* Name Field */}
-
           {/* Email Field */}
           <Form.Item
             label="Email"
@@ -69,6 +65,7 @@ const Login = () => {
             <Input prefix={<MailOutlined />} placeholder="Enter your email" />
           </Form.Item>
 
+          {/* Password Field */}
           <Form.Item
             label="Password"
             name="password"
@@ -93,8 +90,6 @@ const Login = () => {
             </Select>
           </Form.Item>
 
-          {/* Password Field */}
-
           {/* Forgot Password */}
           <div className="flex justify-between mb-4">
             <Link
@@ -112,10 +107,10 @@ const Login = () => {
             </Button>
           </Form.Item>
 
-          {/* Already have an account? */}
+          {/* Don't have an account? */}
           <div className="text-center">
             <Text className="text-gray-600">
-              Already have an account?{" "}
+              Don't have an account?{" "}
               <Link to="/register" className="text-blue-600 hover:underline">
                 Register
               </Link>

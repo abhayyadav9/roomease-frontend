@@ -8,7 +8,7 @@ const AllTTenants = () => {
   const allTenants= useSelector(state=> state.allTenant?.allTenantData)
   const theme = useSelector((state) => state.theme.theme);
 
-  const sortedOwners = [...(allTenants || [])].sort((a, b) => {
+  const sortedTenants = [...(allTenants || [])].sort((a, b) => {
     if (sortBy === "name") return a.name.localeCompare(b.name);
     if (sortBy === "date") return new Date(b.createdAt) - new Date(a.createdAt);
     return 0;
@@ -58,16 +58,16 @@ const AllTTenants = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {sortedOwners?.map((owner) => (
+                {sortedTenants?.map((tenant) => (
                   <tr 
-                    key={owner._id}
+                    key={tenant?._id}
                     className={`hover:${theme === "dark" ? "bg-gray-750" : "bg-gray-50"} transition-colors`}
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <img
-                          src={owner.tenantPic}
-                          alt={owner.name}
+                          src={tenant?.tenantPic}
+                          alt={tenant?.name}
                           className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
                           onError={(e) => {
                             e.target.src = <FaRegUserCircle className="w-12 h-12 text-gray-400" />;
@@ -75,25 +75,26 @@ const AllTTenants = () => {
                         />
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-medium">{owner.name}</td>
+                    <td className="px-6 py-4 font-medium">{tenant?.name}</td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-sm">{owner.phone || 'N/A'}</span>
-                        <span className="text-xs text-gray-500">{owner.user?.email || ''}</span>
+                        <span className="text-sm">{tenant?.phone || 'N/A'}</span>
+                        <span className="text-xs text-gray-500">{tenant.user?.email || ''}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      {new Date(owner.createdAt).toLocaleDateString('en-US', {
+                      {new Date(tenant.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric',
                       })}
                     </td>
                     <td className="px-6 py-4">
-                      <Link
-                        to={`/owners/${owner._id}`}
+                    <Link
+                        to={`/admin/tenant`}
+                        state={{ tenant }} // Pass tenant data via state
                         className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors
-                          bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
+    bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
                       >
                         <FaEye className="mr-2" />
                         View
@@ -105,7 +106,7 @@ const AllTTenants = () => {
             </table>
           </div>
 
-          {sortedOwners?.length === 0 && (
+          {sortedTenants?.length === 0 && (
             <div className="p-12 text-center text-gray-500 dark:text-gray-400">
               No owners found
             </div>

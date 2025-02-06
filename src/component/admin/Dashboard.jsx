@@ -2,8 +2,18 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import useGetAllOwner from "../../hooks/useGetAllOwner";
+import useGetAllTenant from "../../hooks/useGetAllTenant";
+import useGetAllRequirements from "../../hooks/useGetAllRequirement";
+import useGetAllRooms from "../../hooks/useGetAllRooms";
+
+
 
 export default function Dashboard() {
+  useGetAllOwner()
+  useGetAllTenant();
+  useGetAllRequirements()
+  useGetAllRooms()
   const rooms = useSelector((state) => state.room.room);
   const allOwners = useSelector((state) => state.allOwner?.allOwnerData);
   const allTenants = useSelector((state) => state.allTenant?.allTenantData);
@@ -29,7 +39,7 @@ export default function Dashboard() {
               >
                 <h1 className="text-4xl font-semibold">Total Owner</h1>
                 <NumberTicker
-                  value={allOwners.length}
+                  value={allOwners?.length}
                   className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-black dark:text-white"
                 />
               </div>
@@ -42,7 +52,7 @@ export default function Dashboard() {
               >
                 <h1 className="text-4xl font-semibold">Total Tenant</h1>
                 <NumberTicker
-                  value={allTenants.length}
+                  value={allTenants?.length}
                   className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-black dark:text-white"
                 />
               </div>

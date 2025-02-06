@@ -12,6 +12,10 @@ import { Switch } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../../redux/slice/themeSlice";
 import { MdPersonOutline } from "react-icons/md";
+import { CiLogout } from "react-icons/ci";
+import axios from "axios";
+import { logout as logoutAction} from '../../redux/slice/authSlice';
+
 
 const AdminNavbar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -23,6 +27,21 @@ const AdminNavbar = () => {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
+
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/api/v1/logout", {}, {
+        withCredentials: true,
+      });
+      dispatch(logoutAction())
+      
+      window.location.href = "/login"; // Redirect to login page
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while logging out");
+    }
+  };;
 
   return (
     <div className="flex min-h-screen ">
@@ -70,6 +89,15 @@ const AdminNavbar = () => {
               </Link>
             </li>
           </ul>
+          <div
+          onClick={handleLogout}
+          className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
+        >
+          <div className="flex items-center gap-3">
+            <CiLogout size={24} />
+            <span className="text-md">Logout</span>
+          </div>
+        </div>
         </nav>
       </div>
 
