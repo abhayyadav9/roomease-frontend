@@ -27,6 +27,7 @@ const Register = () => {
           },
         }
       );
+      
 
       message.success(response.data.message);
       form.resetFields();
