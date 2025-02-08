@@ -27,7 +27,7 @@ const Home = () => {
           Find your dream home with us
         </p>
         <a
-          href="#"
+          href="/login"
           className="bg-white text-black py-2 px-6 rounded-md text-lg transition duration-300 ease-in-out hover:bg-gray-200"
         >
           Explore Now
