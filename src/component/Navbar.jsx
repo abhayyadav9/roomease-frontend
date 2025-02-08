@@ -95,7 +95,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:3000/api/v1/logout", {}, {
+      await axios.post("https://roomease-backend-edd9.onrender.com/api/v1/logout", {}, {
         withCredentials: true,
       });
       dispatch(logoutAction())

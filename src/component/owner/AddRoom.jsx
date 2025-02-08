@@ -39,7 +39,7 @@ const AddRoom = () => {
       formData.append("description", values.description);
 
       const response = await axios.post(
-        `http://localhost:3000/api/v2a/add/room/${user.id}`,
+        `https://roomease-backend-edd9.onrender.com/api/v2a/add/room/${user.id}`,
         formData,
         {
           withCredentials: true,

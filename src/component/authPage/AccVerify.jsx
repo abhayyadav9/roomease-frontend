@@ -23,7 +23,7 @@ const navigate= useNavigate()
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/verify-email", {
+      const response = await axios.post("https://roomease-backend-edd9.onrender.com/api/v1/verify-email", {
         code: otp, // ✅ Matches backend request body
       });
 
@@ -44,7 +44,7 @@ const navigate= useNavigate()
   const handleResendOtp = async () => {
     setResendDisabled(true);
     try {
-      await axios.post("http://localhost:3000/api/v1/resend-verification-email"); // Adjust API as needed
+      await axios.post("https://roomease-backend-edd9.onrender.com/api/v1/resend-verification-email"); // Adjust API as needed
       message.success("New verification code sent to your email.");
     } catch (error) {
       navigate("/send-verification")

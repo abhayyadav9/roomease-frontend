@@ -9,7 +9,7 @@ const useGetAllRequirement = () => {
   useEffect(() => {
     const fetchAllRequirement = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v3a//all/requirements", {
+        const response = await axios.get("https://roomease-backend-edd9.onrender.com/api/v3a//all/requirements", {
           withCredentials: true,
         });
 

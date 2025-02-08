@@ -8,7 +8,7 @@ const useGetAllOwner = () => {
   useEffect(() => {
     const fetchOwners = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/v4a/get/allowners"); // Replace with actual API URL
+        const response = await fetch("https://roomease-backend-edd9.onrender.com/api/v4a/get/allowners"); // Replace with actual API URL
         const data = await response.json();
         if (data.success) {
           dispatch(setAllOwnerData(data.owners)); // Dispatch the action to store data

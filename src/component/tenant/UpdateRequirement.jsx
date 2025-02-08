@@ -35,7 +35,7 @@ const UpdateRequirement = () => {
 
       const response = await axios.put(
    
-        `http://localhost:3000/api/v3a/update/requirement/${selectedRequirement._id}`,
+        `https://roomease-backend-edd9.onrender.com/api/v3a/update/requirement/${selectedRequirement._id}`,
         { location, category, description, requirement, priceRange, numberOfPerson, additionalNumber },
         { withCredentials: true }
       );

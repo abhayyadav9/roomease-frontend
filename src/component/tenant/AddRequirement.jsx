@@ -20,7 +20,7 @@ const AddRequirement = () => {
     setLoading(true);
     try {
       const { location, category, description, requirement, priceRange, numberOfPerson, additionalNumber } = values;
-      const apiUrl = ` http://localhost:3000/api/v3a/tenant-add/requirement/${tenant._id}`;
+      const apiUrl = ` https://roomease-backend-edd9.onrender.com/api/v3a/tenant-add/requirement/${tenant._id}`;
       const res = await axios.post(apiUrl, {
         location,
         category,

@@ -9,7 +9,7 @@ const useGetAllRooms = () => {
   useEffect(() => {
     const fetchAllRooms = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v2a/all/rooms", {
+        const response = await axios.get("https://roomease-backend-edd9.onrender.com/api/v2a/all/rooms", {
           withCredentials: true
         });
 

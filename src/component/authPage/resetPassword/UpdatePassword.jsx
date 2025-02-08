@@ -23,7 +23,7 @@ const UpdatePassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/update-password/${resetToken}`, {
+      const response = await axios.post(`https://roomease-backend-edd9.onrender.com/api/v1/update-password/${resetToken}`, {
         password,
       });
 

@@ -47,7 +47,7 @@ const UpdateOwnerDetail = () => {
       formData.append("pincode", values.pincode);
       if (image) formData.append("file", image);
 
-      const apiUrl = `http://localhost:3000/api/v2/update-owner/${owner.user._id}`;
+      const apiUrl = `https://roomease-backend-edd9.onrender.com/api/v2/update-owner/${owner.user._id}`;
       console.log("Sending request to:", apiUrl);
 
       await axios.put(apiUrl, formData, {

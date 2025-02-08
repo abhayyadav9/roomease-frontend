@@ -52,7 +52,7 @@ const EditRoom = () => {
       });
 
       await axios.put(
-        `http://localhost:3000/api/v2a/edit/room/${selectedRoom._id}`,
+        `https://roomease-backend-edd9.onrender.com/api/v2a/edit/room/${selectedRoom._id}`,
         formData,
         {
           withCredentials: true,

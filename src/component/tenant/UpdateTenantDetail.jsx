@@ -48,7 +48,7 @@ const UpdateTenantDetail = () => {
       formData.append("address", values.address);
       if (image) formData.append("file", image);
 
-      const apiUrl = `http://localhost:3000/api/v3/update-tenant/${tenant.user._id}`;
+      const apiUrl = `https://roomease-backend-edd9.onrender.com/api/v3/update-tenant/${tenant.user._id}`;
       console.log("Sending request to:", apiUrl);
 
      const res= await axios.put(apiUrl, formData, {

@@ -16,7 +16,7 @@ const useGetOwnerDetails = () => {
       dispatch(setLoading(true)); // Set loading state before fetching
 
       try {
-        const response = await axios.get(`http://localhost:3000/api/v2/owner-details/${user.id}`, {
+        const response = await axios.get(`https://roomease-backend-edd9.onrender.com/api/v2/owner-details/${user.id}`, {
           withCredentials: true
         });
 

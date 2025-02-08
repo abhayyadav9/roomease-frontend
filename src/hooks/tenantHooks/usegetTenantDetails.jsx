@@ -14,7 +14,7 @@ const useGetTenantDetails = () => {
     const fetchTenantDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v3/tenant-details/${user.id}`, {
+          `https://roomease-backend-edd9.onrender.com/api/v3/tenant-details/${user.id}`, {
             withCredentials: true
           }
         );

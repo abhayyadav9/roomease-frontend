@@ -19,7 +19,7 @@ const Register = () => {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/register",
+        "https://roomease-backend-edd9.onrender.com/api/v1/register",
         values,
         {
           headers: {
