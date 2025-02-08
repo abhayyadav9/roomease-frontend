@@ -10,6 +10,9 @@ import useGetAllOwner from "../../hooks/useGetAllOwner";
 import useGetAllTenant from "../../hooks/useGetAllTenant";
 import SingleTenant from "./pages/SingleTenant";
 import SingleOwner from "./pages/SingleOwner";
+import AdminProfile from "./pages/AdminProfile";
+import AllRooms from "./pages/AllRooms";
+import AllRequirements from "./pages/AllRequirements";
 
 
 const AdminHome = () => {
@@ -47,6 +50,11 @@ const AdminHomeWrapper = () => {
         <Route path="tenant" element={<SingleTenant />} />
 
         <Route path="settings" element={<Settings />} />
+
+
+        <Route path="admin-profile" element={<AdminProfile />} />
+        <Route path="all-rooms" element={<AllRooms />} />
+        <Route path="all-requirements" element={<AllRequirements />} />
       </Route>
     </Routes>
   );

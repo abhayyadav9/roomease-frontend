@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useGetAllRooms from "../hooks/useGetAllRooms";
 import { setSelectedRoom } from "../redux/slice/roomSlice";
 import ViewRoomDetail from "./commonPage/ViewRoomDetail";
+import { CircularProgress } from "@mui/material";
 
 const AllRooms = () => {
   useGetAllRooms(); // Fetch all rooms
@@ -13,22 +14,35 @@ const AllRooms = () => {
   const selectedRoom = useSelector((state) => state.room.selectedRoom);
   const dispatch = useDispatch();
 
-  // ✅ State to control modal visibility
+  // State to control modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ✅ Function to open modal with selected room
+  // State for search query
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Function to open modal with selected room
   const handleOpenModal = (room) => {
     dispatch(setSelectedRoom(room)); // Set room in Redux state
     setIsModalOpen(true); // Open modal
   };
 
-  // ✅ Function to close modal
+  // Function to close modal
   const handleCloseModal = () => {
     setIsModalOpen(false); // Close modal
   };
 
+  // Filter rooms based on search query (location)
+  const filteredRooms = rooms.filter((room) => {
+    const address = room.address ? room.address.toLowerCase() : "";
+    return address.includes(searchQuery.toLowerCase());
+  });
+
   if (loading) {
-    return <p className="text-center text-gray-600">Loading rooms...</p>;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {
@@ -45,8 +59,20 @@ const AllRooms = () => {
         🏡 Available Rooms
       </h2>
 
+      {/* Search Bar */}
+      <div className="mb-6 flex justify-center">
+        <input
+          type="text"
+          placeholder="Search by location..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Room Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {rooms.map((room) => (
+        {filteredRooms.map((room) => (
           <div
             key={room._id}
             className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-all hover:scale-105"
@@ -69,7 +95,7 @@ const AllRooms = () => {
               </p>
               <button
                 className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all"
-                onClick={() => handleOpenModal(room)} // ✅ Open modal on click
+                onClick={() => handleOpenModal(room)} // Open modal on click
               >
                 View Details
               </button>
@@ -78,7 +104,7 @@ const AllRooms = () => {
         ))}
       </div>
 
-      {/* 🏡 View Room Details Modal */}
+      {/* View Room Details Modal */}
       {isModalOpen && selectedRoom && (
         <ViewRoomDetail room={selectedRoom} onClose={handleCloseModal} />
       )}
