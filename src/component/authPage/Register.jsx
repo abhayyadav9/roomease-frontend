@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import BASEURL from "../../utils/BaseUrl";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -19,7 +20,7 @@ const Register = () => {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        "https://roomease-backend-edd9.onrender.com/api/v1/register",
+        `${BASEURL}/api/v1/register`,
         values,
         {
           headers: {

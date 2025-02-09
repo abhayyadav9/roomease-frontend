@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setOwner, setLoading, setError } from "../../redux/slice/ownerSlice";
 import axios from "axios";
+import BASEURL from "../../utils/BaseUrl";
 
 const useGetOwnerDetails = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const useGetOwnerDetails = () => {
       dispatch(setLoading(true)); // Set loading state before fetching
 
       try {
-        const response = await axios.get(`https://roomease-backend-edd9.onrender.com/api/v2/owner-details/${user.id}`, {
+        const response = await axios.get(`${BASEURL}/api/v2/owner-details/${user.id}`, {
           withCredentials: true
         });
 

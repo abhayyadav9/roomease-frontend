@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Flex, Input, Button, Typography, message, Spin } from "antd";
 import axios from "axios";
+import BASEURL from "../../../utils/BaseUrl";
 
 const { Title, Text } = Typography;
 
@@ -22,7 +23,7 @@ const VerifyOtp = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("https://roomease-backend-edd9.onrender.com/api/v1/verify-otp", {
+      const response = await axios.post(`${BASEURL}/api/v1/verify-otp`, {
         resetToken: otp, // ✅ Matches backend request body
       });
 
@@ -47,7 +48,7 @@ const VerifyOtp = () => {
   const handleResendOtp = async () => {
     setResendDisabled(true);
     try {
-      await axios.post("https://roomease-backend-edd9.onrender.com/api/v1/resend-verification-email"); // Adjust API as needed
+      await axios.post(`${BASEURL}/api/v1/resend-verification-email`); // Adjust API as needed
       message.success("New verification code sent to your email.");
     } catch (error) {
       message.error("Failed to resend OTP. Try again later.");

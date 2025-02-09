@@ -15,6 +15,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setTenant } from "../../redux/slice/tenantSlice";
+import BASEURL from "../../utils/BaseUrl";
 
 const { Title, Text } = Typography;
 
@@ -48,7 +49,7 @@ const UpdateTenantDetail = () => {
       formData.append("address", values.address);
       if (image) formData.append("file", image);
 
-      const apiUrl = `https://roomease-backend-edd9.onrender.com/api/v3/update-tenant/${tenant.user._id}`;
+      const apiUrl = `${BASEURL}/api/v3/update-tenant/${tenant.user._id}`;
       console.log("Sending request to:", apiUrl);
 
      const res= await axios.put(apiUrl, formData, {

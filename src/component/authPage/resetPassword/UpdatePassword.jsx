@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Typography, message, Spin } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import BASEURL from "../../../utils/BaseUrl";
 
 const { Title, Text } = Typography;
 
@@ -23,7 +24,7 @@ const UpdatePassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`https://roomease-backend-edd9.onrender.com/api/v1/update-password/${resetToken}`, {
+      const response = await axios.post(`${BASEURL}/api/v1/update-password/${resetToken}`, {
         password,
       });
 

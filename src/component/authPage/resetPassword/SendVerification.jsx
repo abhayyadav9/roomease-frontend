@@ -3,6 +3,7 @@ import { MailOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BASEURL from "../../../utils/BaseUrl";
 
 const { Title } = Typography;
 
@@ -16,7 +17,7 @@ const SendVerification = () => {
     try {
       // Dynamically set the API base URL based on the environment
     
-      const response = await axios.post(`https://roomease-backend-edd9.onrender.com/api/v1/reset-password`, {
+      const response = await axios.post(`${BASEURL}/api/v1/reset-password`, {
         email: values.email,
       });
 

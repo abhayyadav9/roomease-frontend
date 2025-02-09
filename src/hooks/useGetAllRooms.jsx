@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setRoom } from "../redux/slice/roomSlice";
 import axios from "axios";
+import BASEURL from "../utils/BaseUrl";
 
 const useGetAllRooms = () => {
   const dispatch = useDispatch();
@@ -9,7 +10,7 @@ const useGetAllRooms = () => {
   useEffect(() => {
     const fetchAllRooms = async () => {
       try {
-        const response = await axios.get("https://roomease-backend-edd9.onrender.com/api/v2a/all/rooms", {
+        const response = await axios.get(`${BASEURL}/api/v2a/all/rooms`, {
           withCredentials: true
         });
 

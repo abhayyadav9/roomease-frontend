@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux"; // Import dispatch
 import { setAllTenantData } from "../redux/slice/allTenantSlice";
+import BASEURL from "../utils/BaseUrl";
 
 const useGetAllTenant = () => {
   const dispatch = useDispatch(); // Initialize dispatch
@@ -8,7 +9,7 @@ const useGetAllTenant = () => {
   useEffect(() => {
     const fetchTenants = async () => {
       try {
-        const response = await fetch("https://roomease-backend-edd9.onrender.com/api/v4a/get/alltenants"); // Replace with actual API URL
+        const response = await fetch(`${BASEURL}/api/v4a/get/alltenants`); // Replace with actual API URL
         const data = await response.json();
         if (data.success) {
           dispatch(setAllTenantData(data.tenants)); // Dispatch the action to store data

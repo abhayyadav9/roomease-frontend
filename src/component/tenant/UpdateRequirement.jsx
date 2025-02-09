@@ -14,6 +14,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import BASEURL from "../../utils/BaseUrl";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -35,7 +36,7 @@ const UpdateRequirement = () => {
 
       const response = await axios.put(
    
-        `https://roomease-backend-edd9.onrender.com/api/v3a/update/requirement/${selectedRequirement._id}`,
+        `${BASEURL}/api/v3a/update/requirement/${selectedRequirement._id}`,
         { location, category, description, requirement, priceRange, numberOfPerson, additionalNumber },
         { withCredentials: true }
       );

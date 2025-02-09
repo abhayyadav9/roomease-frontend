@@ -43,7 +43,7 @@ export default function AllRequirements() {
     return () => clearTimeout(timer);
   }, []);
 
-  const filteredRequirements = requirements.filter((requirement) =>
+  const filteredRequirements = requirements?.filter((requirement) =>
     requirement.location?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

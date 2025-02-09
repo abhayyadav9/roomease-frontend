@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Form, Input, Button, Upload, message, Select, InputNumber } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
+import BASEURL from "../../utils/BaseUrl";
 
 const { Option } = Select;
 
@@ -39,7 +40,7 @@ const AddRoom = () => {
       formData.append("description", values.description);
 
       const response = await axios.post(
-        `https://roomease-backend-edd9.onrender.com/api/v2a/add/room/${user.id}`,
+        `${BASEURL}/api/v2a/add/room/${user.id}`,
         formData,
         {
           withCredentials: true,

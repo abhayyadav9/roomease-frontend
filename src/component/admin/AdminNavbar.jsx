@@ -18,6 +18,7 @@ import axios from "axios";
 import { logout as logoutAction } from "../../redux/slice/authSlice";
 import Badge from "@mui/material/Badge";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import BASEURL from "../../utils/BaseUrl";
 
 const AdminNavbar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -33,7 +34,7 @@ const AdminNavbar = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "https://roomease-backend-edd9.onrender.com/api/v1/logout",
+        `${BASEURL}/api/v1/logout`,
         {},
         {
           withCredentials: true,

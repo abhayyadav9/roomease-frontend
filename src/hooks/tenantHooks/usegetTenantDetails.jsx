@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTenant } from "../../redux/slice/tenantSlice";
+import BASEURL from "../../utils/BaseUrl";
 
 const useGetTenantDetails = () => {
   const user = useSelector((state) => state.auth.user);
@@ -14,7 +15,7 @@ const useGetTenantDetails = () => {
     const fetchTenantDetails = async () => {
       try {
         const response = await axios.get(
-          `https://roomease-backend-edd9.onrender.com/api/v3/tenant-details/${user.id}`, {
+          `${BASEURL}/api/v3/tenant-details/${user.id}`, {
             withCredentials: true
           }
         );

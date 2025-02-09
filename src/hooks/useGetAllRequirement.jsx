@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setRequirements } from "../redux/slice/requirementSlice";
+import BASEURL from "../utils/BaseUrl";
 
 const useGetAllRequirement = () => {
   const dispatch = useDispatch();
@@ -9,7 +10,7 @@ const useGetAllRequirement = () => {
   useEffect(() => {
     const fetchAllRequirement = async () => {
       try {
-        const response = await axios.get("https://roomease-backend-edd9.onrender.com/api/v3a//all/requirements", {
+        const response = await axios.get(`${BASEURL}/api/v3a//all/requirements`, {
           withCredentials: true,
         });
 

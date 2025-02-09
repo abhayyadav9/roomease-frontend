@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slice/authSlice";
+import BASEURL from "../../utils/BaseUrl";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -18,7 +19,7 @@ const Login = () => {
     console.log("Form values:", values);
     try {
       const response = await axios.post(
-        "https://roomease-backend-edd9.onrender.com/api/v1/login",
+        `${BASEURL}/api/v1/login`,
         {
           email: values.email,
           password: values.password,

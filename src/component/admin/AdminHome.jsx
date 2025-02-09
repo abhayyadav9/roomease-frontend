@@ -13,11 +13,16 @@ import SingleOwner from "./pages/SingleOwner";
 import AdminProfile from "./pages/AdminProfile";
 import AllRooms from "./pages/AllRooms";
 import AllRequirements from "./pages/AllRequirements";
+import useGetTenantDetails from "../../hooks/tenantHooks/usegetTenantDetails";
+import useGetAllRooms from "../../hooks/useGetAllRooms";
 
 
 const AdminHome = () => {
   useGetAllOwner()
   useGetAllTenant();
+  useGetTenantDetails();
+  useGetAllRooms()
+  
   return (
     <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900 text-black dark:text-white">
       <AdminNavbar />

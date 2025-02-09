@@ -15,6 +15,7 @@ import { UploadOutlined, CloseOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import BASEURL from "../../utils/BaseUrl";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -52,7 +53,7 @@ const EditRoom = () => {
       });
 
       await axios.put(
-        `https://roomease-backend-edd9.onrender.com/api/v2a/edit/room/${selectedRoom._id}`,
+        `${BASEURL}/api/v2a/edit/room/${selectedRoom._id}`,
         formData,
         {
           withCredentials: true,

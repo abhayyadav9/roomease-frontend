@@ -13,6 +13,7 @@ import { LiaUserEditSolid } from "react-icons/lia";
 import { CiLogout } from "react-icons/ci";
 import axios from "axios";
 import { logout as logoutAction} from '../../redux/slice/authSlice';
+import BASEURL from "../../utils/BaseUrl";
 
 const items = [
   {
@@ -95,7 +96,7 @@ const TenantNavbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("https://roomease-backend-edd9.onrender.com/api/v1/logout", {}, {
+      await axios.post(`${BASEURL}/api/v1/logout`, {}, {
         withCredentials: true,
       });
       dispatch(logoutAction())
