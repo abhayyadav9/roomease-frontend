@@ -1,21 +1,46 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Divider } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import AllRequirements from "./AllRequirements";
 import TenantCreateRequirement from "./TenantCreateRequirement";
+import axios from "axios";
+import BASEURL from "../../utils/BaseUrl";
+import { logout as logoutAction } from "../../redux/slice/authSlice";
+import { CiLogout } from "react-icons/ci";
+
 
 const TenantProfile = () => {
   const tenant = useSelector((state) => state.tenant?.data?.data);
   const requirements = useSelector((state) => state.requirement.requirements.requirement.requirements)
    const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   // ✅ Filter requirements created by this tenant
   const tenantRequirements = requirements.filter(
     (req) => req?.tenant?.user === user?.id
   );
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${BASEURL}/api/v1/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(logoutAction());
+
+      window.location.href = "/login"; // Redirect to login page
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while logging out");
+    }
+  };
+
 
   return (
     <div className="container mx-auto mt-16 p-4">
@@ -79,6 +104,18 @@ const TenantProfile = () => {
           >
             Add New Requirement
           </Button>
+
+
+             {/* Logout */}
+        <div
+          onClick={handleLogout}
+          className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
+        >
+          <div className="flex items-center gap-3">
+            <CiLogout size={24} />
+            <span className="text-md">Logout</span>
+          </div>
+        </div>
         </div>
       </div>
 

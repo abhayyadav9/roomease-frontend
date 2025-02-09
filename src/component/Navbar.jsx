@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppstoreOutlined,
+  HomeFilled,
   MailOutlined,
+  ProfileOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -12,83 +14,44 @@ import { useDispatch, useSelector } from "react-redux";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { CiLogout } from "react-icons/ci";
 import axios from "axios";
-import { logout as logoutAction} from '../redux/slice/authSlice';
+import { logout as logoutAction } from "../redux/slice/authSlice";
 import BASEURL from "../utils/BaseUrl";
 
+
+
+
+
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const owner = useSelector((state) => state.owner.data?.data);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
 const items = [
   {
+    key: "13",
+    icon: <HomeFilled />,
+    label: <Link to="/">Home</Link>,
+  },
+  {
     key: "sub1",
-    label: "Navigation One",
+    label: <Link to="/all-rooms">Find Room</Link>,
     icon: <MailOutlined />,
-    children: [
-      {
-        key: "g1",
-        label: "Item 1",
-        type: "group",
-        children: [
-          {
-            key: "1",
-            label: "Option 1",
-          },
-          {
-            key: "2",
-            label: "Option 2",
-          },
-        ],
-      },
-    ],
   },
   {
     key: "sub2",
-    label: "Navigation Two",
+    label: <Link  to="/all-requirement">All Requiremnt</Link>,
     icon: <AppstoreOutlined />,
-    children: [
-      {
-        key: "5",
-        label: "Option 5",
-      },
-      {
-        key: "6",
-        label: "Option 6",
-      },
-    ],
   },
   {
     type: "divider",
   },
   {
     key: "sub4",
-    label: "Navigation Three",
-    icon: <SettingOutlined />,
-    children: [
-      {
-        key: "9",
-        label: "Option 9",
-      },
-      {
-        key: "10",
-        label: "Option 10",
-      },
-    ],
+    label: <Link to={`/${user.role}-profile`}>Profle</Link>,
+    icon: <ProfileOutlined />,
   },
-  {
-    key: "grp",
-    label: "Group",
-    type: "group",
-    children: [
-      {
-        key: "13",
-        label: "Option 13",
-      },
-    ],
-  },
-];
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const owner = useSelector((state) => state.owner.data?.data);
-  const user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch()
+];
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -96,19 +59,21 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${BASEURL}/api/v1/logout`, {}, {
-        withCredentials: true,
-      });
-      dispatch(logoutAction())
-      
+      await axios.post(
+        `${BASEURL}/api/v1/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(logoutAction());
+
       window.location.href = "/login"; // Redirect to login page
     } catch (error) {
       console.error(error);
       alert("An error occurred while logging out");
     }
-  };;
-
- 
+  };
 
   const content = (
     <div className="flex flex-col gap-5 bg-gray-200">
@@ -178,12 +143,12 @@ const Navbar = () => {
                 Find Room
               </Link>
               <Link
-                to="/about"
+                to="/all-requirement"
                 className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
               >
-                About
+                Find Requiremnt
               </Link>
-             
+
               {user ? (
                 <Popover content={content} title="Profile">
                   <Button type=" " className=" hover">
@@ -198,7 +163,7 @@ const Navbar = () => {
                   Login
                 </Link>
               )}
-               <Link
+              <Link
                 to="/contact"
                 className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
               >

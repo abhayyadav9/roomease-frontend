@@ -1,21 +1,45 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useGetOwnerDetails from "../../hooks/ownerHooks/useGetOwnerDetails";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { MdAddCircleOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
 import OwnerCreatedRoom from "./OwnerCreatedRoom";
+import axios from "axios";
+import BASEURL from "../../utils/BaseUrl";
+import { logout as logoutAction } from "../../redux/slice/authSlice";
+import { CiLogout } from "react-icons/ci";
 
 const OwnerProfile = () => {
   const owner = useSelector((state) => state.owner.data?.data);
   const loading = useSelector((state) => state.owner.loading);
   const error = useSelector((state) => state.owner.error);
-  
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${BASEURL}/api/v1/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(logoutAction());
+
+      window.location.href = "/login"; // Redirect to login page
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while logging out");
+    }
+  };
 
   useGetOwnerDetails(); // Fetch owner details
 
   if (loading) {
-    return <p className="text-gray-600 text-center">Loading owner details...</p>;
+    return (
+      <p className="text-gray-600 text-center">Loading owner details...</p>
+    );
   }
 
   if (error) {
@@ -28,17 +52,32 @@ const OwnerProfile = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-      
+        {/* Logout */}
+        <div
+          onClick={handleLogout}
+          className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
+        >
+          <div className="flex items-center gap-3">
+            <CiLogout size={24} />
+            <span className="text-md">Logout</span>
+          </div>
+        </div>
       <div className="bg-white relative shadow-lg rounded-lg p-6 max-w-3xl mx-auto">
         {/* Action Buttons */}
         <div className="mt-10">
-        <h2 className="text-3xl font-bold text-gray-900">Owner Profile</h2>
-      </div>
+          <h2 className="text-3xl font-bold text-gray-900">Owner Profile</h2>
+        </div>
         <div className="absolute top-4 right-4 flex space-x-3 mt-14">
-          <Link to="/update-detail" className="text-gray-600 hover:text-green-900 transition">
+          <Link
+            to="/update-detail"
+            className="text-gray-600 hover:text-green-900 transition"
+          >
             <LiaUserEditSolid size={24} />
           </Link>
-          <Link to="/add-room" className="text-gray-600 hover:text-green-900 transition">
+          <Link
+            to="/add-room"
+            className="text-gray-600 hover:text-green-900 transition"
+          >
             <MdAddCircleOutline size={24} />
           </Link>
         </div>
@@ -51,11 +90,9 @@ const OwnerProfile = () => {
             alt="Profile"
           />
           <div className="text-center sm:text-left mt-4 sm:mt-0">
-            <h1 className="text-2xl font-semibold text-gray-900">{
-            owner.name?.toUpperCase()
-              
-              
-              }</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">
+              {owner.name?.toUpperCase()}
+            </h1>
             <p className="text-gray-600">Email: {owner.user?.email}</p>
             <p className="text-gray-600">Phone: {owner.phone}</p>
             <p className="text-gray-600">Address:{owner.address}</p>
@@ -80,9 +117,9 @@ const OwnerProfile = () => {
             <p className="text-gray-700 mt-4">No rooms created yet.</p>
           )} */}
         </div>
-        
+
         {/* Owner Created Room Component */}
-        <OwnerCreatedRoom  />
+        <OwnerCreatedRoom />
       </div>
     </div>
   );
