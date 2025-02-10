@@ -3,7 +3,7 @@ import { Form, Input, Button, Select, Typography, message } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../redux/slice/authSlice";
 import BASEURL from "../../utils/BaseUrl";
 
@@ -14,6 +14,7 @@ const Login = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
   const onFinish = async (values) => {
     console.log("Form values:", values);
@@ -33,10 +34,19 @@ const Login = () => {
       message.success(response.data.message);
 
       // If successful, navigate to the homepage
-      navigate("/");
 
       // Dispatch user data to the Redux store
       dispatch(setUser(response.data?.user));
+
+
+      if(response.data?.user?.role === 'admin') {
+        navigate('/admin/dashboard');
+      }else if(response.data?.user?.role === "tenant") {
+        navigate('/')
+      }else{
+        navigate('/')
+      }
+      
     } catch (error) {
       console.error("Error logging in:", error);
       message.error(

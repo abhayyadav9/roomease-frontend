@@ -37,7 +37,7 @@ const AuthRedirector = () => {
 
   useEffect(() => {
     if (user?.role === "admin") {
-      // navigate("/admin/home/*", { replace: true });
+      // navigate("/admin/");
     }
   }, [user, navigate]);
 

@@ -57,7 +57,7 @@ const AdminHomeWrapper = () => {
         <Route path="settings" element={<Settings />} />
 
 
-        <Route path="admin-profile" element={<AdminProfile />} />
+        <Route path="profile" element={<AdminProfile />} />
         <Route path="all-rooms" element={<AllRooms />} />
         <Route path="all-requirements" element={<AllRequirements />} />
       </Route>

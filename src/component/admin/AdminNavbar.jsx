@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   DashboardOutlined,
   UserOutlined,
@@ -25,6 +25,7 @@ const AdminNavbar = () => {
   const theme = useSelector((state) => state.theme.theme);
   const user = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
+  const navigate= useNavigate()
 
   // Apply theme globally to <html>
   useEffect(() => {
@@ -134,7 +135,9 @@ const AdminNavbar = () => {
 
         {/* User Profile Section */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gray-100 dark:bg-gray-700">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3"
+          onClick={()=> navigate("/admin/profile")}
+          >
             <img
               src="https://via.placeholder.com/40"
               alt="User"
