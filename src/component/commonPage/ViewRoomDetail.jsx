@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Modal, Carousel, Tag, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Carousel, Tag, Button, message } from "antd";
 import {
   HomeOutlined,
   DollarOutlined,
@@ -7,13 +7,53 @@ import {
   EnvironmentOutlined,
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import BASEURL from "../../utils/BaseUrl";
+import useGetAllRooms from "../../hooks/useGetAllRooms";
 
 const ViewRoomDetail = ({ onClose }) => {
+  useGetAllRooms(); // Fetch all rooms
+
   const [visible, setVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const [hasApplied, setHasApplied] = useState(false); // Track if the user has applied
+
+  const rooms = useSelector((state) => state.room.room);
+  const user = useSelector((state) => state.auth.user);
   const selectedRoom = useSelector((state) => state.room.selectedRoom);
 
-  if (!selectedRoom) return null; // Ensure room data exists
+  // Check if the user has already applied for the selected room
+  useEffect(() => {
+    if (selectedRoom && user) {
+      const hasUserApplied = selectedRoom.allQuery?.includes(user.id);
+      setHasApplied(hasUserApplied);
+    }
+  }, [selectedRoom, user]);
+
+  // Apply for the room
+  const handleApply = async () => {
+    try {
+      await axios.post(
+        `${BASEURL}/api/v2a/apply/${selectedRoom._id}`,
+        {}, // No request body needed
+        {
+          withCredentials: true, // ✅ Sends cookies automatically
+        }
+      );
+
+      // Update the UI to reflect the application
+      setHasApplied(true);
+      message.success("Applied for the room successfully!");
+    } catch (error) {
+      console.error(
+        "Error applying for room:",
+        error.response?.data?.message || error
+      );
+      message.error(error.response?.data?.message || "Failed to apply.");
+    }
+  };
+
+  if (!selectedRoom) return null; // Safeguard if no room is selected
 
   return (
     <Modal
@@ -62,7 +102,10 @@ const ViewRoomDetail = ({ onClose }) => {
           centered
         >
           <img
-            src={selectedRoom.roomImages?.[currentImage] || "https://via.placeholder.com/800x400"}
+            src={
+              selectedRoom.roomImages?.[currentImage] ||
+              "https://via.placeholder.com/800x400"
+            }
             alt="Room"
             className="w-full h-auto rounded-lg"
           />
@@ -71,7 +114,9 @@ const ViewRoomDetail = ({ onClose }) => {
 
       {/* 📜 Room Details */}
       <div className="p-6 space-y-4">
-        <h2 className="text-2xl font-bold text-gray-800">{selectedRoom.houseName}</h2>
+        <h2 className="text-2xl font-bold text-gray-800">
+          {selectedRoom.houseName}
+        </h2>
         <p className="text-gray-600 text-lg">
           {selectedRoom.description || "No description provided."}
         </p>
@@ -99,7 +144,8 @@ const ViewRoomDetail = ({ onClose }) => {
           <div className="flex items-center gap-2">
             <EnvironmentOutlined className="text-red-600 text-xl" />
             <span className="font-medium">
-              Address: <strong>{selectedRoom.address || "Not specified"}</strong>
+              Address:{" "}
+              <strong>{selectedRoom.address || "Not specified"}</strong>
             </span>
           </div>
         </div>
@@ -114,13 +160,27 @@ const ViewRoomDetail = ({ onClose }) => {
           </Tag>
         </div>
 
-        {/* 🔘 Close Button */}
-        <Button
-          onClick={onClose}
-          className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg mt-4 transition-all duration-300"
-        >
-          Close
-        </Button>
+        {/* Apply & Close Buttons */}
+        <div className="mt-4 flex flex-col space-y-2">
+          <Button
+            onClick={handleApply}
+            disabled={hasApplied} // Disable the button if already applied
+            className={`${
+              hasApplied
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-500 hover:bg-green-700"
+            } text-white py-2 rounded-lg transition-all duration-300`}
+          >
+            {hasApplied ? "Already Applied" : "Apply"}
+          </Button>
+
+          <Button
+            onClick={onClose}
+            className="bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg transition-all duration-300"
+          >
+            Close
+          </Button>
+        </div>
       </div>
     </Modal>
   );
