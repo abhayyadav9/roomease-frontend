@@ -1,5 +1,5 @@
-import { Avatar, Button, Popover } from "antd";
-import React, { useState } from "react";
+import { Avatar, Button, notification, Popover } from "antd";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppstoreOutlined,
@@ -16,42 +16,44 @@ import { CiLogout } from "react-icons/ci";
 import axios from "axios";
 import { logout as logoutAction } from "../redux/slice/authSlice";
 import BASEURL from "../utils/BaseUrl";
-
-
-
-
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Badge from "@mui/material/Badge";
+import socketService from "../utils/socket"; // ✅ Import Socket Service
+import { addNotification } from "../redux/slice/notificationSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const owner = useSelector((state) => state.owner.data?.data);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-const items = [
-  {
-    key: "13",
-    icon: <HomeFilled />,
-    label: <Link to="/">Home</Link>,
-  },
-  {
-    key: "sub1",
-    label: <Link to="/all-rooms">Find Room</Link>,
-    icon: <MailOutlined />,
-  },
-  {
-    key: "sub2",
-    label: <Link  to="/all-requirement">All Requiremnt</Link>,
-    icon: <AppstoreOutlined />,
-  },
-  {
-    type: "divider",
-  },
-  {
-    key: "sub4",
-    label: <Link to={`/${user.role}-profile`}>Profle</Link>,
-    icon: <ProfileOutlined />,
-  },
-
-];
+  const notifications = useSelector(
+    (state) => state.notification?.notifications
+  );
+  const items = [
+    {
+      key: "13",
+      icon: <HomeFilled />,
+      label: <Link to="/">Home</Link>,
+    },
+    {
+      key: "sub1",
+      label: <Link to="/all-rooms">Find Room</Link>,
+      icon: <MailOutlined />,
+    },
+    {
+      key: "sub2",
+      label: <Link to="/all-requirement">All Requiremnt</Link>,
+      icon: <AppstoreOutlined />,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "sub4",
+      label: <Link to={`/${user.role}-profile`}>Profle</Link>,
+      icon: <ProfileOutlined />,
+    },
+  ];
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -119,6 +121,61 @@ const items = [
     </div>
   );
 
+  useEffect(() => {
+    if (user) {
+      socketService.connect(user.id);
+
+      // Listen for real-time notifications
+      socketService.listenForNotifications((receiveNotification) => {
+        notification.info({
+          message: "New Notification",
+          description: receiveNotification,
+          placement: "topRight",
+        });
+
+        // Dispatch notification to the Redux store
+        dispatch(addNotification(receiveNotification));
+      });
+
+      return () => {
+        socketService.disconnect();
+      };
+    }
+  }, [user, dispatch]);
+
+  const notificationContent = (
+    <div className="flex flex-col gap-5 bg-gray-200 p-4 rounded-lg">
+      {/* Notifications List */}
+      {notifications.map((notification) => (
+        <div 
+          key={notification._id} 
+          className="flex items-center gap-3 p-3 bg-white rounded shadow-sm"
+        >
+          <span className="font-medium text-blue-600">
+            {notification.userName} {/* Fixed typo here */}
+          </span>
+          <p className="text-gray-600 flex-1">{notification.message}</p>
+          <p className="text-sm text-gray-400">
+            time:-{new Date(notification?.createdAt).toLocaleDateString()}
+          </p>
+        </div>
+      ))}
+  
+      {/* Edit Profile Section */}
+      {/* <div className="mt-4">
+        <Link
+          to="/update-detail"
+          className="flex items-center justify-between w-full px-4 py-2 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded transition-colors"
+        >
+          Edit Profile
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      </div> */}
+    </div>
+  );
+
   return (
     <div>
       <nav className="bg-[#bfb8b8] shadow-md fixed top-0 left-0 w-full z-50">
@@ -163,6 +220,19 @@ const items = [
                   Login
                 </Link>
               )}
+
+              {user.role === "owner" ? (
+                <Popover content={notificationContent} title="notification">
+                  <Button type=" " className=" hover">
+                    <Badge badgeContent={notifications.length} color="error">
+                      <NotificationsIcon className="text-gray-800 dark:text-white cursor-pointer" />
+                    </Badge>
+                  </Button>
+                </Popover>
+              ) : (
+                ""
+              )}
+
               <Link
                 to="/contact"
                 className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"

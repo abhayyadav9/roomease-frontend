@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Carousel, Tag, Button, message } from "antd";
-import {
-  HomeOutlined,
-  DollarOutlined,
-  PhoneOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { Modal, Carousel, Tag, Button, message, notification } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import BASEURL from "../../utils/BaseUrl";
 import useGetAllRooms from "../../hooks/useGetAllRooms";
+import socketService from "../../utils/socket"; // ✅ Import Socket Service
+import { addNotification } from "../../redux/slice/notificationSlice";
 
 const ViewRoomDetail = ({ onClose }) => {
   useGetAllRooms(); // Fetch all rooms
@@ -21,8 +17,9 @@ const ViewRoomDetail = ({ onClose }) => {
   const rooms = useSelector((state) => state.room.room);
   const user = useSelector((state) => state.auth.user);
   const selectedRoom = useSelector((state) => state.room.selectedRoom);
+  const dispatch = useDispatch();
 
-  // Check if the user has already applied for the selected room
+  // ✅ Check if user has already applied
   useEffect(() => {
     if (selectedRoom && user) {
       const hasUserApplied = selectedRoom.allQuery?.includes(user.id);
@@ -30,18 +27,30 @@ const ViewRoomDetail = ({ onClose }) => {
     }
   }, [selectedRoom, user]);
 
-  // Apply for the room
+  // ✅ Apply for the room and notify the owner
   const handleApply = async () => {
     try {
       await axios.post(
         `${BASEURL}/api/v2a/apply/${selectedRoom._id}`,
         {}, // No request body needed
-        {
-          withCredentials: true, // ✅ Sends cookies automatically
-        }
+        { withCredentials: true }
       );
 
-      // Update the UI to reflect the application
+      // Emit notification to the owner
+      socketService.sendNotification({
+        userId: selectedRoom.owner.user, // Owner ID
+        userName: user.name,
+        message: `${user.name} has applied for your room: ${selectedRoom.houseName} `,
+        houseName:selectedRoom.houseName
+      });
+      socketService.listenForNotifications((message) => {
+               notification.info({
+                 message: "New Notification",
+                 description: message,
+                 placement: "topRight",
+               });
+              })
+      // ✅ Update UI
       setHasApplied(true);
       message.success("Applied for the room successfully!");
     } catch (error) {
@@ -124,25 +133,21 @@ const ViewRoomDetail = ({ onClose }) => {
         {/* 🏠 Room Information */}
         <div className="grid grid-cols-2 gap-4 text-gray-700">
           <div className="flex items-center gap-2">
-            <HomeOutlined className="text-blue-600 text-xl" />
             <span className="font-medium">
               Room Type: <strong>{selectedRoom.roomType}</strong>
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <DollarOutlined className="text-green-600 text-xl" />
             <span className="font-medium">
               Price: <strong>${selectedRoom.price}</strong>
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <PhoneOutlined className="text-purple-600 text-xl" />
             <span className="font-medium">
               Contact: <strong>{selectedRoom.contactNumber || "N/A"}</strong>
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <EnvironmentOutlined className="text-red-600 text-xl" />
             <span className="font-medium">
               Address:{" "}
               <strong>{selectedRoom.address || "Not specified"}</strong>
@@ -162,7 +167,9 @@ const ViewRoomDetail = ({ onClose }) => {
 
         {/* Apply & Close Buttons */}
         <div className="mt-4 flex flex-col space-y-2">
-          <Button
+         {
+          user.role !== "owner" && (
+            <Button
             onClick={handleApply}
             disabled={hasApplied} // Disable the button if already applied
             className={`${
@@ -173,6 +180,8 @@ const ViewRoomDetail = ({ onClose }) => {
           >
             {hasApplied ? "Already Applied" : "Apply"}
           </Button>
+          )
+         }
 
           <Button
             onClick={onClose}

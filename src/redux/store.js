@@ -7,6 +7,8 @@ import requirementReducer from "./slice/requirementSlice";
 import themeReducer from "./slice/themeSlice";
 import allOwnerReducer from "./slice/allOwnerSlice"; // Corrected import path
 import allTenantReducer from "./slice/allTenantSlice";
+import notificationSlice from "./slice/notificationSlice";
+
 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Uses localStorage
@@ -24,7 +26,8 @@ const persistConfig = {
     "requirement",
     "theme",
     "allOwner", // Corrected the persisted state name
-    "allTenant"
+    "allTenant",
+    "notificationSlice"
   ], // Only persist these slices
 };
 
@@ -38,6 +41,7 @@ const rootReducer = combineReducers({
   theme: themeReducer,
   allOwner: allOwnerReducer, // Added correct allOwner reducer
   allTenant: allTenantReducer, 
+  notification:notificationSlice
 });
 
 // Create Persisted Reducer

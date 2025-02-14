@@ -29,6 +29,7 @@ import AllRequirements from "./component/tenant/AllRequirements.jsx";
 import UpdateRequirement from "./component/tenant/UpdateRequirement.jsx";
 import AdminHome from "./component/admin/AdminHome.jsx";
 import AdminHomeWrapper from "./component/admin/AdminHome.jsx";
+import Contact from "./component/Contact.jsx";
 
 // Component for role-based redirection
 const AuthRedirector = () => {
@@ -73,6 +74,8 @@ function App() {
           <Route path="/add-room" element={<AddRoom />} />
           <Route path="/edit-room" element={<EditRoom />} />
           <Route path="/view-room-detail" element={<ViewRoomDetail />} />
+          <Route path="/contact" element={<Contact />} />
+
 
           {/* Tenant Routes */}
           <Route path="/tenant-profile" element={<TenantProfile />} />

@@ -4,6 +4,7 @@ import { Form, Input, Button, Upload, message, Select, InputNumber } from "antd"
 import { UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import BASEURL from "../../utils/BaseUrl";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -12,6 +13,7 @@ const AddRoom = () => {
   const [images, setImages] = useState([]);
   const owner = useSelector((state) => state.owner.data?.data); // Get logged-in owner
   const user = useSelector((state) => state.auth.user);
+  const navigate= useNavigate();
 
   const handleImageUpload = ({ fileList }) => {
     setImages(fileList);
@@ -49,6 +51,7 @@ const AddRoom = () => {
       );
 
       message.success("Room added successfully!");
+      navigate("/owner-profile")
       setImages([]);
     } catch (error) {
       console.error("Error adding room:", error);
