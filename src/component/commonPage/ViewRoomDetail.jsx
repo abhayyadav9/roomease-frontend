@@ -39,6 +39,7 @@ const ViewRoomDetail = ({ onClose }) => {
       // Emit notification to the owner
       socketService.sendNotification({
         userId: selectedRoom.owner.user, // Owner ID
+        roomId: selectedRoom?._id, // Room ID
         userName: user.name,
         message: `${user.name} has applied for your room: ${selectedRoom.houseName} `,
         houseName:selectedRoom.houseName

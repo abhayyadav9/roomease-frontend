@@ -1,6 +1,6 @@
 import { Avatar, Button, notification, Popover } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AppstoreOutlined,
   HomeFilled,
@@ -23,12 +23,20 @@ import { addNotification } from "../redux/slice/notificationSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [lastSeen, setLastSeen] = useState(null);
   const owner = useSelector((state) => state.owner.data?.data);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const notifications = useSelector(
-    (state) => state.notification?.notifications
+    (state) => state.notification.notifications
   );
+
+  const count = notifications.filter((notification) => {
+    if (lastSeen === null) return true;
+    return new Date(notification.createdAt).getTime() > lastSeen;
+  }).length;
+
   const items = [
     {
       key: "13",
@@ -143,36 +151,40 @@ const Navbar = () => {
     }
   }, [user, dispatch]);
 
+  const handleClick = () => {
+    setLastSeen(Date.now());
+  };
+
+  // Updated notification content popover
   const notificationContent = (
-    <div className="flex flex-col gap-5 bg-gray-200 p-4 rounded-lg">
-      {/* Notifications List */}
-      {notifications.map((notification) => (
-        <div 
-          key={notification._id} 
-          className="flex items-center gap-3 p-3 bg-white rounded shadow-sm"
-        >
-          <span className="font-medium text-blue-600">
-            {notification.userName} {/* Fixed typo here */}
-          </span>
-          <p className="text-gray-600 flex-1">{notification.message}</p>
-          <p className="text-sm text-gray-400">
-            time:-{new Date(notification?.createdAt).toLocaleDateString()}
-          </p>
-        </div>
-      ))}
-  
-      {/* Edit Profile Section */}
-      {/* <div className="mt-4">
-        <Link
-          to="/update-detail"
-          className="flex items-center justify-between w-full px-4 py-2 text-gray-700 hover:bg-green-100 hover:text-green-900 rounded transition-colors"
-        >
-          Edit Profile
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
-      </div> */}
+    <div className="flex flex-col gap-5 bg-gray-200 rounded-lg">
+      {notifications.length === 0
+        ? "No notifications"
+        : notifications.map((notification) => (
+            <div
+              key={notification._id}
+              className="flex flex-auto items-center gap-3 p-3 bg-white rounded shadow-sm"
+              onClick={() => {
+                navigate(`/room/${notification?.roomId}`);
+                handleClick();
+              }}
+            >
+
+<span className="font-medium text-blue-600">
+                  {notification.userName}{" "}
+                  {/* Corrected from userName to name */}
+                </span>
+                <span className="text-gray-600">
+                  has applied for your room:
+                </span>
+                <p className="text-gray-600 flex-1">{notification.houseName}</p>
+                <div className="text-sm text-gray-400">
+                  Time: {new Date(notification.createdAt).toLocaleDateString()}{" "}
+                  {/* Added space after colon */}
+                </div>
+              {/* Notification content remains the same */}
+            </div>
+          ))}
     </div>
   );
 
@@ -224,8 +236,11 @@ const Navbar = () => {
               {user.role === "owner" ? (
                 <Popover content={notificationContent} title="notification">
                   <Button type=" " className=" hover">
-                    <Badge badgeContent={notifications.length} color="error">
-                      <NotificationsIcon className="text-gray-800 dark:text-white cursor-pointer" />
+                    <Badge badgeContent={count} color="error">
+                      <NotificationsIcon
+                        className="text-gray-800 dark:text-white cursor-pointer"
+                        onClick={handleClick}
+                      />
                     </Badge>
                   </Button>
                 </Popover>

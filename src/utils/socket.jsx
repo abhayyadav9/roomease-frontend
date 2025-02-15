@@ -16,8 +16,8 @@ class SocketService {
     this.socket.emit("sendNotification", data);
   }
 
-  listenForNotifications(callback) {
-    this.socket.on("receiveNotification", callback);
+  listenForNotifications(data) {
+    this.socket.on("receiveNotification", data);
   }
 
   disconnect() {
