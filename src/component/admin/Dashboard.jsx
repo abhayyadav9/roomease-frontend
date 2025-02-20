@@ -41,7 +41,7 @@ export default function Dashboard() {
   const allTenants = useSelector((state) => state.allTenant?.allTenantData);
 
   const requirements = useSelector(
-    (state) => state.requirement.requirements.requirement.requirements
+    (state) => state.requirement.requirements.requirement?.requirements
   ); // ✅ Corrected state access
   const navigate = useNavigate();
 

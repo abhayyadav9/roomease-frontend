@@ -52,8 +52,7 @@ const EditRoom = () => {
         formData.append(key, value);
       });
 
-      await axios.put(
-        `${BASEURL}/api/v2a/edit/room/${selectedRoom._id}`,
+      await axios.put(`${BASEURL}/api/v2a/edit/room/${selectedRoom._id}`,
         formData,
         {
           withCredentials: true,
