@@ -41,7 +41,7 @@ const rootReducer = combineReducers({
   theme: themeReducer,
   allOwner: allOwnerReducer, // Added correct allOwner reducer
   allTenant: allTenantReducer, 
-  notification:notificationSlice
+  notification: notificationSlice,
 });
 
 // Create Persisted Reducer

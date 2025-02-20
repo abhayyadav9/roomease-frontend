@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useGetOwnerDetails from "../../hooks/ownerHooks/useGetOwnerDetails";
 import { LiaUserEditSolid } from "react-icons/lia";
@@ -9,12 +9,40 @@ import axios from "axios";
 import BASEURL from "../../utils/BaseUrl";
 import { logout as logoutAction } from "../../redux/slice/authSlice";
 import { CiLogout } from "react-icons/ci";
+import { setError, setLoading, setOwner } from "../../redux/slice/ownerSlice";
 
 const OwnerProfile = () => {
   const owner = useSelector((state) => state.owner.data?.data);
   const loading = useSelector((state) => state.owner?.loading);
   const error = useSelector((state) => state.owner?.error);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+
+
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchOwnerDetails = async () => {
+      dispatch(setLoading(true)); // Set loading state before fetching
+
+      try {
+        const response = await axios.get(`${BASEURL}/api/v2/owner-details/${user.id}`, {
+          withCredentials: true
+        });
+
+        dispatch(setOwner(response?.data)); // Store owner details in Redux state
+      } catch (err) {
+        console.error("Failed to fetch owner details:", err);
+        dispatch(setError(err.message)); // Store error message in Redux
+      } finally {
+        dispatch(setLoading(false)); // Reset loading state after fetching
+      }
+    };
+
+    fetchOwnerDetails();
+  }, [user?.id, dispatch]);
 
   const handleLogout = async () => {
     try {
@@ -34,7 +62,6 @@ const OwnerProfile = () => {
     }
   };
 
-  useGetOwnerDetails(); // Fetch owner details
 
   if (loading) {
     return (

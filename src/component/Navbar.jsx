@@ -1,4 +1,4 @@
-import { Avatar, Button, notification, Popover } from "antd";
+import { Avatar, Button, notification, Popover, Switch } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -20,6 +20,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
 import socketService from "../utils/socket"; // ✅ Import Socket Service
 import { addNotification } from "../redux/slice/notificationSlice";
+import { toggleTheme } from "../redux/slice/themeSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +32,8 @@ const Navbar = () => {
   const notifications = useSelector(
     (state) => state.notification.notifications
   );
+
+  const theme = useSelector((state) => state.theme.theme);
 
   const count = notifications.filter((notification) => {
     if (lastSeen === null) return true;
@@ -157,37 +160,47 @@ const Navbar = () => {
 
   // Updated notification content popover
   const notificationContent = (
-    <div className="flex flex-col gap-5 bg-gray-200 rounded-lg">
-      {notifications.length === 0
-        ? "No notifications"
-        : notifications.map((notification) => (
-            <div
-              key={notification._id}
-              className="flex flex-auto items-center gap-3 p-3 bg-white rounded shadow-sm"
-              onClick={() => {
-                navigate(`/room/${notification?.roomId}`);
-                handleClick();
-              }}
-            >
-
-<span className="font-medium text-blue-600">
-                  {notification.userName}{" "}
-                  {/* Corrected from userName to name */}
-                </span>
-                <span className="text-gray-600">
-                  has applied for your room:
-                </span>
-                <p className="text-gray-600 flex-1">{notification.houseName}</p>
-                <div className="text-sm text-gray-400">
-                  Time: {new Date(notification.createdAt).toLocaleDateString()}{" "}
-                  {/* Added space after colon */}
-                </div>
-              {/* Notification content remains the same */}
+    <div className="flex flex-col bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl  shadow-lg">
+      {notifications.length === 0 ? (
+        <p className="text-center text-gray-500 font-medium py-2">
+          No New Notifications
+        </p>
+      ) : (
+        notifications.map((notification) => (
+          <div
+            key={notification._id}
+            className="flex flex-col items-center  bg-white rounded-lg shadow-md hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+            onClick={() => {
+              navigate(`/room/${notification?.roomId}`);
+              handleClick();
+            }}
+          >
+            <span className="font-semibold text-blue-700">
+              {notification.userName}
+            </span>
+            <span className="text-gray-600 text-sm">
+              has applied for your room:
+            </span>
+            <p className="text-gray-700 font-medium flex-1 truncate">
+              {notification.houseName}
+            </p>
+            <div className="text-xs text-gray-500 font-light">
+              {new Date(notification.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}{" "}
+              • {new Date().toLocaleTimeString("en-US", { hour12: true })}
             </div>
-          ))}
+          </div>
+        ))
+      )}
+      <div className="text-xs text-gray-400 text-right mt-2">
+        Last updated: February 20, 2025,{" "}
+        {new Date().toLocaleTimeString("en-US", { hour12: true })}
+      </div>
     </div>
   );
-
   return (
     <div>
       <nav className="bg-[#bfb8b8] shadow-md fixed top-0 left-0 w-full z-50">
@@ -254,6 +267,16 @@ const Navbar = () => {
               >
                 Contact
               </Link>
+
+                <div className="flex items-center space-x-6">
+                  <Switch
+                    checked={theme === "dark"}
+                    onChange={() => dispatch(toggleTheme())}
+                    checkedChildren="🌙"
+                    unCheckedChildren="☀️"
+                    className="bg-gray-300 dark:bg-gray-700"
+                  />
+                </div>
             </div>
             <div className="-mr-2 flex md:hidden">
               <button
