@@ -15,7 +15,6 @@ const useGetAllRooms = () => {
           withCredentials: true,
         });
 
-        console.log("API Response:", response.data); // Debugging: Check API response
 
         dispatch(setRoom({ room: response.data?.data || [] })); // Extract rooms from `data`
       } catch (error) {

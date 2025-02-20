@@ -12,8 +12,8 @@ import { CiLogout } from "react-icons/ci";
 
 const OwnerProfile = () => {
   const owner = useSelector((state) => state.owner.data?.data);
-  const loading = useSelector((state) => state.owner.loading);
-  const error = useSelector((state) => state.owner.error);
+  const loading = useSelector((state) => state.owner?.loading);
+  const error = useSelector((state) => state.owner?.error);
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
@@ -86,16 +86,16 @@ const OwnerProfile = () => {
         <div className="flex flex-col sm:flex-row items-center mt-10 sm:items-start sm:space-x-6">
           <img
             className="h-20 w-20 rounded-full border border-gray-300"
-            src={owner.ownerPic || "https://via.placeholder.com/150"}
+            src={owner?.ownerPic || "https://via.placeholder.com/150"}
             alt="Profile"
           />
           <div className="text-center sm:text-left mt-4 sm:mt-0">
             <h1 className="text-2xl font-semibold text-gray-900">
               {owner.name?.toUpperCase()}
             </h1>
-            <p className="text-gray-600">Email: {owner.user?.email}</p>
-            <p className="text-gray-600">Phone: {owner.phone}</p>
-            <p className="text-gray-600">Address:{owner.address}</p>
+            <p className="text-gray-600">Email: {owner?.user?.email}</p>
+            <p className="text-gray-600">Phone: {owner?.phone}</p>
+            <p className="text-gray-600">Address:{owner?.address}</p>
           </div>
         </div>
 

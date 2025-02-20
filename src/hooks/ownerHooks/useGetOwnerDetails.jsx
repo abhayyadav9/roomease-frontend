@@ -21,7 +21,7 @@ const useGetOwnerDetails = () => {
           withCredentials: true
         });
 
-        dispatch(setOwner(response.data)); // Store owner details in Redux state
+        dispatch(setOwner(response?.data)); // Store owner details in Redux state
       } catch (err) {
         console.error("Failed to fetch owner details:", err);
         dispatch(setError(err.message)); // Store error message in Redux
