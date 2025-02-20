@@ -4,9 +4,12 @@ import useGetAllRooms from "../hooks/useGetAllRooms";
 import { setSelectedRoom } from "../redux/slice/roomSlice";
 import ViewRoomDetail from "./commonPage/ViewRoomDetail";
 import { CircularProgress } from "@mui/material";
+import useGetAllTenant from "../hooks/useGetAllTenant";
+
 
 const AllRooms = () => {
   useGetAllRooms(); // Fetch all rooms
+  useGetAllTenant();
 
   const rooms = useSelector((state) => state.room.room);
   const loading = useSelector((state) => state.room.loading);

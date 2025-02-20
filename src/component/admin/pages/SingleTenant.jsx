@@ -1,15 +1,20 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { FaUser, FaEnvelope, FaPhone, FaHome, FaIdBadge, FaTrash } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
-const SingleOwner = () => {
-  const location = useLocation();
-  const { tenant } = location.state;
+const SingleTenant = () => {
+  const { userId } = useParams();
+  const allTenants = useSelector((state) => state.allTenant?.allTenantData);
+  
+  // Corrected find function
+  const tenant = allTenants?.find((tenant) => tenant.user?._id === userId);
 
   const handleDelete = () => {
-    // Implement delete logic here
-    // dispatch(deleteOwner(tenant?._id));
+    // Implement delete logic
   };
+
+  if (!allTenants) return <div>Loading tenants...</div>;
 
   return (
     <div className="max-w-6xl mx-auto mt-16 p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
@@ -47,53 +52,52 @@ const SingleOwner = () => {
           </h1>
           
           <div className="space-y-2">
-            {tenant?.email && (
+            {tenant?.user?.email && (
               <p className="text-lg flex items-center justify-center md:justify-start">
                 <FaEnvelope className="mr-2 text-blue-500 dark:text-blue-400" />
-                {tenant?.email}
+                {tenant.user.email}
               </p>
             )}
-            {tenant?.phone && (
+            {tenant?.user?.phone && (
               <p className="text-lg flex items-center justify-center md:justify-start">
                 <FaPhone className="mr-2 text-blue-500 dark:text-blue-400" />
-                {tenant?.phone}
+                {tenant.user.phone}
               </p>
             )}
           </div>
         </div>
       </div>
 
-      {/* Created Rooms Section */}
+      {/* Requirements Section */}
       <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-10">
         <h2 className="text-2xl font-semibold mb-6 flex items-center">
           <FaHome className="mr-2 text-blue-500 dark:text-blue-400" />
-          Managed Properties
+          Tenant Requirements
         </h2>
 
-        {tenant?.createdRooms?.length > 0 ? (
+        {tenant?.requiredCreate?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tenant?.createdRooms.map((roomId, index) => (
+            {tenant.requiredCreate.map((requirement, index) => (
               <div 
-                key={index}
+                key={requirement._id}
                 className="p-6 rounded-xl transition-shadow duration-300 bg-gray-50 dark:bg-gray-800"
               >
                 <h3 className="text-xl font-medium mb-2">
-                  Property #{index + 1}
+                  Requirement #{index + 1}
                 </h3>
                 <p className="text-sm opacity-75 dark:opacity-90">
-                  Room ID: {roomId}
+                  Location: {requirement.location}
                 </p>
-                <div className="mt-4 flex items-center text-sm text-blue-500 dark:text-blue-400">
-                  <span className="mr-2">📌</span>
-                  Active Listing
-                </div>
+                <p className="text-sm opacity-75 dark:opacity-90">
+                  Budget: ₹{requirement.priceRange}
+                </p>
               </div>
             ))}
           </div>
         ) : (
           <div className="text-center py-12 rounded-xl bg-gray-50 dark:bg-gray-800">
             <p className="opacity-75 dark:opacity-90 text-lg">
-              No properties listed yet
+              No requirements listed
             </p>
           </div>
         )}
@@ -106,7 +110,7 @@ const SingleOwner = () => {
             Member Since
           </h3>
           <p className="opacity-75 dark:opacity-90">
-            {new Date(tenant?.createdAt).toLocaleDateString()}
+            {new Date(tenant?.user?.createdAt).toLocaleDateString()}
           </p>
         </div>
         <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-800">
@@ -114,7 +118,7 @@ const SingleOwner = () => {
             Verification Status
           </h3>
           <p className="opacity-75 dark:opacity-90">
-            {tenant?.user?.isVerified ? "✅ Verified Host" : "⏳ Pending Verification"}
+            {tenant?.user?.isVerified ? "✅ Verified" : "⏳ Pending Verification"}
           </p>
         </div>
       </div>
@@ -122,4 +126,4 @@ const SingleOwner = () => {
   );
 };
 
-export default SingleOwner;
+export default SingleTenant;

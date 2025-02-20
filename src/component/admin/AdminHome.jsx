@@ -52,7 +52,7 @@ const AdminHomeWrapper = () => {
 
         
         <Route path="tenants" element={<AllTTenants />} />
-        <Route path="tenant" element={<SingleTenant />} />
+        <Route path="tenant/:userId" element={<SingleTenant />} />
 
         <Route path="settings" element={<Settings />} />
 

@@ -105,26 +105,36 @@ const SingleRoom = () => {
           </div>
           <div>
             {notifications.length > 0 ? (
-              <Table
-                dataSource={notifications}
-                columns={[
-                  {
-                    title: "Applied for this room",
-                    dataIndex: "userName",
-                    key: "userName",
-                    render: (text, record) => (
-                      <div>
-                        <span>
-                            <Link to={`/room/${record?.roomId}`}>
-                            {record.userName}</Link>
-                        </span>
-                      </div>
-                    ),
-                  },
-                ]}
-                rowKey="_id"
-                pagination={false}
-              />
+              notifications.map((notification) => (
+                <div
+                  key={notification.userId}
+                  className="bg-gray-100 p-4 rounded-lg mb-3"
+                >
+                  <Table
+                    dataSource={notifications}
+                    columns={[
+                      {
+                        title: "Applied for this room",
+                        dataIndex: "userName",
+                        key: "userName",
+                        render: (text, record) => (
+                          <div>
+                            <span>
+                              <Link
+                                to={`/admin/tenant/${notification?.userId}`}
+                              >
+                                {record.userName}
+                              </Link>
+                            </span>
+                          </div>
+                        ),
+                      },
+                    ]}
+                    rowKey="_id"
+                    pagination={false}
+                  />
+                </div>
+              ))
             ) : (
               <p>No notifications</p>
             )}
