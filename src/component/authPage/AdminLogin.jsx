@@ -12,7 +12,7 @@ import { Option } from "antd/es/mentions";
 
 const { Title, Text } = Typography;
 
-const Login = () => {
+const AdminLogin = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,10 +34,8 @@ const Login = () => {
       message.success(`Welcome back, ${response.data.user.name}!`);
       dispatch(setUser(response.data?.user));
 
-      const redirectPath = response.data?.user?.role === 'admin' 
-        ? '/admin/dashboard' 
-        : '/';
-      navigate(redirectPath);
+   
+      navigate("/admin/");
 
     } catch (error) {
       message.error(
@@ -62,7 +60,7 @@ const Login = () => {
             className="h-16 mx-auto mb-4"
           />
           <Title level={2} className="!mb-2 dark:text-white">
-            Welcome to RoomEase
+            Welcome Admin
           </Title>
           <Text type="secondary" className="dark:text-gray-300">
             Streamlining property rentals with smart solutions
@@ -110,8 +108,7 @@ const Login = () => {
               className="w-full rounded-lg"
               suffixIcon={<UserOutlined className="text-gray-400" />}
             >
-              <Option value="owner">Property Owner</Option>
-              <Option value="tenant">Tenant</Option>
+              <Option  value="admin">Administrator</Option>
             </Select>
           </Form.Item>
 
@@ -179,4 +176,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default AdminLogin;

@@ -34,40 +34,43 @@ import TenantHomeWrapper from "./component/tenant/HomeTenant.jsx";
 
 // Admin Components
 import AdminHomeWrapper from "./component/admin/AdminHome.jsx";
+import AdminRegister from "./component/authPage/AdminRegister.jsx";
+import AdminLogin from "./component/authPage/AdminLogin.jsx";
+import Dashboard from "./component/admin/Dashboard.jsx";
 
-// Role-based redirection component
-const AuthRedirector = () => {
-  const user = useSelector((state) => state.auth.user);
-  const navigate = useNavigate();
+// // Role-based redirection component
+// const AuthRedirector = () => {
+//   const user = useSelector((state) => state.auth.user);
+//   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      switch(user?.role) {
-        case "admin":
-          navigate("/admin/");
-          break;
-        case "tenant":
-          navigate("/tenant/home");
-          break;
-        // case "owner":
-        //   navigate("/owner-profile");
-        //   break;
-        // default:
-        //   navigate("/");
-      }
-    }
-  }, []); // Added dependencies
+//   // useEffect(() => {
+//   //   if (user?.role === "tenant") {
+//   //     navigate("/tenant/home");
+//   //     switch(user?.role) {
+//   //       // case "admin":
+//   //       //   // navigate("/admin/home");
+//   //       //   break;
+//   //       case "tenant":
+//   //         navigate("/tenant/home");
+//   //         break;
+//   //       // case "owner":
+//   //       //   navigate("/owner-profile");
+//   //       //   break;
+//   //       // default:
+//   //       //   navigate("/");
+//   //     }
+//   //   }
+//   // }, []); // Added dependencies
 
-  return null;
-};
+//   return null;
+// };
 
 function App() {
   const user = useSelector((state) => state.auth.user);
 
   return (
     <Router>
-      <AuthRedirector />
-      {(!user || !["tenant", "admin"].includes(user?.role)) && <Navbar />}
+      {/* <AuthRedirector /> */}
       
       <Routes>
         {/* Public Routes */}
@@ -94,6 +97,11 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminHomeWrapper />} />
+        
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/register" element={<AdminRegister />} />
+
+
       </Routes>
     </Router>
   );

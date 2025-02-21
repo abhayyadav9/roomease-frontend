@@ -18,7 +18,7 @@ import { Option } from "antd/es/mentions";
 
 const { Title, Text } = Typography;
 
-const Register = () => {
+const AdminRegister = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ const Register = () => {
             className="h-16 mx-auto mb-4"
           />
           <Title level={2} className="!mb-2 dark:text-white">
-            Join RoomEase
+            Only For RoomEase Admin
           </Title>
           <Text type="secondary" className="dark:text-gray-300">
             Create your account to manage properties or find your perfect home
@@ -120,8 +120,7 @@ const Register = () => {
                 placeholder="Select account type"
                 className="w-full rounded-lg"
               >
-                <Option value="owner">Property Owner</Option>
-                <Option value="tenant">Tenant</Option>
+                <Option value="admin">Administrator</Option>
               </Select>
             </Form.Item>
 
@@ -199,4 +198,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default AdminRegister;

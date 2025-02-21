@@ -1,0 +1,33 @@
+/* Custom form transitions */
+.ant-input-affix-wrapper, .ant-select-selector {
+    transition: all 0.3s ease !important;
+  }
+  
+  /* Dark mode overrides */
+  .dark .ant-input, .dark .ant-select-selector {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #fff !important;
+  }
+  
+  .dark .ant-input-prefix {
+    color: #9ca3af !important;
+  }
+
+
+
+  /* Form transitions */
+.ant-input, .ant-select-selector, .ant-btn {
+    transition: all 0.3s ease !important;
+  }
+  
+  /* Dark mode overrides */
+  .dark .ant-input, .dark .ant-select-selector {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #fff !important;
+  }
+  
+  .dark .ant-input-prefix {
+    color: #9ca3af !important;
+  }
