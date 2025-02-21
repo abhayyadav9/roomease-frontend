@@ -1,26 +1,27 @@
-import { Avatar, Button, notification, Popover, Switch } from "antd";
+import { Avatar, Button, notification, Popover, Switch, Menu, Drawer, Badge } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
-  AppstoreOutlined,
   HomeFilled,
-  MailOutlined,
-  ProfileOutlined,
-  SettingOutlined,
+  SearchOutlined,
+  FormOutlined,
   UserOutlined,
+  MenuOutlined,
+  CloseOutlined,
+  BellOutlined,
+  MailOutlined,
+  ContactsOutlined,
+  LogoutOutlined
 } from "@ant-design/icons";
-import { Menu, Drawer } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { LiaUserEditSolid } from "react-icons/lia";
-import { CiLogout } from "react-icons/ci";
 import axios from "axios";
 import { logout as logoutAction } from "../redux/slice/authSlice";
 import BASEURL from "../utils/BaseUrl";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import Badge from "@mui/material/Badge";
-import socketService from "../utils/socket"; // ✅ Import Socket Service
+import socketService from "../utils/socket";
 import { addNotification } from "../redux/slice/notificationSlice";
 import { toggleTheme } from "../redux/slice/themeSlice";
+import { motion } from "framer-motion";
+import "./Navbar"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,42 +30,44 @@ const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const notifications = useSelector(
-    (state) => state.notification.notifications
-  );
-
+  const notifications = useSelector((state) => state.notification.notifications);
   const theme = useSelector((state) => state.theme.theme);
 
-  const count = notifications.filter((notification) => {
-    if (lastSeen === null) return true;
-    return new Date(notification.createdAt).getTime() > lastSeen;
-  }).length;
+  const count = notifications.filter(notification => 
+    lastSeen === null || new Date(notification.createdAt) > lastSeen
+  ).length;
 
-  const items = [
+  const menuItems = [
     {
-      key: "13",
-      icon: <HomeFilled />,
-      label: <Link to="/">Home</Link>,
+      key: "home",
+      label: <NavLink to="/">Home</NavLink>,
+      icon: <HomeFilled className="text-lg" />
     },
     {
-      key: "sub1",
-      label: <Link to="/all-rooms">Find Room</Link>,
-      icon: <MailOutlined />,
+      key: "find-room",
+      label: <NavLink to="/all-rooms">Find Room</NavLink>,
+      icon: <SearchOutlined className="text-lg" />
     },
     {
-      key: "sub2",
-      label: <Link to="/all-requirement">All Requiremnt</Link>,
-      icon: <AppstoreOutlined />,
+      key: "requirements",
+      label: <NavLink to="/all-requirement">Requirements</NavLink>,
+      icon: <FormOutlined className="text-lg" />
     },
     {
-      type: "divider",
+      key: "profile",
+      label: <NavLink to={`/${user?.role}-profile`}>Profile</NavLink>,
+      icon: <UserOutlined className="text-lg" />
     },
     {
-      key: "sub4",
-      label: <Link to={`/${user.role}-profile`}>Profle</Link>,
-      icon: <ProfileOutlined />,
-    },
+      key: "contact",
+      label: <NavLink to="/contact">Contact</NavLink>,
+      icon: <ContactsOutlined className="text-lg" />
+    }
   ];
+
+
+
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -88,49 +91,6 @@ const Navbar = () => {
     }
   };
 
-  const content = (
-    <div className="flex flex-col gap-5 bg-gray-200">
-      {/* Profile Section */}
-      <Link to="/owner-profile">
-        <div className="flex items-center gap-4">
-          <Avatar
-            src={owner?.ownerPic || "path_to_default_avatar.jpg"}
-            size={35}
-            icon={<UserOutlined />}
-          />
-          <span className="text-lg font-medium">
-            <span>Hey, </span>
-            {user?.name || "Guest"}
-          </span>
-        </div>
-      </Link>
-
-      {/* Menu Options */}
-      <div className="flex flex-col gap-2">
-        {/* Edit Profile */}
-        <Link
-          to="/update-detail"
-          className="flex items-center justify-between w-full px-2 py-1 hover:text-green-900 rounded"
-        >
-          <div className="flex items-center gap-3">
-            <LiaUserEditSolid size={24} />
-            <span className="text-md">Edit</span>
-          </div>
-        </Link>
-
-        {/* Logout */}
-        <div
-          onClick={handleLogout}
-          className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
-        >
-          <div className="flex items-center gap-3">
-            <CiLogout size={24} />
-            <span className="text-md">Logout</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   useEffect(() => {
     if (user) {
@@ -158,167 +118,236 @@ const Navbar = () => {
     setLastSeen(Date.now());
   };
 
-  // Updated notification content popover
+
+  const profileContent = (
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col gap-4 p-4 w-64"
+    >
+      <div className="flex items-center gap-4 border-b pb-4">
+        <Avatar
+          src={owner?.ownerPic}
+          size={48}
+          icon={<UserOutlined />}
+          className="border-2 border-blue-500 hover:scale-105 transition-transform"
+        />
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+            {user?.name || "Guest"}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-300">{user?.email}</p>
+        </div>
+      </div>
+      
+      <NavLink 
+        to="/update-detail" 
+        className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+      >
+        <UserOutlined className="text-lg text-blue-500" />
+        <span className="text-gray-700 dark:text-gray-200">Edit Profile</span>
+      </NavLink>
+      
+      <button 
+        onClick={handleLogout}
+        className="flex items-center gap-3 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-red-600 dark:text-red-400"
+      >
+        <LogoutOutlined className="text-lg" />
+        <span>Logout</span>
+      </button>
+    </motion.div>
+  );
+
   const notificationContent = (
-    <div className="flex flex-col bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl  shadow-lg">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col gap-3 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4"
+    >
       {notifications.length === 0 ? (
-        <p className="text-center text-gray-500 font-medium py-2">
+        <p className="text-center text-gray-500 dark:text-gray-400 py-2">
           No New Notifications
         </p>
       ) : (
         notifications.map((notification) => (
-          <div
+          <motion.div
             key={notification._id}
-            className="flex flex-col items-center  bg-white rounded-lg shadow-md hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+            whileHover={{ scale: 1.02 }}
+            className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer"
             onClick={() => {
               navigate(`/room/${notification?.roomId}`);
               handleClick();
             }}
           >
-            <span className="font-semibold text-blue-700">
-              {notification.userName}
-            </span>
-            <span className="text-gray-600 text-sm">
-              has applied for your room:
-            </span>
-            <p className="text-gray-700 font-medium flex-1 truncate">
-              {notification.houseName}
-            </p>
-            <div className="text-xs text-gray-500 font-light">
+            <div className="flex items-center gap-3">
+              <Avatar size="small" src={notification.userAvatar} />
+              <div>
+                <p className="font-medium text-gray-800 dark:text-white">
+                  {notification.userName}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  Applied for {notification.houseName}
+                </p>
+              </div>
+            </div>
+            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
               {new Date(notification.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
+                month: "short",
                 day: "numeric",
               })}{" "}
-              • {new Date().toLocaleTimeString("en-US", { hour12: true })}
+              • {new Date(notification.createdAt).toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+              })}
             </div>
-          </div>
+          </motion.div>
         ))
       )}
-      <div className="text-xs text-gray-400 text-right mt-2">
-        Last updated: February 20, 2025,{" "}
-        {new Date().toLocaleTimeString("en-US", { hour12: true })}
-      </div>
-    </div>
+    </motion.div>
   );
+
   return (
-    <div>
-      <nav className="bg-[#bfb8b8] shadow-md fixed top-0 left-0 w-full z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/" className="text-2xl font-bold text-gray-800">
-                RoomEase
-              </Link>
-            </div>
-            <div className="hidden md:flex md:items-center md:space-x-4">
-              <Link
-                to="/"
-                className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Home
-              </Link>
-              <Link
-                to="/all-rooms"
-                className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Find Room
-              </Link>
-              <Link
-                to="/all-requirement"
-                className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Find Requiremnt
-              </Link>
+    <nav className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 shadow-lg fixed top-0 left-0 w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <NavLink 
+            to="/" 
+            className="flex items-center gap-2 text-xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"
+          >
+            <img src="/logo.png" alt="Logo" className="h-8 w-8" />
+            RoomEase
+          </NavLink>
 
-              {user ? (
-                <Popover content={content} title="Profile">
-                  <Button type=" " className=" hover">
-                    Profile
-                  </Button>
-                </Popover>
-              ) : (
-                <Link
-                  to="/login"
-                  className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-6">
+            {menuItems.map((item) => (
+              <NavLink
+                key={item.key}
+                to={item.key === 'home' ? '/' : `/${item.key}`}
+                className={({ isActive }) => 
+                  `flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                    isActive 
+                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`
+                }
+              >
+                {item.icon}
+                {item.label}
+              </NavLink>
+            ))}
+
+            {/* Notifications */}
+            {user?.role === "owner" && (
+              <Popover content={notificationContent} trigger="click">
+                <Button
+                  type="text"
+                  className="flex items-center gap-1 h-10 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                 >
-                  Login
-                </Link>
-              )}
+                  <Badge count={count} color="#2563eb">
+                    <BellOutlined className="text-lg text-gray-700 dark:text-gray-300" />
+                  </Badge>
+                </Button>
+              </Popover>
+            )}
 
-              {user.role === "owner" ? (
-                <Popover content={notificationContent} title="notification">
-                  <Button type=" " className=" hover">
-                    <Badge badgeContent={count} color="error">
-                      <NotificationsIcon
-                        className="text-gray-800 dark:text-white cursor-pointer"
-                        onClick={handleClick}
-                      />
-                    </Badge>
-                  </Button>
-                </Popover>
-              ) : (
-                ""
-              )}
+            {/* Theme Toggle */}
+            <Switch
+              checked={theme === "dark"}
+              onChange={() => dispatch(toggleTheme())}
+              checkedChildren="🌙"
+              unCheckedChildren="☀️"
+              className="bg-gray-200 dark:bg-gray-600"
+            />
 
-              <Link
-                to="/contact"
-                className="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Contact
-              </Link>
-
-                <div className="flex items-center space-x-6">
-                  <Switch
-                    checked={theme === "dark"}
-                    onChange={() => dispatch(toggleTheme())}
-                    checkedChildren="🌙"
-                    unCheckedChildren="☀️"
-                    className="bg-gray-300 dark:bg-gray-700"
-                  />
-                </div>
-            </div>
-            <div className="-mr-2 flex md:hidden">
-              <button
-                onClick={toggleSidebar}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:text-blue-500 focus:outline-none"
-              >
-                <svg
-                  className="h-6 w-6"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 24 24"
+            {/* Profile */}
+            {user ? (
+              <Popover content={profileContent} trigger="click">
+                <Button 
+                  type="text" 
+                  className="flex items-center gap-2 h-10 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
+                  <Avatar 
+                    src={owner?.ownerPic} 
+                    icon={<UserOutlined />} 
+                    className="border-2 border-blue-500"
                   />
-                </svg>
-              </button>
-            </div>
+                </Button>
+              </Popover>
+            ) : (
+              <NavLink
+                to="/login"
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+              >
+                Login
+              </NavLink>
+            )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={toggleSidebar}
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            {isOpen ? (
+              <CloseOutlined className="text-xl text-gray-700 dark:text-gray-300" />
+            ) : (
+              <MenuOutlined className="text-xl text-gray-700 dark:text-gray-300" />
+            )}
+          </button>
         </div>
-      </nav>
+      </div>
+
+      {/* Mobile Drawer */}
       <Drawer
-        title="Menu"
-        placement="left"
-        closable={true}
+        title={
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="Logo" className="h-6 w-6" />
+            <span className="text-xl font-bold text-blue-600 dark:text-blue-400">RoomEase</span>
+          </div>
+        }
+        placement="right"
+        closable={false}
         onClose={toggleSidebar}
-        visible={isOpen}
-        width="50%" // Set the width of the Drawer to 50% of the screen width
+        open={isOpen}
+        width="280px"
+        className="dark:bg-gray-800"
       >
         <Menu
-          onClick={toggleSidebar}
-          style={{ width: "100%" }}
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
           mode="inline"
-          items={items}
+          selectedKeys={[]}
+          className="border-0 dark:bg-gray-800"
+          items={menuItems.map(item => ({
+            key: item.key,
+            icon: item.icon,
+            label: item.label,
+            className: "hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg my-1"
+          }))}
         />
+        
+        <div className="mt-4 px-4 border-t pt-4 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-gray-700 dark:text-gray-300">Dark Mode</span>
+            <Switch
+              checked={theme === "dark"}
+              onChange={() => dispatch(toggleTheme())}
+              className="bg-gray-200 dark:bg-gray-600"
+            />
+          </div>
+          
+          {user && (
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-red-600 dark:text-red-400"
+            >
+              <LogoutOutlined className="text-lg" />
+              <span>Logout</span>
+            </button>
+          )}
+        </div>
       </Drawer>
-    </div>
+    </nav>
   );
 };
 

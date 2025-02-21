@@ -91,7 +91,7 @@ const TenantProfile = () => {
             icon={<EditOutlined />}
             size="large"
             className="w-full sm:w-auto"
-            onClick={() => navigate("/update/tenant/detail")}
+            onClick={() => navigate("/tenant/update-detail")}
           >
             Edit Profile
           </Button>

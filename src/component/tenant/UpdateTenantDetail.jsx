@@ -59,7 +59,7 @@ const UpdateTenantDetail = () => {
 
       message.success("Tenant updated successfully!");
       dispatch(setTenant(res.data))
-      navigate("/tenant-profile");
+      navigate("/tenant/profile");
     } catch (error) {
       console.error("Error updating Tenant:", error);
       message.error(error.response?.data?.message || "Failed to update Tenant");
@@ -75,7 +75,7 @@ const UpdateTenantDetail = () => {
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">
             {/* ✅ Tenant Image */}
-            <Avatar size={64} src={tenant.tenantPic} alt="Tenant Profile" />
+            <Avatar size={64} src={tenant?.tenantPic} alt="Tenant Profile" />
             <Title level={3} className="text-blue-600">
               ✏️ Update Tenant - {tenant.name}
             </Title>
@@ -84,7 +84,7 @@ const UpdateTenantDetail = () => {
             type="text"
             icon={<CloseOutlined />}
             className="text-gray-500 hover:text-red-500"
-            onClick={() => navigate("/tenant-profile")}
+            onClick={() => navigate("/tenant/profile")}
           />
         </div>
 
@@ -137,7 +137,7 @@ const UpdateTenantDetail = () => {
               {loading ? "Updating..." : "Update Tenant"}
             </Button>
             <Button
-              onClick={() => navigate("/tenant-profile")}
+              onClick={() => navigate("/tenant/profile")}
               className="bg-gray-500 text-white hover:bg-gray-600 w-full"
             >
               Cancel

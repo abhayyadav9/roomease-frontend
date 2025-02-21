@@ -42,7 +42,7 @@ const AdminHome = () => {
 const AdminHomeWrapper = () => {
   return (
     <Routes>
-      <Route path="/" element={<AdminHome />}>
+      <Route path="/home" element={<AdminHome />}>
         {/* <Route index element={<Dashboard />} /> */}
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="transaction" element={<Transaction />} />
