@@ -220,6 +220,7 @@ const AdminNavbar = ({ children }) => {
             )}
           </div>
         </div>
+        
       </motion.div>
 
       {/* Main Content Area */}
