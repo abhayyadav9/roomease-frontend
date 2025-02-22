@@ -36,7 +36,7 @@ const AddRequirement = () => {
 
       message.success("Requirement added successfully!");
       form.resetFields();
-      navigate("/tenant-profile");
+      navigate("/tenant/tenant-profile");
     } catch (error) {
       console.error("Error adding requirement:", error);
       message.error(error.response?.data?.message || "Failed to add requirement");
@@ -149,7 +149,7 @@ const AddRequirement = () => {
               </Button>
               <Button
                 type="default"
-                onClick={() => navigate("/tenant-profile")}
+                onClick={() => navigate("/tenant/profile")}
                 className="w-full lg:w-auto mt-2 lg:mt-0"
               >
                 Cancel

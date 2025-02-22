@@ -18,7 +18,7 @@ import UpdatePassword from "./component/authPage/resetPassword/UpdatePassword.js
 // Common Components
 import Home from "./component/Home.jsx";
 import Navbar from "./component/Navbar.jsx";
-import Contact from "./component/Contact.jsx";
+import Contact, { Footer } from "./component/Contact.jsx";
 import ViewRoomDetail from "./component/commonPage/ViewRoomDetail.jsx";
 import SingleRoom from "./component/SignleRoom.jsx";
 
@@ -37,41 +37,33 @@ import AdminHomeWrapper from "./component/admin/AdminHome.jsx";
 import AdminRegister from "./component/authPage/AdminRegister.jsx";
 import AdminLogin from "./component/authPage/AdminLogin.jsx";
 import Dashboard from "./component/admin/Dashboard.jsx";
+import AllRequirements from "./component/tenant/AllRequirements.jsx";
 
 // // Role-based redirection component
-// const AuthRedirector = () => {
-//   const user = useSelector((state) => state.auth.user);
-//   const navigate = useNavigate();
+const AuthRedirector = () => {
+  const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
 
-//   // useEffect(() => {
-//   //   if (user?.role === "tenant") {
-//   //     navigate("/tenant/home");
-//   //     switch(user?.role) {
-//   //       // case "admin":
-//   //       //   // navigate("/admin/home");
-//   //       //   break;
-//   //       case "tenant":
-//   //         navigate("/tenant/home");
-//   //         break;
-//   //       // case "owner":
-//   //       //   navigate("/owner-profile");
-//   //       //   break;
-//   //       // default:
-//   //       //   navigate("/");
-//   //     }
-//   //   }
-//   // }, []); // Added dependencies
+  useEffect(() => {
+    if (user?.role === "tenant") {
+      navigate("/tenant/home");
+    }else if (!user?.role === "tenant"){
+      navigate("/login");
+    }
+    
+  }, []); // Added dependencies
 
-//   return null;
-// };
+  return null;
+};
 
 function App() {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <Router>
-      {/* <AuthRedirector /> */}
-      
+    <div>
+       <Router>
+      <AuthRedirector />
+
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -91,19 +83,21 @@ function App() {
         <Route path="/add-room" element={<AddRoom />} />
         <Route path="/edit-room/:roomId" element={<EditRoom />} />
         <Route path="/view-room-detail/:roomId" element={<ViewRoomDetail />} />
+        <Route path="/all-requirement" element={<AllRequirements />} />
 
         {/* Tenant Routes */}
         <Route path="/tenant/*" element={<TenantHomeWrapper />} />
 
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminHomeWrapper />} />
-        
+
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/register" element={<AdminRegister />} />
-
-
       </Routes>
     </Router>
+    <Footer/>
+    </div>
+   
   );
 }
 

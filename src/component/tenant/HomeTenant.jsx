@@ -15,7 +15,8 @@ const TenantHome = () => {
   useGetAllRequirement();
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br mt-16 from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
+    <div>
+        <div className="min-h-screen flex bg-gradient-to-br mt-16 from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
       {/* Animated Navbar */}
       <div className="fixed left-0 top-0 h-full z-10 animate-slide-in">
         <TenantNavbar />
@@ -32,7 +33,11 @@ const TenantHome = () => {
           </div>
         </div>
       </main>
+    
     </div>
+    {/* <Footer/> */}
+    </div>
+  
   );
 };
 
@@ -83,6 +88,7 @@ const TenantHomeWrapper = () => {
             </div>
           }
         />
+      <Route path="contact" element={<Contact />} />
       </Route>
     </Routes>
   );
@@ -92,6 +98,7 @@ export default TenantHomeWrapper;
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import Contact, { Footer } from "../Contact";
 
 const RoomEaseLanding = () => {
   const [searchQuery, setSearchQuery] = useState("");

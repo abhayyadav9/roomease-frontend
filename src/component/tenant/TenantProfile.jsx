@@ -100,7 +100,7 @@ const TenantProfile = () => {
             icon={<PlusOutlined />}
             size="large"
             className="w-full sm:w-auto"
-            onClick={() => navigate("/add-requirement")}
+            onClick={() => navigate("/tenant/add-requirement")}
           >
             Add New Requirement
           </Button>

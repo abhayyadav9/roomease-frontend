@@ -87,7 +87,7 @@ const TenantNavbar = () => {
     {
       key: "contact",
       label: (
-        <NavLink to="/contact" className="text-gray-700">
+        <NavLink to="/tenant/contact" className="text-gray-700">
           Contact
         </NavLink>
       ),
