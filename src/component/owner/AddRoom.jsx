@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Input, Button, Upload, message, Select, InputNumber } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
@@ -14,6 +14,13 @@ const AddRoom = () => {
   const owner = useSelector((state) => state.owner.data?.data); // Get logged-in owner
   const user = useSelector((state) => state.auth.user);
   const navigate= useNavigate();
+
+  useEffect(() => {
+    if (user?.role != "owner") {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+  
 
   const handleImageUpload = ({ fileList }) => {
     setImages(fileList);

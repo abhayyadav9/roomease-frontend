@@ -5,18 +5,25 @@ import useGetTenantDetails from "../hooks/tenantHooks/usegetTenantDetails";
 import useGetAllRequirement from "../hooks/useGetAllRequirement";
 import { useSelector } from "react-redux";
 import Navbar from "./Navbar";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate()
   // useGetOwnerDetails();
   //  useGetAllRooms(); // Call the hook
   useGetTenantDetails();
   useGetAllRequirement();
   const user = useSelector((state) => state.auth.user);
 
+  useEffect(() => {
+    if (user?.role ==="tenant") {
+      navigate("/tenant/home");
+    }
+  }, [user, navigate]);
+
   return (
     <div>
-      {(!user || !["tenant", "admin"].includes(user?.role)) && <Navbar />}
-
       <div
         className="relative h-screen bg-cover bg-center"
         style={{

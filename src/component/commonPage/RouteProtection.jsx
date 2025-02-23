@@ -4,9 +4,11 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 const RoleProtectedRoute = ({ allowedRoles }) => {
-  const { user, loading } = useSelector((state) => state.auth?.user);
+  // Correctly destructure user and loading from state.auth
+  const { user, loading } = useSelector((state) => state.auth);
   const location = useLocation();
 
+  // Show spinner while loading
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -15,42 +17,18 @@ const RoleProtectedRoute = ({ allowedRoles }) => {
     );
   }
 
+  // Redirect to login if no user is authenticated
   if (!user) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  // Uncomment below for role-based route protection
-  // if (allowedRoles && !allowedRoles.includes(user.role)) {
-  //   return <Navigate to="/unauthorized" replace />;
-  // }
+  // If allowedRoles are provided, check if the user's role is permitted
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
 
+  // Render the child routes if the user is authenticated (and authorized, if roles are checked)
   return <Outlet />;
 };
 
 export default RoleProtectedRoute;
-
-
-
-// import { useEffect } from "react";
-// import { useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
-
-// const ProtectedUser = ({ children }) => {
-//     const { user } = useSelector((store) => store.auth);
-//     const navigate = useNavigate();
-
-//     useEffect(() => {
-//         if (user === null) {
-//             navigate('/login');
-//         }
-//     }, [user, navigate]); // Include `user` and `navigate` in the dependency array
-
-//     // Render nothing if the user is not authenticated yet to avoid flashing content
-//     if (user === null) {
-//         return null; 
-//     }
-
-//     return <>{children}</>;
-// };
-
-// export default ProtectedUser;

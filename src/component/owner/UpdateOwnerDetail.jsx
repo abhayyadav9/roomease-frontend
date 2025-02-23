@@ -15,6 +15,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BASEURL from "../../utils/BaseUrl";
+import { useEffect } from "react";
 
 const { Title, Text } = Typography;
 
@@ -22,7 +23,16 @@ const UpdateOwnerDetail = () => {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const owner = useSelector((state) => state.owner?.data?.data);
+  const user = useSelector(state=> state.auth?.user)
   const navigate = useNavigate();
+
+
+
+  useEffect(() => {
+    if (user?.role !="owner") {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   if (!owner) {
     return <p className="text-center text-red-500">No owner selected.</p>;
@@ -94,7 +104,9 @@ const UpdateOwnerDetail = () => {
           <Form.Item
             label={<Text strong>👤 Owner Name</Text>}
             name="name"
-            rules={[{ required: true, message: "Please enter the owner's name" }]}
+            rules={[
+              { required: true, message: "Please enter the owner's name" },
+            ]}
           >
             <Input placeholder="Enter owner's name" />
           </Form.Item>
@@ -108,7 +120,12 @@ const UpdateOwnerDetail = () => {
           <Form.Item
             label={<Text strong>📞 Phone</Text>}
             name="phone"
-            rules={[{ required: true, message: "Please enter the owner's phone number" }]}
+            rules={[
+              {
+                required: true,
+                message: "Please enter the owner's phone number",
+              },
+            ]}
           >
             <Input placeholder="Enter phone number" />
           </Form.Item>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Select, Typography, message, Divider } from "antd";
 import { 
   UserOutlined, 
@@ -15,6 +15,7 @@ import BASEURL from "../../utils/BaseUrl";
 import { motion } from "framer-motion";
 import "./Auth.css"
 import { Option } from "antd/es/mentions";
+import { useSelector } from "react-redux";
 
 const { Title, Text } = Typography;
 
@@ -22,6 +23,15 @@ const Register = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.auth?.user);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+  
+
 
   const onFinish = async (values) => {
     setLoading(true);

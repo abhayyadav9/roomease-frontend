@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useGetOwnerDetails from "../../hooks/ownerHooks/useGetOwnerDetails";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { MdAddCircleOutline } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OwnerCreatedRoom from "./OwnerCreatedRoom";
 import axios from "axios";
 import BASEURL from "../../utils/BaseUrl";
@@ -12,14 +12,19 @@ import { CiLogout } from "react-icons/ci";
 import { setError, setLoading, setOwner } from "../../redux/slice/ownerSlice";
 
 const OwnerProfile = () => {
-  const owner = useSelector((state) => state.owner.data?.data);
+  const owner = useSelector((state) => state.owner.data.data);
   const loading = useSelector((state) => state.owner?.loading);
   const error = useSelector((state) => state.owner?.error);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const navigate= useNavigate()
 
 
-
+  useEffect(() => {
+    if (user?.role !="owner") {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     if (!user?.id) return;

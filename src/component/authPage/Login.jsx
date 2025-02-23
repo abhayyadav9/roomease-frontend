@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Select, Typography, message, Divider } from "antd";
 import { MailOutlined, LockOutlined, UserOutlined, GoogleOutlined, FacebookOutlined, GithubOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../redux/slice/authSlice";
 import BASEURL from "../../utils/BaseUrl";
 import { motion } from "framer-motion";
@@ -17,6 +17,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.auth?.user);
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -47,6 +48,13 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+    useEffect(() => {
+      if (user) {
+        navigate("/");
+      }
+    }, [user, navigate]);
+    
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">

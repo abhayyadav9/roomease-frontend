@@ -38,6 +38,7 @@ import AdminRegister from "./component/authPage/AdminRegister.jsx";
 import AdminLogin from "./component/authPage/AdminLogin.jsx";
 import Dashboard from "./component/admin/Dashboard.jsx";
 import AllRequirements from "./component/tenant/AllRequirements.jsx";
+import RoleProtectedRoute from "./component/commonPage/RouteProtection.jsx";
 
 // // Role-based redirection component
 const AuthRedirector = () => {
@@ -47,10 +48,9 @@ const AuthRedirector = () => {
   useEffect(() => {
     if (user?.role === "tenant") {
       navigate("/tenant/home");
-    }else if (!user?.role === "tenant"){
+    } else if (!user?.role === "tenant") {
       navigate("/login");
     }
-    
   }, []); // Added dependencies
 
   return null;
@@ -61,43 +61,52 @@ function App() {
 
   return (
     <div>
-       <Router>
-      <AuthRedirector />
+      <Router>
+        {(!user || !["tenant", "admin"].includes(user?.role)) && <Navbar />}
+        <AuthRedirector />
 
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/acc-verify" element={<AccVerify />} />
-        <Route path="/send-verification" element={<SendVerification />} />
-        <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/update-password" element={<UpdatePassword />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/room/:roomId" element={<SingleRoom />} />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/acc-verify" element={<AccVerify />} />
+          <Route path="/send-verification" element={<SendVerification />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/room/:roomId" element={<SingleRoom />} />
 
-        {/* Owner Routes */}
-        <Route path="/owner-profile" element={<OwnerProfile />} />
-        <Route path="/update-detail" element={<UpdateOwnerDetail />} />
-        <Route path="/all-rooms" element={<AllRooms />} />
-        <Route path="/add-room" element={<AddRoom />} />
-        <Route path="/edit-room/:roomId" element={<EditRoom />} />
-        <Route path="/view-room-detail/:roomId" element={<ViewRoomDetail />} />
-        <Route path="/all-requirement" element={<AllRequirements />} />
+          {/* Owner Routes */}
+          <Route path="/owner-profile" element={<OwnerProfile />} />
+          <Route path="/update-detail" element={<UpdateOwnerDetail />} />
+          <Route path="/all-rooms" element={<AllRooms />} />
+          <Route path="/add-room" element={<AddRoom />} />
+          <Route path="/edit-room/:roomId" element={<EditRoom />} />
+          <Route
+            path="/view-room-detail/:roomId"
+            element={<ViewRoomDetail />}
+          />
+          <Route path="/all-requirement" element={<AllRequirements />} />
 
-        {/* Tenant Routes */}
-        <Route path="/tenant/*" element={<TenantHomeWrapper />} />
+          {/* Tenant Routes */}
+          {/* Protected Tenant Routes */}
+          <Route element={<RoleProtectedRoute allowedRoles={["tenant"]} />}>
+            <Route path="/tenant/*" element={<TenantHomeWrapper />} />
+          </Route>
 
-        {/* Admin Routes */}
-        <Route path="/admin/*" element={<AdminHomeWrapper />} />
+          {/* Admin Routes */}
+          <Route path="/admin/*" element={<AdminHomeWrapper />} />
 
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/register" element={<AdminRegister />} />
-      </Routes>
-    </Router>
-    <Footer/>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/register" element={<AdminRegister />} />
+        </Routes>
+      </Router>
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-1">{/* Your page content */}</main>
+        <Footer />
+      </div>
     </div>
-   
   );
 }
 

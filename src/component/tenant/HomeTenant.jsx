@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useGetTenantDetails from "../../hooks/tenantHooks/usegetTenantDetails";
 import useGetAllRequirement from "../../hooks/useGetAllRequirement";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import TenantNavbar from "./TenantNavbar";
 import TenantProfile from "./TenantProfile";
 import UpdateTenantDetail from "./UpdateTenantDetail";
@@ -11,33 +11,43 @@ import AllRequirements from "./AllRequirements";
 import AllRooms from "../AllRooms";
 
 const TenantHome = () => {
+  const navigate = useNavigate();
+  const user = useSelector(state=>state.auth?.user)
+
+  // Authentication check
+  // useEffect(() => {
+    
+  //   if (!user?.role ==="tenant") {
+  //     navigate("/login", { replace: true });
+  //   }
+  // }, [navigate]);
+
+  // Protected hooks (only run if authenticated)
   useGetTenantDetails();
   useGetAllRequirement();
 
   return (
-    <div>
-        <div className="min-h-screen flex bg-gradient-to-br mt-16 from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
-      {/* Animated Navbar */}
-      <div className="fixed left-0 top-0 h-full z-10 animate-slide-in">
-        <TenantNavbar />
+    <div className="min-h-screen flex flex-col">
+      {/* Main Content Area */}
+      <div className="flex-1 flex bg-gradient-to-br mt-16 from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
+        {/* Animated Navbar */}
+        <div className="fixed left-0 top-0 h-full z-10 animate-slide-in">
+          <TenantNavbar />
+        </div>
+
+        {/* Protected Content */}
+        <main className="flex-grow ml-5 p-2 transition-all duration-300">
+          <div className="max-w-7xl mx-auto space-y-8">
+            {/* Content Container with Glassmorphism Effect */}
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-xl transition-all hover:shadow-2xl">
+              <Outlet />
+            </div>
+          </div>
+        </main>
       </div>
 
-      {/* Main Content Area */}
-      <main className="flex-grow ml-5 p-2 transition-all duration-300">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* Animated Header */}
-
-          {/* Content Container with Glassmorphism Effect */}
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-xl  transition-all  hover:shadow-2xl">
-            <Outlet />
-          </div>
-        </div>
-      </main>
-    
+      {/* Optional: Add your footer component here */}
     </div>
-    {/* <Footer/> */}
-    </div>
-  
   );
 };
 
@@ -88,7 +98,7 @@ const TenantHomeWrapper = () => {
             </div>
           }
         />
-      <Route path="contact" element={<Contact />} />
+        <Route path="contact" element={<Contact />} />
       </Route>
     </Routes>
   );
@@ -99,6 +109,7 @@ export default TenantHomeWrapper;
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Contact, { Footer } from "../Contact";
+import { useSelector } from "react-redux";
 
 const RoomEaseLanding = () => {
   const [searchQuery, setSearchQuery] = useState("");

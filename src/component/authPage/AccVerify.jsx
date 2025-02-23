@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, Input, Button, Typography, message, Spin } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import BASEURL from "../../utils/BaseUrl";
+import { useSelector } from "react-redux";
 
 const { Title, Text } = Typography;
 
@@ -11,6 +12,15 @@ const AccVerify = () => {
   const [loading, setLoading] = useState(false);
   const [resendDisabled, setResendDisabled] = useState(false);
 const navigate= useNavigate()
+
+const user = useSelector((state) => state.auth?.user);
+
+useEffect(() => {
+  if (user) {
+    navigate("/");
+  }
+}, [user, navigate]);
+
   // Handle OTP Input Change
   const handleChange = (value) => {
     setOtp(value);

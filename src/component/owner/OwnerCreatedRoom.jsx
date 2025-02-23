@@ -2,13 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Spin } from "antd";
 import { setSelectedRoom } from "../../redux/slice/roomSlice";
+import { useNavigate } from "react-router-dom";
 
 const OwnerCreatedRoom = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const rooms = useSelector((state) => state.room.room) || [];
   const owner = useSelector((state) => state.owner.data?.data);
+    useEffect(() => {
+      if (!owner) {
+        navigate("/login");
+      }
+    }, [owner, navigate]);
+    
 
   useEffect(() => {
     if (rooms.length && owner?.createdRooms?.length) {

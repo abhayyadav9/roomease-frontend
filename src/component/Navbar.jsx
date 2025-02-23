@@ -1,4 +1,13 @@
-import { Avatar, Button, notification, Popover, Switch, Menu, Drawer, Badge } from "antd";
+import {
+  Avatar,
+  Button,
+  notification,
+  Popover,
+  Switch,
+  Menu,
+  Drawer,
+  Badge,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
@@ -11,7 +20,8 @@ import {
   BellOutlined,
   MailOutlined,
   ContactsOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -21,7 +31,7 @@ import socketService from "../utils/socket";
 import { addNotification } from "../redux/slice/notificationSlice";
 import { toggleTheme } from "../redux/slice/themeSlice";
 import { motion } from "framer-motion";
-import "./Navbar"
+import "./Navbar";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,44 +40,43 @@ const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const notifications = useSelector((state) => state.notification.notifications);
+  const notifications = useSelector(
+    (state) => state.notification.notifications
+  );
   const theme = useSelector((state) => state.theme.theme);
 
-  const count = notifications.filter(notification => 
-    lastSeen === null || new Date(notification.createdAt) > lastSeen
+  const count = notifications.filter(
+    (notification) =>
+      lastSeen === null || new Date(notification.createdAt) > lastSeen
   ).length;
 
   const menuItems = [
     {
       key: "home",
       label: <NavLink to="/">Home</NavLink>,
-      icon: <HomeFilled className="text-lg" />
+      icon: <HomeFilled className="text-lg" />,
     },
     {
       key: "find-room",
       label: <NavLink to="/all-rooms">Find Room</NavLink>,
-      icon: <SearchOutlined className="text-lg" />
+      icon: <SearchOutlined className="text-lg" />,
     },
     {
       key: "requirements",
       label: <NavLink to="/all-requirement">Requirements</NavLink>,
-      icon: <FormOutlined className="text-lg" />
+      icon: <FormOutlined className="text-lg" />,
     },
-    {
-      key: "profile",
-      label: <NavLink to={`/${user?.role}-profile`}>Profile</NavLink>,
-      icon: <UserOutlined className="text-lg" />
-    },
+    // {
+    //   key: "profile",
+    //   label: <NavLink to={`/${user?.role}-profile`}>Profile</NavLink>,
+    //   icon: <UserOutlined className="text-lg" />,
+    // },
     {
       key: "contact",
       label: <NavLink to="/contact">Contact</NavLink>,
-      icon: <ContactsOutlined className="text-lg" />
-    }
+      icon: <ContactsOutlined className="text-lg" />,
+    },
   ];
-
-
-
-
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -90,7 +99,6 @@ const Navbar = () => {
       alert("An error occurred while logging out");
     }
   };
-
 
   useEffect(() => {
     if (user) {
@@ -120,43 +128,59 @@ const Navbar = () => {
 
 
   const profileContent = (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col gap-4 p-4 w-64"
-    >
+    <div className="flex flex-col gap-2 p-2 w-64">
       <div className="flex items-center gap-4 border-b pb-4">
         <Avatar
           src={owner?.ownerPic}
-          size={48}
           icon={<UserOutlined />}
           className="border-2 border-blue-500 hover:scale-105 transition-transform"
         />
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+          <h3 className="text-lg font-semibold text-gray-800">
             {user?.name || "Guest"}
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-300">{user?.email}</p>
+          <p className="text-xs text-gray-500">{user?.email}</p>
         </div>
       </div>
-      
-      <NavLink 
-        to="/update-detail" 
-        className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+
+      <NavLink
+        to="/owner-profile"
+        className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
       >
         <UserOutlined className="text-lg text-blue-500" />
-        <span className="text-gray-700 dark:text-gray-200">Edit Profile</span>
+        <span className="text-gray-700">View Profile</span>
       </NavLink>
-      
-      <button 
+
+      <NavLink
+        to="/update-detail"
+        className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+      >
+        <EditOutlined className="text-lg text-green-500" />
+        <span className="text-gray-700">Edit Profile</span>
+      </NavLink>
+
+      <button
         onClick={handleLogout}
-        className="flex items-center gap-3 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-red-600 dark:text-red-400"
+        className="flex items-center gap-3 p-2 hover:bg-red-50 rounded-lg transition-colors text-red-600"
       >
         <LogoutOutlined className="text-lg" />
         <span>Logout</span>
       </button>
-    </motion.div>
+
+      <div>
+           {/* Theme Toggle */}
+           <Switch
+              checked={theme === "dark"}
+              onChange={() => dispatch(toggleTheme())}
+              checkedChildren="🌙"
+              unCheckedChildren="☀️"
+              className="bg-gray-200 dark:bg-gray-600"
+            />
+            <span>Theme</span>
+      </div>
+    </div>
   );
+
 
   const notificationContent = (
     <motion.div
@@ -195,7 +219,8 @@ const Navbar = () => {
                 month: "short",
                 day: "numeric",
               })}{" "}
-              • {new Date(notification.createdAt).toLocaleTimeString("en-US", {
+              •{" "}
+              {new Date(notification.createdAt).toLocaleTimeString("en-US", {
                 hour: "numeric",
                 minute: "2-digit",
               })}
@@ -211,8 +236,8 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <NavLink 
-            to="/" 
+          <NavLink
+            to="/"
             className="flex items-center gap-2 text-xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"
           >
             <img src="/logo.png" alt="Logo" className="h-8 w-8" />
@@ -224,12 +249,12 @@ const Navbar = () => {
             {menuItems.map((item) => (
               <NavLink
                 key={item.key}
-                to={item.key === 'home' ? '/' : `/${item.key}`}
-                className={({ isActive }) => 
+                to={item.key === "home" ? "/" : `/${item.key}`}
+                className={({ isActive }) =>
                   `flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
-                    isActive 
-                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
-                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    isActive
+                      ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   }`
                 }
               >
@@ -252,27 +277,28 @@ const Navbar = () => {
               </Popover>
             )}
 
-            {/* Theme Toggle */}
-            <Switch
-              checked={theme === "dark"}
-              onChange={() => dispatch(toggleTheme())}
-              checkedChildren="🌙"
-              unCheckedChildren="☀️"
-              className="bg-gray-200 dark:bg-gray-600"
-            />
+         
 
             {/* Profile */}
             {user ? (
-              <Popover content={profileContent} trigger="click">
-                <Button 
-                  type="text" 
-                  className="flex items-center gap-2 h-10 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+              <Popover
+                content={profileContent}
+                trigger="click"
+                placement="bottomRight"
+                overlayClassName="profile-popover"
+              >
+                <Button
+                  type="text"
+                  className="flex items-center gap-2 h-10 hover:bg-gray-100 rounded-lg"
                 >
-                  <Avatar 
-                    src={owner?.ownerPic} 
-                    icon={<UserOutlined />} 
+                  <Avatar
+                    src={owner?.ownerPic}
+                    icon={<UserOutlined />}
                     className="border-2 border-blue-500"
                   />
+                  <span className="text-gray-700">
+                    {user?.name?.split(" ")[0]}
+                  </span>
                 </Button>
               </Popover>
             ) : (
@@ -286,7 +312,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             onClick={toggleSidebar}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
@@ -304,7 +330,9 @@ const Navbar = () => {
         title={
           <div className="flex items-center gap-2">
             <img src="/logo.png" alt="Logo" className="h-6 w-6" />
-            <span className="text-xl font-bold text-blue-600 dark:text-blue-400">RoomEase</span>
+            <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
+              RoomEase
+            </span>
           </div>
         }
         placement="right"
@@ -318,14 +346,15 @@ const Navbar = () => {
           mode="inline"
           selectedKeys={[]}
           className="border-0 dark:bg-gray-800"
-          items={menuItems.map(item => ({
+          items={menuItems.map((item) => ({
             key: item.key,
             icon: item.icon,
             label: item.label,
-            className: "hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg my-1"
+            className:
+              "hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg my-1",
           }))}
         />
-        
+
         <div className="mt-4 px-4 border-t pt-4 dark:border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-700 dark:text-gray-300">Dark Mode</span>
@@ -335,9 +364,9 @@ const Navbar = () => {
               className="bg-gray-200 dark:bg-gray-600"
             />
           </div>
-          
+
           {user && (
-            <button 
+            <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-red-600 dark:text-red-400"
             >
