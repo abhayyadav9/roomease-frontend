@@ -9,8 +9,8 @@ const OwnerCreatedRoom = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const rooms = useSelector((state) => state.room.room) || [];
-  const owner = useSelector((state) => state.owner.data?.data);
+  const rooms = useSelector((state) => state.room?.room) || [];
+  const owner = useSelector((state) => state.owner?.data?.data);
     useEffect(() => {
       if (!owner) {
         navigate("/login");
@@ -19,7 +19,7 @@ const OwnerCreatedRoom = () => {
     
 
   useEffect(() => {
-    if (rooms.length && owner?.createdRooms?.length) {
+    if (rooms?.length && owner?.createdRooms?.length) {
       setLoading(false);
     }
   }, [rooms, owner]);
@@ -36,7 +36,7 @@ const OwnerCreatedRoom = () => {
   }
 
   const filteredRooms = rooms.filter((room) =>
-    owner.createdRooms.includes(room._id.toString())
+    owner?.createdRooms?.includes(room._id?.toString())
   );
 
   console.log("Filtered Rooms:", filteredRooms);
@@ -49,9 +49,9 @@ const OwnerCreatedRoom = () => {
 
       {/* Room Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredRooms.map((room) => (
+        {filteredRooms?.map((room) => (
           <div
-            key={room._id}
+            key={room?._id}
             className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-all hover:scale-105 cursor-pointer"
           >
             <img
@@ -60,13 +60,13 @@ const OwnerCreatedRoom = () => {
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
-              <h3 className="text-lg font-semibold">Address: {room.address}</h3>
+              <h3 className="text-lg font-semibold">Address: {room?.address}</h3>
               <p
                 className={`text-sm font-medium ${
-                  room.status === "active" ? "text-green-600" : "text-gray-500"
+                  room?.status === "active" ? "text-green-600" : "text-gray-500"
                 }`}
               >
-                {room.houseName}
+                {room?.houseName}
               </p>
               {/* 🔹 Only this button opens the edit form */}
               <button
@@ -85,7 +85,7 @@ const OwnerCreatedRoom = () => {
         ))}
       </div>
 
-      {filteredRooms.length === 0 && (
+      {filteredRooms?.length === 0 && (
         <p className="text-center text-gray-500 mt-6">No rooms found.</p>
       )}
     </div>

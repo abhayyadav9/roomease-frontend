@@ -12,7 +12,7 @@ import { CiLogout } from "react-icons/ci";
 import { setError, setLoading, setOwner } from "../../redux/slice/ownerSlice";
 
 const OwnerProfile = () => {
-  const owner = useSelector((state) => state.owner.data.data);
+  const owner = useSelector((state) => state.owner?.data?.data);
   const loading = useSelector((state) => state.owner?.loading);
   const error = useSelector((state) => state.owner?.error);
   const dispatch = useDispatch();
@@ -123,7 +123,7 @@ const OwnerProfile = () => {
           />
           <div className="text-center sm:text-left mt-4 sm:mt-0">
             <h1 className="text-2xl font-semibold text-gray-900">
-              {owner.name?.toUpperCase()}
+              {owner?.name?.toUpperCase()}
             </h1>
             <p className="text-gray-600">Email: {owner?.user?.email}</p>
             <p className="text-gray-600">Phone: {owner?.phone}</p>
@@ -134,7 +134,7 @@ const OwnerProfile = () => {
         {/* Created Rooms Section */}
         <div className="mt-6">
           <h2 className="text-lg font-semibold text-gray-900">
-            Created Rooms ({owner.createdRooms?.length || 0})
+            Created Rooms ({owner?.createdRooms?.length || 0})
           </h2>
           {/* {owner.createdRooms?.length > 0 ? (
             <ul className="mt-4 space-y-3">
