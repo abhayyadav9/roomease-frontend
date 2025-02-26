@@ -102,7 +102,7 @@ function App() {
           <Route path="/admin/register" element={<AdminRegister />} />
         </Routes>
       </Router>
-      <div className="min-h-screen flex flex-col">
+      <div className="mt-20 mb-0 flex flex-col">
         <main className="flex-1">{/* Your page content */}</main>
         <Footer />
       </div>

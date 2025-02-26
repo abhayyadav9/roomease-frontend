@@ -1,33 +1,55 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 import useGetAllRooms from "../hooks/useGetAllRooms";
-import { setSelectedRoom } from "../redux/slice/roomSlice";
+import { setSearchQuery, setSelectedRoom } from "../redux/slice/roomSlice";
 import ViewRoomDetail from "./commonPage/ViewRoomDetail";
 import { CircularProgress, Pagination } from "@mui/material";
 import useGetAllTenant from "../hooks/useGetAllTenant";
-import { FiSearch, FiHome, FiDollarSign, FiMapPin } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
+import RoomCard from "./commonPage/RoomCard";
+import { FilterCard } from "./commonPage/FilterCard";
 
 const AllRooms = () => {
   useGetAllRooms();
   useGetAllTenant();
 
   const rooms = useSelector((state) => state.room?.room);
+  const searchQuery = useSelector((state) => state.room?.searchQuery);
+
   const loading = useSelector((state) => state.room?.loading);
   const error = useSelector((state) => state.room?.error);
   const selectedRoom = useSelector((state) => state.room?.selectedRoom);
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
 
   const filteredRooms = rooms?.filter((room) => {
+
     const address = room?.address ? room?.address.toLowerCase() : "";
-    return address?.includes(searchQuery.toLowerCase());
+    const roomType = room?.roomType ? room?.roomType.toLowerCase() : "";
+    const description = room?.description  ? room?.description.toLowerCase() : "";
+    // const [min, max] = searchQuery.split('-');
+    // let price=0;
+
+//     if (room.price >= min && room.price <= max) {
+//  price = room?.price;
+// }
+
+
+
+    return (
+      address?.includes(searchQuery.toLowerCase()) ||
+      roomType?.includes(searchQuery.toLowerCase()) ||
+      description?.includes(searchQuery.toLowerCase())
+      // price?.includes(min,max)
+      
+
+    );
   });
 
-  // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentRooms = filteredRooms?.slice(indexOfFirstItem, indexOfLastItem);
@@ -35,6 +57,7 @@ const AllRooms = () => {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleOpenModal = (room) => {
@@ -53,19 +76,28 @@ const AllRooms = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-6 mt-16">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800 animate-pulse">
+        <motion.h2
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-3xl font-bold text-center mb-6 text-gray-800 animate-pulse"
+        >
           🏡 Loading Rooms...
-        </h2>
+        </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-              <div className="w-full h-48 bg-gray-200" />
+            <motion.div
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse"
+            >
+              <div className="w-full h-48 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse" />
               <div className="p-4 space-y-4">
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
                 <div className="h-4 bg-gray-200 rounded w-1/2" />
                 <div className="h-10 bg-gray-200 rounded-lg" />
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -74,116 +106,153 @@ const AllRooms = () => {
 
   if (error) {
     return (
-      <div className="text-center mt-16 p-8 bg-red-50 rounded-lg mx-4">
+      <motion.div
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        className="text-center mt-16 p-8 bg-red-50 rounded-lg mx-4"
+      >
         <p className="text-red-600 font-semibold text-xl">
           ⚠️ Error loading rooms: {error}
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   if (!rooms || rooms?.length === 0) {
     return (
-      <div className="text-center mt-16 p-8 bg-blue-50 rounded-lg mx-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center mt-16 p-8 bg-blue-50 rounded-lg mx-4"
+      >
         <p className="text-gray-600 text-xl font-medium">
           🏘️ No available rooms at the moment. Please check back later!
         </p>
-      </div>
+      </motion.div>
     );
   }
-
   return (
     <div className="container mx-auto px-4 py-6 mt-16">
-      <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
-        🏡 Available Rooms
-      </h2>
+      <motion.h2
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="text-4xl font-bold text-center mb-8 text-gray-800 bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 text-transparent"
+      >
+        Discover Your Perfect Space
+      </motion.h2>
 
-      <div className="mb-8 max-w-2xl mx-auto">
-        <div className="relative">
-          <FiSearch className="absolute left-4 top-4 text-gray-400 text-xl" />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="mb-8 max-w-2xl mx-auto"
+      >
+        <div className="relative group">
+          <FiSearch className="absolute left-4 top-4 text-gray-400 text-xl transition-transform group-hover:scale-110" />
           <input
             type="text"
             placeholder="Search by location..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-lg hover:shadow-xl"
           />
         </div>
-      </div>
+      </motion.div>
 
-      {filteredRooms.length === 0 ? (
-        <div className="text-center p-8 bg-yellow-50 rounded-lg">
-          <p className="text-gray-600 text-lg">
-            🔍 No rooms found matching your search criteria
-          </p>
+      <div className="flex flex-col lg:flex-row gap-7">
+        {/* Filter Card - Hidden on mobile, shown on desktop */}
+        <div className="hidden lg:block w-full lg:w-1/5 sticky top-14 h-fit pb-4">
+          <FilterCard />
         </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentRooms.map((room) => (
-              <div
-                key={room._id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:scale-[1.02] hover:shadow-xl"
-              >
-                <img
-                  src={room.roomImages?.[0] || "https://via.placeholder.com/300"}
-                  alt="Room"
-                  className="w-full h-56 object-cover"
-                />
-                <div className="p-5">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
-                      room.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}>
-                      {room.status.charAt(0).toUpperCase() + room.status.slice(1)}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    <FiHome className="inline mr-2 text-blue-600" />
-                    {room.houseName}
-                  </h3>
-                  <p className="text-gray-600 mb-2">
-                    <FiMapPin className="inline mr-2 text-blue-600" />
-                    {room.address}
-                  </p>
-                  <p className="text-lg font-bold text-gray-900 mb-4">
-                    <FiDollarSign className="inline mr-2 text-green-600" />
-                    {room.price}/month
-                  </p>
-                  <button
-                    onClick={() => handleOpenModal(room)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
-                  >
-                    View Details
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
+
+        {/* Main Content Area */}
+        <div className="w-full lg:w-4/5">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {currentRooms.map((room) => (
+                <motion.div
+                  key={room._id}
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white rounded-xl shadow-xl overflow-hidden transform transition-all hover:shadow-2xl"
+                >
+                  <RoomCard room={room} onClick={() => handleOpenModal(room)} />
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Pagination */}
+          <div>
+            {filteredRooms.length > 0 ? (
+              <div className="mt-8 flex flex-col items-center gap-4">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white p-2 rounded-full shadow-lg"
+                >
+                  <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    color="primary"
+                    shape="rounded"
+                    showFirstButton
+                    showLastButton
+                    sx={{
+                      "& .MuiPaginationItem-root": {
+                        fontSize: "1.1rem",
+                        margin: "0 4px",
+                        transition: "all 0.3s ease",
+                      },
+                      "& .MuiPaginationItem-page:hover": {
+                        transform: "scale(1.1)",
+                        backgroundColor: "#3b82f6",
+                        color: "white",
+                      },
+                      "& .Mui-selected": {
+                        backgroundColor: "#3b82f6!important",
+                        color: "white",
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  />
+                </motion.div>
+
+                <motion.p
+                  className="text-center text-gray-600 font-medium"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  Showing{" "}
+                  <span className="text-blue-600 font-bold">
+                    {currentRooms.length}
+                  </span>{" "}
+                  of{" "}
+                  <span className="text-purple-600 font-bold">
+                    {filteredRooms.length}
+                  </span>{" "}
+                  amazing properties
+                </motion.p>
               </div>
-            ))}
+            ) : (
+              <div>
+                <motion.h2
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  className="text-xl font-bold text-left mb-8 text-gray-800 bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 text-transparent"
+                >
+                  No matching rooms found " {searchQuery}"
+                </motion.h2>
+              </div>
+            )}
           </div>
-
-          <div className="mt-8 flex justify-center">
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              color="primary"
-              shape="rounded"
-              showFirstButton
-              showLastButton
-              className="[&_.MuiPaginationItem-root]:h-10 [&_.MuiPaginationItem-root]:min-w-10"
-            />
-          </div>
-
-          <p className="text-center text-gray-600 mt-4">
-            Showing {currentRooms.length} of {filteredRooms.length} properties
-          </p>
-        </>
-      )}
+        </div>
+      </div>
 
       {isModalOpen && selectedRoom && (
         <ViewRoomDetail room={selectedRoom} onClose={handleCloseModal} />

@@ -5,6 +5,7 @@ const roomSlice = createSlice({
   initialState: {
     room: [],
     selectedRoom: null,
+    searchQuery:null
   
   },
   reducers: {
@@ -13,9 +14,12 @@ const roomSlice = createSlice({
     },
     setSelectedRoom(state, action) {
       state.selectedRoom = action.payload;
+    },
+    setSearchQuery(state, action) {
+      state.searchQuery = action.payload;
     }
   },
 });
 
-export const { setRoom, setSelectedRoom } = roomSlice.actions;
+export const { setRoom, setSelectedRoom,setSearchQuery } = roomSlice.actions;
 export default roomSlice.reducer;
