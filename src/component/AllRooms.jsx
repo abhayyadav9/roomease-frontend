@@ -41,9 +41,9 @@ const AllRooms = () => {
 
 
     return (
-      address?.includes(searchQuery.toLowerCase()) ||
-      roomType?.includes(searchQuery.toLowerCase()) ||
-      description?.includes(searchQuery.toLowerCase())
+      address?.includes(searchQuery?.toLowerCase()) ||
+      roomType?.includes(searchQuery?.toLowerCase()) ||
+      description?.includes(searchQuery?.toLowerCase())
       // price?.includes(min,max)
       
 
@@ -84,7 +84,7 @@ const AllRooms = () => {
           🏡 Loading Rooms...
         </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, index) => (
+          {[...Array(6)]?.map((_, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0 }}
@@ -175,9 +175,9 @@ const AllRooms = () => {
               transition={{ duration: 0.3 }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {currentRooms.map((room) => (
+              {currentRooms?.map((room) => (
                 <motion.div
-                  key={room._id}
+                  key={room?._id}
                   whileHover={{ scale: 1.02 }}
                   className="bg-white rounded-xl shadow-xl overflow-hidden transform transition-all hover:shadow-2xl"
                 >
@@ -189,7 +189,7 @@ const AllRooms = () => {
 
           {/* Pagination */}
           <div>
-            {filteredRooms.length > 0 ? (
+            {filteredRooms?.length > 0 ? (
               <div className="mt-8 flex flex-col items-center gap-4">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -234,7 +234,7 @@ const AllRooms = () => {
                   </span>{" "}
                   of{" "}
                   <span className="text-purple-600 font-bold">
-                    {filteredRooms.length}
+                    {filteredRooms?.length}
                   </span>{" "}
                   amazing properties
                 </motion.p>

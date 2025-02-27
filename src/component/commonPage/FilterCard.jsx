@@ -77,10 +77,10 @@ export const FilterCard = () => {
             
             <RadioGroup value={selectedValue} onValueChange={changeHandler}>
                 {filterData?.map((data) => (
-                    <div key={data.filterType} className='mb-4'>
-                        <h1 className='font-semibold text-md mb-2 text-gray-700'>{data.filterType}</h1>
-                        {data.array.map((item, idx) => {
-                            const itemId = `id${data.filterType}-${idx}`;
+                    <div key={data?.filterType} className='mb-4'>
+                        <h1 className='font-semibold text-md mb-2 text-gray-700'>{data?.filterType}</h1>
+                        {data?.array?.map((item, idx) => {
+                            const itemId = `id${data?.filterType}-${idx}`;
                             return (
                                 <div className='flex items-center space-x-2 my-2' key={itemId}>
                                     <RadioGroupItem 
