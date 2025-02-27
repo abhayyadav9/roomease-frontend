@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 import useGetOwnerDetails from "../../hooks/ownerHooks/useGetOwnerDetails";
-import { LiaUserEditSolid } from "react-icons/lia";
+import { LiaSpinnerSolid, LiaUserEditSolid } from "react-icons/lia";
 import { MdAddCircleOutline } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import OwnerCreatedRoom from "./OwnerCreatedRoom";
@@ -17,11 +18,10 @@ const OwnerProfile = () => {
   const error = useSelector((state) => state.owner?.error);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  const navigate= useNavigate()
-
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.role !="owner") {
+    if (user?.role !== "owner") {
       navigate("/login");
     }
   }, [user, navigate]);
@@ -30,19 +30,19 @@ const OwnerProfile = () => {
     if (!user?.id) return;
 
     const fetchOwnerDetails = async () => {
-      dispatch(setLoading(true)); // Set loading state before fetching
+      dispatch(setLoading(true));
 
       try {
-        const response = await axios.get(`${BASEURL}/api/v2/owner-details/${user.id}`, {
-          withCredentials: true
-        });
-
-        dispatch(setOwner(response?.data)); // Store owner details in Redux state
+        const response = await axios.get(
+          `${BASEURL}/api/v2/owner-details/${user.id}`,
+          { withCredentials: true }
+        );
+        dispatch(setOwner(response?.data));
       } catch (err) {
         console.error("Failed to fetch owner details:", err);
-        dispatch(setError(err.message)); // Store error message in Redux
+        dispatch(setError(err.message));
       } finally {
-        dispatch(setLoading(false)); // Reset loading state after fetching
+        dispatch(setLoading(false));
       }
     };
 
@@ -54,25 +54,49 @@ const OwnerProfile = () => {
       await axios.post(
         `${BASEURL}/api/v1/logout`,
         {},
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
       dispatch(logoutAction());
-
-      window.location.href = "/login"; // Redirect to login page
+      window.location.href = "/login";
     } catch (error) {
       console.error(error);
       alert("An error occurred while logging out");
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LiaSpinnerSolid className="animate-spin text-indigo-600" size={50} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-500 text-center">Error: {error}</p>;
+  }
+
+  if (!owner) {
+    return (
+      <p className="text-gray-600 text-center">No owner details found.</p>
+    );
+  }
+
 
   if (loading) {
     return (
-      <p className="text-gray-600 text-center">Loading owner details...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="text-blue-600"
+        >
+          <LiaSpinnerSolid className="w-16 h-16" />
+        </motion.div>
+      </div>
     );
   }
+
 
   if (error) {
     return <p className="text-red-500 text-center">Error: {error}</p>;
@@ -82,79 +106,103 @@ const OwnerProfile = () => {
     return <p className="text-gray-600 text-center">No owner details found.</p>;
   }
 
-  return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        {/* Logout */}
-        <div
-          onClick={handleLogout}
-          className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
-        >
-          <div className="flex items-center gap-3">
-            <CiLogout size={24} />
-            <span className="text-md">Logout</span>
+ 
+    // ... (keep error and empty states the same)
+  
+    return (
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+          {/* Header Section */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 flex justify-between items-center">
+            <h2 className="text-3xl font-bold text-white">Owner Dashboard</h2>
+            <div className="flex items-center gap-4">
+              <Link
+                to="/update-detail"
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <LiaUserEditSolid className="w-6 h-6 text-white" />
+              </Link>
+              <Link
+                to="/add-room"
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <MdAddCircleOutline className="w-6 h-6 text-white" />
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <CiLogout className="w-6 h-6 text-white" />
+              </button>
+            </div>
+          </div>
+  
+          {/* Profile Section */}
+          <div className="p-8">
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                className="relative"
+              >
+                <img
+                  className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
+                  src={owner?.ownerPic || "https://via.placeholder.com/150"}
+                  alt="Profile"
+                />
+                <div className="absolute bottom-0 right-0 w-8 h-8 bg-green-500 rounded-full border-2 border-white"></div>
+              </motion.div>
+  
+              <div className="text-center sm:text-left">
+                <h1 className="text-3xl font-bold text-gray-800 mb-2 font-serif">
+                  {owner?.name?.toUpperCase()}
+                </h1>
+                <div className="space-y-1 text-gray-600">
+                  <p className="flex items-center gap-2">
+                    <span className="material-icons">📧</span>
+                    {owner?.user?.email}
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="material-icons">📱</span>
+                    {owner?.phone || "Not provided"}
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <span className="material-icons">📍</span>
+                    {owner?.address || "Not provided"}
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+            {/* Stats Section */}
+            <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
+              <div className="bg-blue-50 p-4 rounded-xl">
+                <p className="text-2xl font-bold text-blue-600">
+                  {owner?.createdRooms?.length || 0}
+                </p>
+                <p className="text-sm text-gray-600">Total Listings</p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-xl">
+                <p className="text-2xl font-bold text-purple-600">0</p>
+                <p className="text-sm text-gray-600">Active Tenants</p>
+              </div>
+              <div className="bg-green-50 p-4 rounded-xl">
+                <p className="text-2xl font-bold text-green-600">₹0</p>
+                <p className="text-sm text-gray-600">Total Revenue</p>
+              </div>
+            </div>
+  
+            {/* Created Rooms Section */}
+            <div className="mt-12">
+              <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+                Managed Properties
+              </h3>
+              <OwnerCreatedRoom />
+            </div>
           </div>
         </div>
-      <div className="bg-white relative shadow-lg rounded-lg p-6 max-w-3xl mx-auto">
-        {/* Action Buttons */}
-        <div className="mt-10">
-          <h2 className="text-3xl font-bold text-gray-900">Owner Profile</h2>
-        </div>
-        <div className="absolute top-4 right-4 flex space-x-3 mt-14">
-          <Link
-            to="/update-detail"
-            className="text-gray-600 hover:text-green-900 transition"
-          >
-            <LiaUserEditSolid size={24} />
-          </Link>
-          <Link
-            to="/add-room"
-            className="text-gray-600 hover:text-green-900 transition"
-          >
-            <MdAddCircleOutline size={24} />
-          </Link>
-        </div>
-
-        {/* Profile Section */}
-        <div className="flex flex-col sm:flex-row items-center mt-10 sm:items-start sm:space-x-6">
-          <img
-            className="h-20 w-20 rounded-full border border-gray-300"
-            src={owner?.ownerPic || "https://via.placeholder.com/150"}
-            alt="Profile"
-          />
-          <div className="text-center sm:text-left mt-4 sm:mt-0">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {owner?.name?.toUpperCase()}
-            </h1>
-            <p className="text-gray-600">Email: {owner?.user?.email}</p>
-            <p className="text-gray-600">Phone: {owner?.phone}</p>
-            <p className="text-gray-600">Address:{owner?.address}</p>
-          </div>
-        </div>
-
-        {/* Created Rooms Section */}
-        <div className="mt-6">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Created Rooms ({owner?.createdRooms?.length || 0})
-          </h2>
-          {/* {owner.createdRooms?.length > 0 ? (
-            <ul className="mt-4 space-y-3">
-              {owner.createdRooms.map((room) => (
-                <li key={room._id} className="bg-gray-100 p-4 rounded-lg shadow">
-                  <h3 className="text-lg font-semibold">{room.name}</h3>
-                  <p className="text-gray-700">{room.description}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-700 mt-4">No rooms created yet.</p>
-          )} */}
-        </div>
-
-        {/* Owner Created Room Component */}
-        <OwnerCreatedRoom />
       </div>
-    </div>
-  );
-};
-
-export default OwnerProfile;
+    );
+  };
+  
+  export default OwnerProfile;

@@ -9,6 +9,7 @@ import useGetAllTenant from "../hooks/useGetAllTenant";
 import { FiSearch } from "react-icons/fi";
 import RoomCard from "./commonPage/RoomCard";
 import { FilterCard } from "./commonPage/FilterCard";
+import { LiaSpinnerSolid } from "react-icons/lia";
 
 const AllRooms = () => {
   useGetAllRooms();
@@ -27,26 +28,23 @@ const AllRooms = () => {
   const [itemsPerPage] = useState(6);
 
   const filteredRooms = rooms?.filter((room) => {
-
     const address = room?.address ? room?.address.toLowerCase() : "";
     const roomType = room?.roomType ? room?.roomType.toLowerCase() : "";
-    const description = room?.description  ? room?.description.toLowerCase() : "";
+    const description = room?.description
+      ? room?.description.toLowerCase()
+      : "";
     // const [min, max] = searchQuery.split('-');
     // let price=0;
 
-//     if (room.price >= min && room.price <= max) {
-//  price = room?.price;
-// }
-
-
+    //     if (room.price >= min && room.price <= max) {
+    //  price = room?.price;
+    // }
 
     return (
       address?.includes(searchQuery?.toLowerCase()) ||
       roomType?.includes(searchQuery?.toLowerCase()) ||
       description?.includes(searchQuery?.toLowerCase())
       // price?.includes(min,max)
-      
-
     );
   });
 
@@ -131,6 +129,21 @@ const AllRooms = () => {
       </motion.div>
     );
   }
+
+  
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="text-blue-600"
+          >
+            <LiaSpinnerSolid className="w-16 h-16" />
+          </motion.div>
+        </div>
+      );
+    }
   return (
     <div className="container mx-auto px-4 py-6 mt-16">
       <motion.h2

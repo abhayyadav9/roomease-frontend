@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Form,
   Input,
@@ -6,30 +7,28 @@ import {
   message,
   Spin,
   Typography,
-  Divider,
   Avatar,
   Upload,
+  InputNumber,
 } from "antd";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import BASEURL from "../../utils/BaseUrl";
-import { useEffect } from "react";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const UpdateOwnerDetail = () => {
+  // ... keep existing state and logic the same ...
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const owner = useSelector((state) => state.owner?.data?.data);
-  const user = useSelector(state=> state.auth?.user)
+  const user = useSelector((state) => state.auth?.user);
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
-    if (user?.role !="owner") {
+    if (user?.role != "owner") {
       navigate("/login");
     }
   }, [user, navigate]);
@@ -77,110 +76,181 @@ const UpdateOwnerDetail = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-20">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden mt-20"
+    >
       <Spin spinning={loading}>
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-3">
-            {/* ✅ Owner Image */}
-            <Avatar size={64} src={owner.ownerPic} alt="Owner Profile" />
-            <Title level={3} className="text-blue-600">
-              ✏️ Update Owner - {owner.name}
-            </Title>
+        {/* Gradient Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Avatar
+              size={64}
+              src={owner.ownerPic}
+              className="border-2 border-white"
+            />
+            <h2 className="text-2xl font-bold text-white">
+              ✏️ Update Profile - {owner.name}
+            </h2>
           </div>
           <Button
             type="text"
-            icon={<CloseOutlined />}
-            className="text-gray-500 hover:text-red-500"
+            icon={<CloseOutlined className="text-white" />}
+            className="!text-white hover:!bg-white/10"
             onClick={() => navigate("/owner-profile")}
           />
         </div>
 
-        <Divider />
+        {/* Form Content */}
+        <div className="p-8">
+          <Form layout="vertical" onFinish={onFinish} initialValues={owner}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Owner Name */}
+              <Form.Item
+                label={
+                  <span className="text-gray-700 font-semibold">
+                    👤 Full Name
+                  </span>
+                }
+                name="name"
+                rules={[{ required: true }]}
+              >
+                <Input
+                  placeholder="John Doe"
+                  className="rounded-lg py-2 hover:border-blue-500"
+                />
+              </Form.Item>
 
-        {/* Form */}
-        <Form layout="vertical" onFinish={onFinish} initialValues={owner}>
-          {/* Owner Name */}
-          <Form.Item
-            label={<Text strong>👤 Owner Name</Text>}
-            name="name"
-            rules={[
-              { required: true, message: "Please enter the owner's name" },
-            ]}
-          >
-            <Input placeholder="Enter owner's name" />
-          </Form.Item>
+              {/* Email (Disabled) */}
+              <Form.Item
+                label={
+                  <span className="text-gray-700 font-semibold">📧 Email</span>
+                }
+              >
+                <Input
+                  disabled
+                  value={owner?.user?.email || "N/A"}
+                  className="rounded-lg bg-gray-100"
+                />
+              </Form.Item>
 
-          {/* Email (Disabled) */}
-          <Form.Item label={<Text strong>📧 Email</Text>} name="email">
-            <Input disabled value={owner?.user?.email || "N/A"} />
-          </Form.Item>
+              {/* Phone */}
+              <Form.Item
+                label={
+                  <span className="text-gray-700 font-semibold">📱 Phone</span>
+                }
+                name="phone"
+                rules={[{ required: true }]}
+              >
+                <Input
+                  placeholder="+91 9876543210"
+                  className="rounded-lg py-2"
+                />
+              </Form.Item>
 
-          {/* Phone */}
-          <Form.Item
-            label={<Text strong>📞 Phone</Text>}
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Please enter the owner's phone number",
-              },
-            ]}
-          >
-            <Input placeholder="Enter phone number" />
-          </Form.Item>
+              {/* Pincode */}
+              <Form.Item
+                label={
+                  <span className="text-gray-700 font-semibold">
+                    📮 Pincode
+                  </span>
+                }
+                name="pincode"
+                rules={[{ required: true }]}
+              >
+                <InputNumber
+                  min={1}
+                  className="w-full rounded-lg"
+                  placeholder="560001"
+                />
+              </Form.Item>
 
-          {/* Address */}
-          <Form.Item
-            label={<Text strong>📍 Address</Text>}
-            name="address"
-            rules={[{ required: true, message: "Please enter the address" }]}
-          >
-            <Input placeholder="Enter address" />
-          </Form.Item>
+              {/* Address */}
+              <Form.Item
+                label={
+                  <span className="text-gray-700 font-semibold">
+                    📍 Address
+                  </span>
+                }
+                name="address"
+                rules={[{ required: true }]}
+                className="col-span-2"
+              >
+                <Input.TextArea
+                  rows={3}
+                  placeholder="Enter full address"
+                  className="rounded-lg"
+                />
+              </Form.Item>
 
-          {/* Pincode */}
-          <Form.Item
-            label={<Text strong>📮 Pincode</Text>}
-            name="pincode"
-            rules={[{ required: true, message: "Please enter the pincode" }]}
-          >
-            <Input placeholder="Enter pincode" />
-          </Form.Item>
+              {/* Profile Picture */}
+              <Form.Item
+                label={
+                  <span className="text-gray-700 font-semibold">
+                    📸 Profile Photo
+                  </span>
+                }
+                className="col-span-2"
+              >
+                <div className="flex items-center gap-6">
+                  <Avatar
+                    size={96}
+                    src={image ? URL.createObjectURL(image) : owner.ownerPic}
+                    className="border-2 border-gray-200"
+                  />
+                  <Upload
+                    beforeUpload={handleImageUpload}
+                    showUploadList={false}
+                  >
+                    <Button
+                      icon={<UploadOutlined />}
+                      className="h-12 px-6 rounded-lg bg-gray-100 hover:bg-gray-200 border-0"
+                    >
+                      Change Photo
+                    </Button>
+                  </Upload>
+                </div>
+              </Form.Item>
 
-          {/* Profile Picture Upload */}
-          <Form.Item label={<Text strong>📸 Profile Picture</Text>}>
-            <Upload beforeUpload={handleImageUpload} showUploadList={false}>
-              <Button icon={<UploadOutlined />}>Upload New Image</Button>
-            </Upload>
-          </Form.Item>
-
-          {/* Created Rooms (View Only) */}
-          <Form.Item label={<Text strong>🏠 Created Rooms</Text>}>
-            <div className="bg-gray-100 p-3 rounded-md text-gray-600">
-              {owner.createdRooms?.length > 0 ? (
-                <p>🏡 {owner.createdRooms.length} room(s) created</p>
-              ) : (
-                <p>No rooms created yet.</p>
-              )}
+              {/* Created Rooms */}
+              <Form.Item
+                label={
+                  <span className="text-gray-700 font-semibold">
+                    🏠 Properties
+                  </span>
+                }
+                className="col-span-2"
+              >
+                <div className="bg-blue-50 p-4 rounded-xl text-center">
+                  <p className="text-lg font-semibold text-blue-600">
+                    {owner.createdRooms?.length || 0}
+                  </p>
+                  <p className="text-gray-600">Listed Properties</p>
+                </div>
+              </Form.Item>
             </div>
-          </Form.Item>
 
-          {/* Buttons */}
-          <div className="flex gap-3 mt-4">
-            <Button type="primary" htmlType="submit" loading={loading} block>
-              {loading ? "Updating..." : "Update Owner"}
-            </Button>
-            <Button
-              onClick={() => navigate("/owner-profile")}
-              className="bg-gray-500 text-white hover:bg-gray-600 w-full"
-            >
-              Cancel
-            </Button>
-          </div>
-        </Form>
+            {/* Form Actions */}
+            <div className="flex gap-4 mt-8">
+              <Button
+                onClick={() => navigate("/owner-profile")}
+                className="h-12 px-8 rounded-lg bg-red-500 hover:bg-red-600 !text-white !border-0"
+              >
+                Cancel
+              </Button>
+              <Button
+                htmlType="submit"
+                loading={loading}
+                className="h-12 px-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 !text-white !border-0"
+              >
+                {loading ? "Saving Changes..." : "Update Profile"}
+              </Button>
+            </div>
+          </Form>
+        </div>
       </Spin>
-    </div>
+    </motion.div>
   );
 };
 

@@ -121,3 +121,11 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+
+
+@layer components {
+  .bg-blue-600 { /* your theme color */ }
+  .bg-purple-600 { /* your theme color */ }
+  .hover\:bg-blue-700 { /* darker shade */ }
+  .hover\:bg-purple-700 { /* darker shade */ }
+}

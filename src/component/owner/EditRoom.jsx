@@ -1,26 +1,28 @@
 import React, { useState } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Upload,
-  message,
-  Select,
-  InputNumber,
-  Spin,
-  Typography,
-  Divider,
-} from "antd";
-import { UploadOutlined, CloseOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import BASEURL from "../../utils/BaseUrl";
-
-const { Option } = Select;
-const { Title, Text } = Typography;
-
-const EditRoom = () => {
+  import { motion } from "framer-motion";
+  import {
+    Form,
+    Input,
+    Button,
+    Upload,
+    message,
+    Select,
+    InputNumber,
+    Spin,
+    Typography,
+    Divider,
+  } from "antd";
+  import { UploadOutlined, CloseOutlined } from "@ant-design/icons";
+  import axios from "axios";
+  import { useSelector } from "react-redux";
+  import { useNavigate } from "react-router-dom";
+  import BASEURL from "../../utils/BaseUrl";
+  
+  const { Option } = Select;
+  const { Title, Text } = Typography;
+  
+  const EditRoom = () => {
+    // ... keep existing state and logic the same ...
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const selectedRoom = useSelector((state) => state.room.selectedRoom);
@@ -52,7 +54,7 @@ const EditRoom = () => {
         formData.append(key, value);
       });
 
-      await axios.put(`${BASEURL}/api/v2a/edit/room/${selectedRoom._id}`,
+      await axios.put(`${BASEURL}/api/v2a/edit/room/${selectedRoom?._id}`,
         formData,
         {
           withCredentials: true,
@@ -70,143 +72,194 @@ const EditRoom = () => {
     }
   };
 
-  return (
-    <div className="max-w-2xl mt-20 mx-auto bg-white p-6 rounded-lg shadow-md">
-      <Spin spinning={loading}>
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <Title level={3} className="text-blue-600">
-            ✏️ Edit Room - {selectedRoom.houseName}
-          </Title>
-          <Button
-            type="text"
-            icon={<CloseOutlined />}
-            className="text-gray-500 hover:text-red-500"
-            onClick={() => navigate("/owner-profile")}
-          />
-        </div>
-
-        <Divider />
-
-        {/* Form */}
-        <Form
-          layout="vertical"
-          onFinish={onFinish}
-          initialValues={selectedRoom}
-        >
-          {/* House Name */}
-          <Form.Item
-            label={<Text strong>🏠 House Name</Text>}
-            name="houseName"
-            rules={[{ required: true, message: "Please enter the house name" }]}
-          >
-            <Input placeholder="Enter house name" />
-          </Form.Item>
-
-          {/* Location (Disabled) */}
-
-          <Form.Item
-            label={<Text strong>🏠 House Location</Text>}
-            name="address"
-            value={selectedRoom.address}
-            rules={[
-              { required: true, message: "Please enter the house address" },
-            ]}
-          >
-            <Input placeholder="Enter Address" />
-          </Form.Item>
-
-          {/* Room Type */}
-          <Form.Item
-            label={<Text strong>🛏️ Room Type</Text>}
-            name="roomType"
-            rules={[{ required: true, message: "Please select the room type" }]}
-          >
-            <Select placeholder="Select room type">
-              <Option value="flat">Flat</Option>
-              <Option value="room">Room</Option>
-            </Select>
-          </Form.Item>
-
-          {/* Number of Rooms */}
-          <Form.Item
-            label={<Text strong>🏢 Number of Rooms</Text>}
-            name="numberRoom"
-            rules={[
-              { required: true, message: "Please enter the number of rooms" },
-            ]}
-          >
-            <InputNumber min={1} className="w-full" />
-          </Form.Item>
-
-          {/* Price */}
-          <Form.Item
-            label={<Text strong>💰 Price</Text>}
-            name="price"
-            rules={[{ required: true, message: "Please enter the price" }]}
-          >
-            <InputNumber min={0} className="w-full" />
-          </Form.Item>
-
-          {/* Status */}
-          <Form.Item
-            label={<Text strong>🔘 Status</Text>}
-            name="status"
-            rules={[{ required: true, message: "Please select the status" }]}
-          >
-            <Select placeholder="Select status">
-              <Option value="active">Active</Option>
-              <Option value="inactive">Inactive</Option>
-            </Select>
-          </Form.Item>
-
-          {/* Room Images */}
-          <Form.Item label={<Text strong>🖼️ Room Images</Text>}>
-            <div className="grid grid-cols-3 gap-3 mb-3">
-              {/* Show existing images */}
-              {existingImages.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`Room Image ${index + 1}`}
-                  className="w-24 h-24 object-cover rounded-md border"
-                />
-              ))}
-            </div>
-            <Upload
-              listType="picture-card"
-              beforeUpload={() => false}
-              onChange={handleImageUpload}
-              multiple
-            >
-              <Button icon={<UploadOutlined />}>Upload New Images</Button>
-            </Upload>
-          </Form.Item>
-
-          {/* Description */}
-          <Form.Item
-            label={<Text strong>📝 Description</Text>}
-            name="description"
-          >
-            <Input.TextArea rows={4} placeholder="Enter description" />
-          </Form.Item>
-
-          {/* Buttons */}
-          <div className="flex gap-3 mt-4">
-            <Button type="primary" htmlType="submit" loading={loading} block>
-              {loading ? "Updating..." : "Update Room"}
-            </Button>
+  
+  
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden mt-20"
+      >
+        <Spin spinning={loading}>
+          {/* Header Section */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 flex justify-between items-center">
+            <Title level={3} className="!text-white !m-0">
+              ✏️ Edit Property - {selectedRoom?.houseName}
+            </Title>
             <Button
+              type="text"
+              icon={<CloseOutlined className="text-white" />}
+              className="!text-white hover:!bg-white/10"
               onClick={() => navigate("/owner-profile")}
-              className="bg-gray-500 text-white hover:bg-gray-600 w-full"
-            >
-              Cancel
-            </Button>
+            />
           </div>
-        </Form>
-      </Spin>
-    </div>
-  );
-};
-
-export default EditRoom;
+  
+          {/* Form Content */}
+          <div className="p-8">
+            <Form
+              layout="vertical"
+              onFinish={onFinish}
+              initialValues={selectedRoom}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* House Name */}
+                <Form.Item
+                  label={<Text strong className="text-gray-700">🏠 Property Name</Text>}
+                  name="houseName"
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    placeholder="Luxury Villa"
+                    className="rounded-lg py-2"
+                  />
+                </Form.Item>
+  
+                {/* Address */}
+                <Form.Item
+                  label={<Text strong className="text-gray-700">📍 Location</Text>}
+                  name="address"
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    placeholder="Enter full address"
+                    className="rounded-lg py-2"
+                  />
+                </Form.Item>
+  
+                {/* Room Type */}
+                <Form.Item
+                  label={<Text strong className="text-gray-700">🛌 Property Type</Text>}
+                  name="roomType"
+                  rules={[{ required: true }]}
+                >
+                  <Select
+                    placeholder="Select type"
+                    className="rounded-lg"
+                    dropdownClassName="rounded-lg"
+                  >
+                    <Option value="flat">🏢 Apartment</Option>
+                    <Option value="room">🏠 Independent House</Option>
+                  </Select>
+                </Form.Item>
+  
+                {/* Number of Rooms */}
+                <Form.Item
+                  label={<Text strong className="text-gray-700">🚪 Rooms Available</Text>}
+                  name="numberRoom"
+                  rules={[{ required: true }]}
+                >
+                  <InputNumber
+                    min={1}
+                    className="w-full rounded-lg"
+                    controls={false}
+                  />
+                </Form.Item>
+  
+                {/* Price */}
+                <Form.Item
+                  label={<Text strong className="text-gray-700">💰 Monthly Price</Text>}
+                  name="price"
+                  rules={[{ required: true }]}
+                >
+                  <InputNumber
+                    min={0}
+                    className="w-full rounded-lg"
+                    formatter={(value) => `₹ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value) => value.replace(/₹\s?|(,*)/g, '')}
+                  />
+                </Form.Item>
+  
+                {/* Status */}
+                <Form.Item
+                  label={<Text strong className="text-gray-700">📊 Listing Status</Text>}
+                  name="status"
+                  rules={[{ required: true }]}
+                >
+                  <Select
+                    placeholder="Select status"
+                    className="rounded-lg"
+                    dropdownClassName="rounded-lg"
+                  >
+                    <Option value="active">🟢 Active</Option>
+                    <Option value="inactive">🔴 Inactive</Option>
+                  </Select>
+                </Form.Item>
+              </div>
+  
+              {/* Image Upload */}
+              <Form.Item label={<Text strong className="text-gray-700">📸 Property Images</Text>}>
+                <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mb-4">
+                  {existingImages?.map((img, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={img}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-xl border shadow-sm"
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                        <Button
+                          type="primary"
+                          danger
+                          className="!flex items-center"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <Upload
+                  listType="picture-card"
+                  beforeUpload={() => false}
+                  onChange={handleImageUpload}
+                  multiple
+                  className="w-full"
+                >
+                  <div className="flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-xl hover:border-blue-500 transition-colors">
+                    <UploadOutlined className="text-2xl text-gray-500 mb-2" />
+                    <Text className="text-gray-600">Click to upload</Text>
+                    <Text type="secondary" className="text-sm">
+                      (JPEG, PNG)
+                    </Text>
+                  </div>
+                </Upload>
+              </Form.Item>
+  
+              {/* Description */}
+              <Form.Item
+                label={<Text strong className="text-gray-700">📝 Property Description</Text>}
+                name="description"
+              >
+                <Input.TextArea
+                  rows={4}
+                  placeholder="Describe your property's best features..."
+                  className="rounded-lg"
+                />
+              </Form.Item>
+  
+              {/* Form Actions */}
+              <div className="flex gap-4 mt-8">
+                <Button
+                  onClick={() => navigate("/owner-profile")}
+                  className="h-12 px-8 rounded-lg bg-red-500  !border-0"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  htmlType="submit"
+                  loading={loading}
+                  className="h-12 px-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600  !border-0"
+                >
+                  {loading ? "Saving Changes..." : "Update Property"}
+                </Button>
+              </div>
+            </Form>
+          </div>
+        </Spin>
+      </motion.div>
+    );
+  };
+  
+  export default EditRoom;

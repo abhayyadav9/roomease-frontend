@@ -82,7 +82,7 @@ function App() {
           <Route path="/update-detail" element={<UpdateOwnerDetail />} />
           <Route path="/all-rooms" element={<AllRooms />} />
           <Route path="/add-room" element={<AddRoom />} />
-          <Route path="/edit-room/:roomId" element={<EditRoom />} />
+          <Route path="/edit-room" element={<EditRoom />} />
           <Route
             path="/view-room-detail/:roomId"
             element={<ViewRoomDetail />}

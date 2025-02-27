@@ -12,7 +12,7 @@ import { FaLinkedin, FaTwitter, FaFacebook } from "react-icons/fa";
 
 const Contact = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mt-20">
       {/* Hero Section */}
       <div className="bg-blue-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
@@ -263,7 +263,7 @@ export default Contact;
 export const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 border-t border-gray-700">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 py-4">
         <div className="md:flex md:justify-between md:items-start">
           {/* Company Info */}
           <div className="mb-8 md:mb-0">
@@ -326,14 +326,14 @@ export const Footer = () => {
                     Blog
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href="/careers"
                     className="hover:text-blue-400 transition-colors duration-300 hover:pl-2"
                   >
                     Careers
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
 
@@ -349,11 +349,11 @@ export const Footer = () => {
                   </a>
                 </li>
                 <li>+1 (555) 123-4567</li>
-                <li>
+                {/* <li>
                   123 Business Street
                   <br />
                   New York, NY 10001
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
@@ -386,7 +386,7 @@ export const Footer = () => {
                 className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
               >
                 <span className="sr-only">GitHub</span>
-                <svg
+                {/* <svg
                   className="w-6 h-6"
                   fill="currentColor"
                   viewBox="0 0 24 24"
@@ -411,7 +411,7 @@ export const Footer = () => {
                   aria-hidden="true"
                 >
                   <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
+                </svg> */}
               </a>
             </div>
           </div>

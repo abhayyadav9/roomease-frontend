@@ -24,8 +24,7 @@ const OwnerCreatedRoom = () => {
     }
   }, [rooms, owner]);
 
-  console.log("Owner Created Rooms:", owner?.createdRooms);
-  console.log("Rooms List:", rooms);
+
 
   if (loading) {
     return (
@@ -36,10 +35,10 @@ const OwnerCreatedRoom = () => {
   }
 
   const filteredRooms = rooms.filter((room) =>
-    owner?.createdRooms?.includes(room._id?.toString())
+    owner?.createdRooms?.includes(room?._id?.toString())
   );
 
-  console.log("Filtered Rooms:", filteredRooms);
+
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -72,9 +71,9 @@ const OwnerCreatedRoom = () => {
               <button
                 onClick={() => {
                   dispatch(setSelectedRoom(room));
-                  setTimeout(() => {
-                    window.location.href = "/edit-room";
-                  }, 1000);
+                  
+                   navigate("/edit-room");
+        
                 }}
                 className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all"
               >

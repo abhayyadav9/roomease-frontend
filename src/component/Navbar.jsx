@@ -32,6 +32,7 @@ import { addNotification } from "../redux/slice/notificationSlice";
 import { toggleTheme } from "../redux/slice/themeSlice";
 import { motion } from "framer-motion";
 import "./Navbar";
+import loh from "../../public/loh.jpg"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -126,7 +127,6 @@ const Navbar = () => {
     setLastSeen(Date.now());
   };
 
-
   const profileContent = (
     <div className="flex flex-col gap-2 p-2 w-64">
       <div className="flex items-center gap-4 border-b pb-4">
@@ -168,19 +168,18 @@ const Navbar = () => {
       </button>
 
       <div>
-           {/* Theme Toggle */}
-           <Switch
-              checked={theme === "dark"}
-              onChange={() => dispatch(toggleTheme())}
-              checkedChildren="🌙"
-              unCheckedChildren="☀️"
-              className="bg-gray-200 dark:bg-gray-600"
-            />
-            <span>Theme</span>
+        {/* Theme Toggle */}
+        <Switch
+          checked={theme === "dark"}
+          onChange={() => dispatch(toggleTheme())}
+          checkedChildren="🌙"
+          unCheckedChildren="☀️"
+          className="bg-gray-200 dark:bg-gray-600"
+        />
+        <span>Theme</span>
       </div>
     </div>
   );
-
 
   const notificationContent = (
     <motion.div
@@ -240,8 +239,15 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-2 text-xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"
           >
-            <img src="/logo.png" alt="Logo" className="h-8 w-8" />
-            RoomEase
+            <img
+              src={loh}
+              alt="Room Ease Logo"
+              className="h-8 w-auto object-contain"
+            />
+
+            <h1 className="text-2xl font-bold text-gray-800">
+              Room<span className="text-[#F83002]">Ease</span>
+            </h1>
           </NavLink>
 
           {/* Desktop Navigation */}
@@ -276,8 +282,6 @@ const Navbar = () => {
                 </Button>
               </Popover>
             )}
-
-         
 
             {/* Profile */}
             {user ? (
