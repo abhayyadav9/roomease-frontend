@@ -19,13 +19,13 @@ const Home = () => {
 
   const features = [
     {
-      name: 'AI-Powered Matching',
+      name: ' Matching',
       description: 'Smart algorithm finds properties matching your lifestyle',
       icon: SparklesIcon,
     },
     {
-      name: 'Virtual Reality Tours',
-      description: 'Immersive 3D property walkthroughs from home',
+      name: ' Reality Tours',
+      description: 'Immersive  property walkthroughs from home',
       icon: UserGroupIcon,
     },
     {
@@ -37,7 +37,7 @@ const Home = () => {
 
   const stats = [
     { id: 1, name: 'Premium Listings', value: '25K+' },
-    { id: 2, name: 'Cities Covered', value: '50+' },
+    { id: 2, name: 'Place Covered', value: '50+' },
     { id: 3, name: 'Happy Clients', value: '98%' },
     { id: 4, name: 'Response Time', value: '<2h' },
   ];
@@ -92,7 +92,7 @@ const Home = () => {
             </motion.h1>
             
             <motion.p variants={itemVariants} className="mt-6 text-lg leading-8 text-gray-600">
-              Discover seamless renting with AI-powered matching, virtual reality tours, 
+              Discover seamless renting application where easy owner can rentted their house, room and their properties Easily,  And Teanant get their dream home or rooms as per their need
               and smart contract management.
             </motion.p>
 
@@ -100,8 +100,7 @@ const Home = () => {
               <motion.a
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href="/login"
-                className="rounded-lg bg-gradient-to-br from-cyan-600 to-violet-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+onClick={()=>navigate("/all-rooms")}                className="rounded-lg bg-gradient-to-br from-cyan-600 to-violet-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:shadow-xl"
               >
                 Get Started
               </motion.a>

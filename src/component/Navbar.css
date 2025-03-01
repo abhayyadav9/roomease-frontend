@@ -17,3 +17,12 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
   }
+
+  .band-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: #ffcc00;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 5px black;
+  }
+  

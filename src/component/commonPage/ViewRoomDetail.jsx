@@ -6,6 +6,8 @@ import BASEURL from "../../utils/BaseUrl";
 import useGetAllRooms from "../../hooks/useGetAllRooms";
 import socketService from "../../utils/socket"; // ✅ Import Socket Service
 import { addNotification } from "../../redux/slice/notificationSlice";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const ViewRoomDetail = ({ onClose }) => {
   useGetAllRooms(); // Fetch all rooms
@@ -14,10 +16,11 @@ const ViewRoomDetail = ({ onClose }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [hasApplied, setHasApplied] = useState(false); // Track if the user has applied
 
-  const rooms = useSelector((state) => state.room.room);
-  const user = useSelector((state) => state.auth.user);
-  const selectedRoom = useSelector((state) => state.room.selectedRoom);
+  const rooms = useSelector((state) => state.room?.room);
+  const user = useSelector((state) => state.auth?.user);
+  const selectedRoom = useSelector((state) => state.room?.selectedRoom);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // ✅ Check if user has already applied
   useEffect(() => {
@@ -30,30 +33,36 @@ const ViewRoomDetail = ({ onClose }) => {
   // ✅ Apply for the room and notify the owner
   const handleApply = async () => {
     try {
-      await axios.post(
-        `${BASEURL}/api/v2a/apply/${selectedRoom._id}`,
-        {}, // No request body needed
-        { withCredentials: true }
-      );
-
-      // Emit notification to the owner
-      socketService.sendNotification({
-        userId: selectedRoom.owner.user, // Owner ID
-        roomId: selectedRoom?._id, // Room ID
-        userName: user.name,
-        message: `${user.name} has applied for your room: ${selectedRoom.houseName} `,
-        houseName:selectedRoom.houseName
-      });
-      socketService.listenForNotifications((message) => {
-               notification.info({
-                 message: "New Notification",
-                 description: message,
-                 placement: "topRight",
-               });
-              })
-      // ✅ Update UI
-      setHasApplied(true);
-      message.success("Applied for the room successfully!");
+      if(!user){
+        toast("Please login first to apply")
+        navigate("/login");
+      }else{
+        await axios.post(
+          `${BASEURL}/api/v2a/apply/${selectedRoom?._id}`,
+          {}, // No request body needed
+          { withCredentials: true }
+        );
+  
+        // Emit notification to the owner
+        socketService.sendNotification({
+          userId: selectedRoom.owner.user, // Owner ID
+          roomId: selectedRoom?._id, // Room ID
+          userName: user?.name,
+          message: `${user?.name} has applied for your room: ${selectedRoom?.houseName} `,
+          houseName:selectedRoom?.houseName
+        });
+        socketService.listenForNotifications((message) => {
+                 notification.info({
+                   message: "New Notification",
+                   description: message,
+                   placement: "topRight",
+                 });
+                })
+        // ✅ Update UI
+        setHasApplied(true);
+        message.success("Applied for the room successfully!");
+      }
+     
     } catch (error) {
       console.error(
         "Error applying for room:",
@@ -83,7 +92,7 @@ const ViewRoomDetail = ({ onClose }) => {
           className="rounded-lg overflow-hidden"
         >
           {selectedRoom.roomImages?.length ? (
-            selectedRoom.roomImages.map((img, index) => (
+            selectedRoom.roomImages?.map((img, index) => (
               <img
                 key={index}
                 src={img}
@@ -113,7 +122,7 @@ const ViewRoomDetail = ({ onClose }) => {
         >
           <img
             src={
-              selectedRoom.roomImages?.[currentImage] ||
+              selectedRoom?.roomImages?.[currentImage] ||
               "https://via.placeholder.com/800x400"
             }
             alt="Room"
@@ -135,23 +144,23 @@ const ViewRoomDetail = ({ onClose }) => {
         <div className="grid grid-cols-2 gap-4 text-gray-700">
           <div className="flex items-center gap-2">
             <span className="font-medium">
-              Room Type: <strong>{selectedRoom.roomType}</strong>
+              Room Type: <strong>{selectedRoom?.roomType}</strong>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium">
-              Price: <strong>${selectedRoom.price}</strong>
+              Price: <strong>${selectedRoom?.price}</strong>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium">
-              Contact: <strong>{selectedRoom.contactNumber || "N/A"}</strong>
+              Contact: <strong>{selectedRoom?.contactNumber || "N/A"}</strong>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-medium">
               Address:{" "}
-              <strong>{selectedRoom.address || "Not specified"}</strong>
+              <strong>{selectedRoom?.address || "Not specified"}</strong>
             </span>
           </div>
         </div>
@@ -159,17 +168,17 @@ const ViewRoomDetail = ({ onClose }) => {
         {/* ✅ Status Indicator */}
         <div className="flex justify-center mt-4">
           <Tag
-            color={selectedRoom.status === "active" ? "green" : "red"}
+            color={selectedRoom?.status === "active" ? "green" : "red"}
             className="text-lg px-4 py-1"
           >
-            {selectedRoom.status === "active" ? "Available" : "Not Available"}
+            {selectedRoom?.status === "active" ? "Available" : "Not Available"}
           </Tag>
         </div>
 
         {/* Apply & Close Buttons */}
         <div className="mt-4 flex flex-col space-y-2">
          {
-          user.role !== "owner" && (
+          user?.role !== "owner" && (
             <Button
             onClick={handleApply}
             disabled={hasApplied} // Disable the button if already applied

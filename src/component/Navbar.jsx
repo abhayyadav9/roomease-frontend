@@ -32,7 +32,7 @@ import { addNotification } from "../redux/slice/notificationSlice";
 import { toggleTheme } from "../redux/slice/themeSlice";
 import { motion } from "framer-motion";
 import "./Navbar";
-import loh from "../../public/loh.jpg"
+import loh from "../../public/loh.jpg";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -239,13 +239,12 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-2 text-xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"
           >
-            <img
+            {/* <img
               src={loh}
               alt="Room Ease Logo"
               className="h-8 w-auto object-contain"
-            />
-
-            <h1 className="text-2xl font-bold text-gray-800">
+            /> */}
+            <h1 className="font-metal text-2xl tracking-widest drop-shadow-2xl">
               Room<span className="text-[#F83002]">Ease</span>
             </h1>
           </NavLink>

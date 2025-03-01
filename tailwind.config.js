@@ -3,6 +3,9 @@ module.exports = {
     content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
   	extend: {
+		fontFamily: {
+			bebas: ["Bebas Neue", "sans-serif"],
+		  },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

@@ -204,7 +204,7 @@ const Contact = () => {
         </div>
 
         {/* Team Section */}
-        <div className="mt-16">
+        {/* <div className="mt-16">
           <h2 className="text-2xl font-bold mb-8 text-gray-800">
             Our Leadership Team
           </h2>
@@ -237,7 +237,7 @@ const Contact = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Map */}
         <div className="mt-16 bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -268,7 +268,12 @@ export const Footer = () => {
           {/* Company Info */}
           <div className="mb-8 md:mb-0">
             <div className="flex items-center mb-4">
-              <span className="text-2xl font-bold text-white">YourBrand</span>
+              <span className="text-2xl font-bold text-white">
+
+              <h1 className="font-metal text-2xl tracking-widest drop-shadow-2xl">
+              Room<span className="text-[#F83002]">Ease</span>
+            </h1>
+              </span>
             </div>
             <p className="max-w-xs text-sm leading-6">
               Transforming ideas into exceptional digital experiences.
@@ -345,10 +350,10 @@ export const Footer = () => {
                     href="mailto:info@company.com"
                     className="hover:text-blue-400 transition-colors duration-300 hover:pl-2"
                   >
-                    info@company.com
+                  rooease@gmail.com
                   </a>
                 </li>
-                <li>+1 (555) 123-4567</li>
+                <li>9263833367</li>
                 {/* <li>
                   123 Business Street
                   <br />

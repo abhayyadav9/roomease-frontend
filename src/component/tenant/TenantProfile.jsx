@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Divider } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
@@ -9,14 +9,17 @@ import axios from "axios";
 import BASEURL from "../../utils/BaseUrl";
 import { logout as logoutAction } from "../../redux/slice/authSlice";
 import { CiLogout } from "react-icons/ci";
-
+import SavedRooms from "./SavedRooms";
 
 const TenantProfile = () => {
   const tenant = useSelector((state) => state.tenant?.data?.data);
-  const requirements = useSelector((state) => state.requirement.requirements.requirement.requirements)
-   const user = useSelector((state) => state.auth.user);
+  const requirements = useSelector(
+    (state) => state.requirement.requirements.requirement.requirements
+  );
+  const [toggle, setToggle] = useState(null);
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // ✅ Filter requirements created by this tenant
   const tenantRequirements = requirements.filter(
@@ -41,7 +44,6 @@ const TenantProfile = () => {
     }
   };
 
-
   return (
     <div className="container mx-auto mt-16 p-4">
       {/* Profile Card */}
@@ -58,7 +60,9 @@ const TenantProfile = () => {
             <h2 className="text-3xl font-semibold text-gray-800">
               {tenant?.name || "Unknown Tenant"}
             </h2>
-            <p className="text-sm text-gray-500">{tenant?.user?.email || "No email provided"}</p>
+            <p className="text-sm text-gray-500">
+              {tenant?.user?.email || "No email provided"}
+            </p>
           </div>
         </div>
 
@@ -105,27 +109,58 @@ const TenantProfile = () => {
             Add New Requirement
           </Button>
 
-
-             {/* Logout */}
-        <div
-          onClick={handleLogout}
-          className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
-        >
-          <div className="flex items-center gap-3">
-            <CiLogout size={24} />
-            <span className="text-md">Logout</span>
+          {/* Logout */}
+          <div
+            onClick={handleLogout}
+            className="flex items-center justify-between w-full px-2 py-1 hover:text-red-900 rounded"
+          >
+            <div className="flex items-center gap-3">
+              <CiLogout size={24} />
+              <span className="text-md">Logout</span>
+            </div>
           </div>
         </div>
-        </div>
       </div>
+      <div className="flex gap-5">
+  <Button className="mt-6 bg-red-700" onClick={() => setToggle("requirement")}>
+    Total Requirement
+  </Button>
+  <Button className="mt-6 bg-blue-500" onClick={() => setToggle("saved")}>
+    Saved
+  </Button>
+  <Button className="mt-6 bg-green-700" onClick={() => setToggle("query")}>
+    Apply for Query A
+  </Button>
+</div>
 
-      {/* Tenant Requirements */}
-      <div className="space-y-4 mt-6">
-        <h2>Total Requirements Created ({tenantRequirements.length})</h2>
+<div className="mt-6">
+  {toggle === "requirement" && (
+    <div className="space-y-4 mt-6">
+      <h2>Total Requirements Created ({tenantRequirements?.length})</h2>
+      {tenantRequirements?.length > 0 ? (
+        <TenantCreateRequirement />
+      ) : (
+        <p>No requirements found.</p>
+      )}
+    </div>
+  )}
+  {toggle === "saved" && (
+    <div className="space-y-4 mt-6">
+      <h2>Total Requirements Created ({tenant?.bookmarks?.length})</h2>
+      {tenantRequirements?.length > 0 ? (
+        <SavedRooms />
+      ) : (
+        <p>No requirements found.</p>
+      )}
+    </div>
+  )}
+  {toggle === "query" && (
+    <div>
+      Query A Content
+    </div>
+  )}
+</div>
 
-        {/* ✅ Render `AllRequirements` only if there are requirements for this tenant */}
-        {tenantRequirements.length > 0 ? <TenantCreateRequirement /> : <p>No requirements found.</p>}
-      </div>
     </div>
   );
 };
