@@ -8,6 +8,9 @@ import socketService from "../../utils/socket"; // ✅ Import Socket Service
 import { addNotification } from "../../redux/slice/notificationSlice";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { setBookmarks } from "../../redux/slice/tenantSlice";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const ViewRoomDetail = ({ onClose }) => {
   useGetAllRooms(); // Fetch all rooms
@@ -15,6 +18,8 @@ const ViewRoomDetail = ({ onClose }) => {
   const [visible, setVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [hasApplied, setHasApplied] = useState(false); // Track if the user has applied
+  const [save, setSave] = useState(false);
+  const tenant = useSelector((state) => state.tenant.data?.data);
 
   const rooms = useSelector((state) => state.room?.room);
   const user = useSelector((state) => state.auth?.user);
@@ -33,36 +38,35 @@ const ViewRoomDetail = ({ onClose }) => {
   // ✅ Apply for the room and notify the owner
   const handleApply = async () => {
     try {
-      if(!user){
-        toast("Please login first to apply")
+      if (!user) {
+        toast("Please login first to apply");
         navigate("/login");
-      }else{
+      } else {
         await axios.post(
           `${BASEURL}/api/v2a/apply/${selectedRoom?._id}`,
           {}, // No request body needed
           { withCredentials: true }
         );
-  
+
         // Emit notification to the owner
         socketService.sendNotification({
           userId: selectedRoom.owner.user, // Owner ID
           roomId: selectedRoom?._id, // Room ID
           userName: user?.name,
           message: `${user?.name} has applied for your room: ${selectedRoom?.houseName} `,
-          houseName:selectedRoom?.houseName
+          houseName: selectedRoom?.houseName,
         });
         socketService.listenForNotifications((message) => {
-                 notification.info({
-                   message: "New Notification",
-                   description: message,
-                   placement: "topRight",
-                 });
-                })
+          notification.info({
+            message: "New Notification",
+            description: message,
+            placement: "topRight",
+          });
+        });
         // ✅ Update UI
         setHasApplied(true);
         message.success("Applied for the room successfully!");
       }
-     
     } catch (error) {
       console.error(
         "Error applying for room:",
@@ -73,6 +77,35 @@ const ViewRoomDetail = ({ onClose }) => {
   };
 
   if (!selectedRoom) return null; // Safeguard if no room is selected
+  // handle save
+
+  const saveHandler = async () => {
+    if (!user) {
+      toast("Please login first to save");
+      navigate("/login");
+    }else{
+    try {
+      const response = await axios.post(
+        `${BASEURL}/api/v3/save-room/${selectedRoom?._id}`,
+        {},
+        { withCredentials: true }
+      );
+
+      if (response.data?.message === "saved") {
+        setSave(true);
+        message.success("Room saved to bookmarks");
+      } else {
+        setSave(false);
+        message.success("Room removed from bookmarks");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Bookmark update failed");
+      navigate("/login")
+    }
+  }
+  };
+
 
   return (
     <Modal
@@ -140,66 +173,74 @@ const ViewRoomDetail = ({ onClose }) => {
           {selectedRoom.description || "No description provided."}
         </p>
 
-        {/* 🏠 Room Information */}
+      
+    
+
+        {/* Detail Grid */}
         <div className="grid grid-cols-2 gap-4 text-gray-700">
-          <div className="flex items-center gap-2">
-            <span className="font-medium">
-              Room Type: <strong>{selectedRoom?.roomType}</strong>
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-medium">
-              Price: <strong>${selectedRoom?.price}</strong>
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-medium">
-              Contact: <strong>{selectedRoom?.contactNumber || "N/A"}</strong>
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-medium">
-              Address:{" "}
-              <strong>{selectedRoom?.address || "Not specified"}</strong>
-            </span>
-          </div>
+          {[
+            { label: "Type", value: selectedRoom?.roomType },
+            { label: "Price", value: `$${selectedRoom?.price}/mo` },
+            { label: "Contact", value: selectedRoom?.contactNumber || "N/A" },
+            { label: "Address", value: selectedRoom?.address || "Hidden" },
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+            >
+              <span className="font-medium text-gray-500">{item.label}:</span>
+              <span className="font-semibold">{item.value}</span>
+            </motion.div>
+          ))}
         </div>
 
-        {/* ✅ Status Indicator */}
-        <div className="flex justify-center mt-4">
-          <Tag
-            color={selectedRoom?.status === "active" ? "green" : "red"}
-            className="text-lg px-4 py-1"
-          >
-            {selectedRoom?.status === "active" ? "Available" : "Not Available"}
-          </Tag>
-        </div>
+        {/* Action Buttons */}
+        <div className="flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
+          {user?.role !== "owner" && (
+            <>
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Button
+                  onClick={saveHandler}
+                  className="flex items-center gap-2 text-gray-600 hover:text-blue-600"
+                  type="text"
+                >
+                  {save ? (
+                    <FaBookmark className="text-blue-600" />
+                  ) : (
+                    <FaRegBookmark />
+                  )}
+                  <span>{save ? "Saved" : "Save"}</span>
+                </Button>
+              </motion.div>
 
-        {/* Apply & Close Buttons */}
-        <div className="mt-4 flex flex-col space-y-2">
-         {
-          user?.role !== "owner" && (
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Button
+                  onClick={handleApply}
+                  disabled={hasApplied}
+                  className={`flex items-center gap-2 ${
+                    hasApplied
+                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                  } px-6 py-3 rounded-lg transition-all`}
+                >
+                  {hasApplied ? "Application Sent" : "Apply Now"}
+                </Button>
+              </motion.div>
+            </>
+          )}
+
+          <motion.div whileHover={{ scale: 1.05 }}>
             <Button
-            onClick={handleApply}
-            disabled={hasApplied} // Disable the button if already applied
-            className={`${
-              hasApplied
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-green-500 hover:bg-green-700"
-            } text-white py-2 rounded-lg transition-all duration-300`}
-          >
-            {hasApplied ? "Already Applied" : "Apply"}
-          </Button>
-          )
-         }
-
-          <Button
-            onClick={onClose}
-            className="bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg transition-all duration-300"
-          >
-            Close
-          </Button>
-        </div>
+              onClick={onClose}
+              className="px-6 py-3 text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200"
+            >
+              Close
+            </Button>
+          </motion.div>
+        </div>      
       </div>
     </Modal>
   );

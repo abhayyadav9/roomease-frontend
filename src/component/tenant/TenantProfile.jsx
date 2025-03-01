@@ -122,45 +122,46 @@ const TenantProfile = () => {
         </div>
       </div>
       <div className="flex gap-5">
-  <Button className="mt-6 bg-red-700" onClick={() => setToggle("requirement")}>
-    Total Requirement
-  </Button>
-  <Button className="mt-6 bg-blue-500" onClick={() => setToggle("saved")}>
-    Saved
-  </Button>
-  <Button className="mt-6 bg-green-700" onClick={() => setToggle("query")}>
-    Apply for Query A
-  </Button>
-</div>
+        <Button
+          className="mt-6 bg-red-700"
+          onClick={() => setToggle("requirement")}
+        >
+          Total Requirement
+        </Button>
+        <Button className="mt-6 bg-blue-500" onClick={() => setToggle("saved")}>
+          Saved
+        </Button>
+        <Button
+          className="mt-6 bg-green-700"
+          onClick={() => setToggle("query")}
+        >
+          Apply for Query A
+        </Button>
+      </div>
 
-<div className="mt-6">
-  {toggle === "requirement" && (
-    <div className="space-y-4 mt-6">
-      <h2>Total Requirements Created ({tenantRequirements?.length})</h2>
-      {tenantRequirements?.length > 0 ? (
-        <TenantCreateRequirement />
-      ) : (
-        <p>No requirements found.</p>
-      )}
-    </div>
-  )}
-  {toggle === "saved" && (
-    <div className="space-y-4 mt-6">
-      <h2>Total Requirements Created ({tenant?.bookmarks?.length})</h2>
-      {tenantRequirements?.length > 0 ? (
-        <SavedRooms />
-      ) : (
-        <p>No requirements found.</p>
-      )}
-    </div>
-  )}
-  {toggle === "query" && (
-    <div>
-      Query A Content
-    </div>
-  )}
-</div>
-
+      <div className="mt-6">
+        {toggle === "requirement" && (
+          <div className="space-y-4 mt-6">
+            <h2>Total Requirements Created ({tenantRequirements?.length})</h2>
+            {tenantRequirements?.length > 0 ? (
+              <TenantCreateRequirement />
+            ) : (
+              <p>No requirements found.</p>
+            )}
+          </div>
+        )}
+        {toggle === "saved" && (
+          <div className="space-y-4 mt-6">
+            <h2>Total Requirements Created ({tenant?.bookmarks?.length})</h2>
+            {tenantRequirements?.length > 0 ? (
+              <SavedRooms />
+            ) : (
+              <p>No requirements found.</p>
+            )}
+          </div>
+        )}
+        {toggle === "query" && <div>Query A Content</div>}
+      </div>
     </div>
   );
 };

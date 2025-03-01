@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTenant } from "../../redux/slice/tenantSlice";
 import BASEURL from "../../utils/BaseUrl";
@@ -7,30 +7,52 @@ import BASEURL from "../../utils/BaseUrl";
 const useGetTenantDetails = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  const [tenantDetails, setTenantDetails] = useState(null); // Store fetched data
+  const [tenantDetails, setTenantDetails] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchTenantDetails = useCallback(async () => {
+    if (!user?.id) return;
+    
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        `${BASEURL}/api/v3/tenant-details/${user.id}`, 
+        { withCredentials: true }
+      );
+      
+      setTenantDetails(response.data);
+      dispatch(setTenant(response.data));
+      setError(null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch tenant details");
+      console.error("Error fetching tenant details:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user?.id, dispatch]);
 
   useEffect(() => {
-    if (!user?.id) return; // Avoid making a request if user.id is not available
+    let intervalId;
+    const controller = new AbortController();
 
-    const fetchTenantDetails = async () => {
-      try {
-        const response = await axios.get(
-          `${BASEURL}/api/v3/tenant-details/${user.id}`, {
-            withCredentials: true
-          }
-        );
-
-        setTenantDetails(response.data); // Store in state
-        dispatch(setTenant(response.data)); // Dispatch to Redux
-      } catch (error) {
-        console.error("Error fetching tenant details:", error);
-      }
+    const initialFetch = async () => {
+      await fetchTenantDetails();
+      // Start polling after initial fetch
+      intervalId = setInterval(fetchTenantDetails, 5000);
     };
 
-    fetchTenantDetails();
-  }, [user?.id, dispatch]); // Added dispatch to dependencies
+    if (user?.id) {
+      initialFetch();
+    }
 
-  return tenantDetails;
+    return () => {
+      controller.abort();
+      clearInterval(intervalId);
+    };
+  }, [fetchTenantDetails, user?.id]);
+
+  return { tenantDetails, isLoading, error, refresh: fetchTenantDetails };
 };
 
 export default useGetTenantDetails;

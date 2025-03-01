@@ -1,6 +1,8 @@
 import { Avatar, Button, Popover, Menu, Drawer, Modal } from "antd";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { AiOutlineSave } from "react-icons/ai";
+
 
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
@@ -126,6 +128,14 @@ const TenantNavbar = () => {
         <EditOutlined className="text-lg text-green-500" />
         <span className="text-gray-700">Edit Profile</span>
       </NavLink>
+      <NavLink
+        to="/tenant/saved-rooms"
+        className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+      >
+        <AiOutlineSave 
+        className="text-lg text-green-500" />
+        <span className="text-gray-700">Save Rooms</span>
+      </NavLink>
 
       <button
         onClick={handleLogout}
@@ -249,6 +259,14 @@ const TenantNavbar = () => {
           >
             <UserOutlined className="text-lg text-blue-500" />
             <span className="text-gray-700">Profile</span>
+          </NavLink>
+          <NavLink
+            to="/tenant/saved-rooms"
+            className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <AiOutlineSave
+            className="text-lg text-blue-500" />
+            <span className="text-gray-700">Saved Rooms</span>
           </NavLink>
 
           <button

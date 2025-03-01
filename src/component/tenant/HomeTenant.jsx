@@ -12,11 +12,11 @@ import AllRooms from "../AllRooms";
 
 const TenantHome = () => {
   const navigate = useNavigate();
-  const user = useSelector(state=>state.auth?.user)
+  const user = useSelector((state) => state.auth?.user);
 
   // Authentication check
   // useEffect(() => {
-    
+
   //   if (!user?.role ==="tenant") {
   //     navigate("/login", { replace: true });
   //   }
@@ -74,6 +74,15 @@ const TenantHomeWrapper = () => {
         />
 
         <Route
+          path="saved-rooms"
+          element={
+            <div className="animate-slide-in-right">
+              <SavedRooms />
+            </div>
+          }
+        />
+
+        <Route
           path="update-detail"
           element={
             <div className="animate-slide-in-left">
@@ -110,6 +119,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Contact, { Footer } from "../Contact";
 import { useSelector } from "react-redux";
+import SavedRooms from "./SavedRooms";
 
 const RoomEaseLanding = () => {
   const [searchQuery, setSearchQuery] = useState("");

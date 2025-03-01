@@ -357,8 +357,16 @@ const Navbar = () => {
               "hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg my-1",
           }))}
         />
+         <div className="  px-4 border-t pt-4 dark:border-gray-700">
+        <div className=" mx-3">
+          <UserOutlined className="text-lg" />,
+          <NavLink to={`/${user?.role}-profile`}>Profile</NavLink>,
+        </div>
+     
 
-        <div className="mt-4 px-4 border-t pt-4 dark:border-gray-700">
+        <div className="mt-4  px-4 border-t pt-4 dark:border-gray-700">
+       
+        </div>
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-700 dark:text-gray-300">Dark Mode</span>
             <Switch
