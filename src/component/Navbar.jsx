@@ -33,6 +33,7 @@ import { motion } from "framer-motion";
 import "./Navbar";
 import loh from "../../public/loh.jpg";
 import { markAllAsRead, markAsRead } from "../redux/slice/notificationSlice";
+import { FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,11 +49,6 @@ const Navbar = () => {
   );
   const unreadCount = useSelector((state) => state.notifications?.unreadCount);
   const theme = useSelector((state) => state.theme.theme);
-
-  const count = notifications?.filter(
-    (notification) =>
-      lastSeen === null || new Date(notification.createdAt) > lastSeen
-  )?.length;
 
   const menuItems = [
     {
@@ -163,6 +159,9 @@ const Navbar = () => {
   );
 
   const NotificationContent = ({ handleClose }) => {
+    // Get all tenants data once from Redux store
+    const allTenants = useSelector((state) => state.allTenant?.allTenantData);
+
     useEffect(() => {
       if (unreadCount > 0) {
         dispatch(markAllAsRead());
@@ -181,101 +180,119 @@ const Navbar = () => {
           </p>
         ) : (
           <div className="overflow-y-auto max-h-[calc(3*(80px+12px))] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
-            {notifications?.map((notification) => (
-              <motion.div
-                key={notification?._id}
-                whileHover={{ scale: 1.02 }}
-                className={`p-3 ${
-                  notification.read
-                    ? "bg-white dark:bg-gray-700"
-                    : "bg-gray-100 dark:bg-gray-800"
-                } rounded-lg cursor-pointer mb-3 transition-colors`}
-                onClick={() => {
-                  navigate(`/room/${notification?.roomId}`);
-                  if (!notification.read) {
-                    dispatch(markAsRead(notification._id));
-                  }
-                  handleClose();
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    size="small"
-                    src={notification?.userAvatar}
-                    className="border-2 border-blue-500/30"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-800 dark:text-white truncate">
-                      {notification?.sender?.name}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
-                      {notification?.message}
-                    </p>
+            {notifications.map((notification) => {
+              // Find the tenant whose _id matches the sender id from the notification
+              const tenant = allTenants?.find(
+                (tenant) => tenant.user?._id === notification?.sender?._id
+              );
+
+              console.log("Tenant for notification", notification._id, tenant);
+              return (
+                <motion.div
+                  key={notification._id}
+                  whileHover={{ scale: 1.02 }}
+                  className={`p-3 ${
+                    notification.read
+                      ? "bg-white dark:bg-gray-700"
+                      : "bg-gray-100 dark:bg-gray-800"
+                  } rounded-lg cursor-pointer mb-3 transition-colors`}
+                  onClick={() => {
+                    navigate(`/room/${notification?.relatedEntity}`);
+                    if (!notification.read) {
+                      dispatch(markAsRead(notification._id));
+                    }
+                    handleClose();
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    {tenant?.tenantPic ? (
+                      <Avatar
+                        size="small"
+                        src={tenant?.tenantPic}
+                        className="border-2 border-blue-500/30"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <FaUser className="text-6xl text-blue-500 dark:text-blue-400 opacity-75" />
+                      </div>
+                    )}
+
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-800 dark:text-white truncate">
+                        {notification?.sender?.name}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                        {notification?.message}
+                      </p>
+                      {/* Display tenant details if matched */}
+                    </div>
                   </div>
-                </div>
-                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                  {new Date(notification?.createdAt).toLocaleDateString(
-                    "en-US",
-                    {
-                      month: "short",
-                      day: "numeric",
-                    }
-                  )}{" "}
-                  •{" "}
-                  {new Date(notification?.createdAt).toLocaleTimeString(
-                    "en-US",
-                    {
-                      hour: "numeric",
-                      minute: "2-digit",
-                    }
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                  <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    {new Date(notification?.createdAt).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}{" "}
+                    •{" "}
+                    {new Date(notification?.createdAt).toLocaleTimeString(
+                      "en-US",
+                      {
+                        hour: "numeric",
+                        minute: "2-digit",
+                      }
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </motion.div>
     );
   };
-
   return (
     <nav className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 shadow-lg fixed top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <NavLink
-            to="/"
-            className="flex items-center gap-2 text-xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"
-          >
-            {/* <img
+          <div className="flex gap-x-80">
+            {/* Logo */}
+            <NavLink
+              to="/"
+              className="flex items-center gap-2 text-xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"
+            >
+              {/* <img
               src={loh}
               alt="Room Ease Logo"
               className="h-8 w-auto object-contain"
             /> */}
-            <h1 className="font-metal text-2xl tracking-widest drop-shadow-2xl">
-              Room<span className="text-[#F83002]">Ease</span>
-            </h1>
-          </NavLink>
+              <h1 className="font-metal text-2xl tracking-widest drop-shadow-2xl">
+                Room<span className="text-[#F83002]">Ease</span>
+              </h1>
+            </NavLink>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.key}
-                to={item.key === "home" ? "/" : `/${item.key}`}
-                className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
-                    isActive
-                      ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`
-                }
-              >
-                {item.icon}
-                {item.label}
-              </NavLink>
-            ))}
-
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-6">
+              {menuItems.map((item) => (
+                <NavLink
+                  key={item.key}
+                  to={item.key === "home" ? "/" : `/${item.key}`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                      isActive
+                        ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                        : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    }`
+                  }
+                >
+                  {item.icon}
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-row ml-20 md:ml-0 gap-0 md:gap-6">
             {/* Notifications */}
             {user?.role === "owner" && (
               <Popover

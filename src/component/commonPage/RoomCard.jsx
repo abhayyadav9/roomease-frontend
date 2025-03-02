@@ -95,19 +95,19 @@ const RoomCard = ({ room }) => {
         </div>
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
           <FiHome className="inline mr-2 text-blue-600" />
-          {room?.houseName}
+          {room?.houseName?.charAt(0).toUpperCase() + room?.houseName?.slice(1)}
         </h3>
         <p className="text-gray-600 mb-2">
           <FiMapPin className="inline mr-2 text-blue-600" />
-          {room?.address}
+          {room?.address?.charAt(0).toUpperCase() + room?.address?.slice(1)}
         </p>
         <p className="text-lg font-bold text-gray-900 mb-4">
-          <FiDollarSign className="inline mr-2 text-green-600" />
+          <span className="inline mr-2 text-green-600" >Rs :</span>
           {room?.price}/month
         </p>
         <button
           onClick={handleOpenModal}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
+          className="w-full bg-[#6509F1] hover:bg-[#802FF3] text-white font-medium py-2.5 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
         >
           View Details
           <svg
