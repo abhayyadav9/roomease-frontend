@@ -27,29 +27,32 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { logout as logoutAction } from "../redux/slice/authSlice";
 import BASEURL from "../utils/BaseUrl";
-import socketService from "../utils/socket";
-import { addNotification } from "../redux/slice/notificationSlice";
+
 import { toggleTheme } from "../redux/slice/themeSlice";
 import { motion } from "framer-motion";
 import "./Navbar";
 import loh from "../../public/loh.jpg";
+import { markAllAsRead, markAsRead } from "../redux/slice/notificationSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [lastSeen, setLastSeen] = useState(null);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+
   const owner = useSelector((state) => state.owner.data?.data);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const notifications = useSelector(
-    (state) => state.notification.notifications
+    (state) => state.notifications?.notifications
   );
+  const unreadCount = useSelector((state) => state.notifications?.unreadCount);
   const theme = useSelector((state) => state.theme.theme);
 
-  const count = notifications.filter(
+  const count = notifications?.filter(
     (notification) =>
       lastSeen === null || new Date(notification.createdAt) > lastSeen
-  ).length;
+  )?.length;
 
   const menuItems = [
     {
@@ -100,28 +103,6 @@ const Navbar = () => {
       alert("An error occurred while logging out");
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      socketService.connect(user.id);
-
-      // Listen for real-time notifications
-      socketService.listenForNotifications((receiveNotification) => {
-        notification.info({
-          message: "New Notification",
-          description: receiveNotification,
-          placement: "topRight",
-        });
-
-        // Dispatch notification to the Redux store
-        dispatch(addNotification(receiveNotification));
-      });
-
-      return () => {
-        socketService.disconnect();
-      };
-    }
-  }, [user, dispatch]);
 
   const handleClick = () => {
     setLastSeen(Date.now());
@@ -181,54 +162,81 @@ const Navbar = () => {
     </div>
   );
 
-  const notificationContent = (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col gap-3 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4"
-    >
-      {notifications.length === 0 ? (
-        <p className="text-center text-gray-500 dark:text-gray-400 py-2">
-          No New Notifications
-        </p>
-      ) : (
-        notifications.map((notification) => (
-          <motion.div
-            key={notification._id}
-            whileHover={{ scale: 1.02 }}
-            className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer"
-            onClick={() => {
-              navigate(`/room/${notification?.roomId}`);
-              handleClick();
-            }}
-          >
-            <div className="flex items-center gap-3">
-              <Avatar size="small" src={notification.userAvatar} />
-              <div>
-                <p className="font-medium text-gray-800 dark:text-white">
-                  {notification.userName}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Applied for {notification.houseName}
-                </p>
-              </div>
-            </div>
-            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-              {new Date(notification.createdAt).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}{" "}
-              •{" "}
-              {new Date(notification.createdAt).toLocaleTimeString("en-US", {
-                hour: "numeric",
-                minute: "2-digit",
-              })}
-            </div>
-          </motion.div>
-        ))
-      )}
-    </motion.div>
-  );
+  const NotificationContent = ({ handleClose }) => {
+    useEffect(() => {
+      if (unreadCount > 0) {
+        dispatch(markAllAsRead());
+      }
+    }, [dispatch, unreadCount]);
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col gap-3 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4"
+      >
+        {notifications?.length === 0 ? (
+          <p className="text-center text-gray-500 dark:text-gray-400 py-2">
+            No New Notifications
+          </p>
+        ) : (
+          <div className="overflow-y-auto max-h-[calc(3*(80px+12px))] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+            {notifications?.map((notification) => (
+              <motion.div
+                key={notification?._id}
+                whileHover={{ scale: 1.02 }}
+                className={`p-3 ${
+                  notification.read
+                    ? "bg-white dark:bg-gray-700"
+                    : "bg-gray-100 dark:bg-gray-800"
+                } rounded-lg cursor-pointer mb-3 transition-colors`}
+                onClick={() => {
+                  navigate(`/room/${notification?.roomId}`);
+                  if (!notification.read) {
+                    dispatch(markAsRead(notification._id));
+                  }
+                  handleClose();
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    size="small"
+                    src={notification?.userAvatar}
+                    className="border-2 border-blue-500/30"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-800 dark:text-white truncate">
+                      {notification?.sender?.name}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
+                      {notification?.message}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  {new Date(notification?.createdAt).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                    }
+                  )}{" "}
+                  •{" "}
+                  {new Date(notification?.createdAt).toLocaleTimeString(
+                    "en-US",
+                    {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    }
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </motion.div>
+    );
+  };
 
   return (
     <nav className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 shadow-lg fixed top-0 left-0 w-full z-50">
@@ -270,12 +278,18 @@ const Navbar = () => {
 
             {/* Notifications */}
             {user?.role === "owner" && (
-              <Popover content={notificationContent} trigger="click">
-                <Button
-                  type="text"
-                  className="flex items-center gap-1 h-10 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
-                >
-                  <Badge count={count} color="#2563eb">
+              <Popover
+                content={
+                  <NotificationContent
+                    handleClose={() => setNotificationOpen(false)}
+                  />
+                }
+                trigger="click"
+                open={notificationOpen}
+                onOpenChange={(open) => setNotificationOpen(open)}
+              >
+                <Button type="text" className="notification-button">
+                  <Badge count={unreadCount} color="#2563eb" offset={[10, -5]}>
                     <BellOutlined className="text-lg text-gray-700 dark:text-gray-300" />
                   </Badge>
                 </Button>
@@ -357,16 +371,13 @@ const Navbar = () => {
               "hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg my-1",
           }))}
         />
-         <div className="  px-4 border-t pt-4 dark:border-gray-700">
-        <div className=" mx-3">
-          <UserOutlined className="text-lg" />,
-          <NavLink to={`/${user?.role}-profile`}>Profile</NavLink>,
-        </div>
-     
+        <div className="  px-4 border-t pt-4 dark:border-gray-700">
+          <div className=" mx-3">
+            <UserOutlined className="text-lg" />,
+            <NavLink to={`/${user?.role}-profile`}>Profile</NavLink>,
+          </div>
 
-        <div className="mt-4  px-4 border-t pt-4 dark:border-gray-700">
-       
-        </div>
+          <div className="mt-4  px-4 border-t pt-4 dark:border-gray-700"></div>
           <div className="flex items-center justify-between mb-4">
             <span className="text-gray-700 dark:text-gray-300">Dark Mode</span>
             <Switch

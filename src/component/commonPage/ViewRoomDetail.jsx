@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import BASEURL from "../../utils/BaseUrl";
 import useGetAllRooms from "../../hooks/useGetAllRooms";
-import socketService from "../../utils/socket"; // ✅ Import Socket Service
-import { addNotification } from "../../redux/slice/notificationSlice";
+
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { setBookmarks } from "../../redux/slice/tenantSlice";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { addNotification } from "../../redux/slice/notificationSlice";
 
 const ViewRoomDetail = ({ onClose }) => {
   useGetAllRooms(); // Fetch all rooms
@@ -42,27 +42,13 @@ const ViewRoomDetail = ({ onClose }) => {
         toast("Please login first to apply");
         navigate("/login");
       } else {
-        await axios.post(
-          `${BASEURL}/api/v2a/apply/${selectedRoom?._id}`,
+        const res=await axios.post(
+          `${BASEURL}/api/v5/apply/${selectedRoom?._id}`,
           {}, // No request body needed
           { withCredentials: true }
         );
+        dispatch(addNotification(res.data.notification))
 
-        // Emit notification to the owner
-        socketService.sendNotification({
-          userId: selectedRoom.owner.user, // Owner ID
-          roomId: selectedRoom?._id, // Room ID
-          userName: user?.name,
-          message: `${user?.name} has applied for your room: ${selectedRoom?.houseName} `,
-          houseName: selectedRoom?.houseName,
-        });
-        socketService.listenForNotifications((message) => {
-          notification.info({
-            message: "New Notification",
-            description: message,
-            placement: "topRight",
-          });
-        });
         // ✅ Update UI
         setHasApplied(true);
         message.success("Applied for the room successfully!");

@@ -6,8 +6,10 @@ import { FiSearch, FiCalendar, FiDollarSign, FiHome, FiUsers, FiMapPin } from "r
 import { Pagination } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import useGetAllRequirement from "../../hooks/useGetAllRequirement";
 
 const AllRequirements = () => {
+  useGetAllRequirement();
   const requirements = useSelector((state) => state.requirement.requirements?.requirement?.requirements || []);
   const loading = useSelector((state) => state.requirement.loading);
   const error = useSelector((state) => state.requirement.error);

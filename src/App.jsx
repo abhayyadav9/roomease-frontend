@@ -5,7 +5,7 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Auth Components
 import Register from "./component/authPage/Register.jsx";
@@ -39,11 +39,14 @@ import AdminLogin from "./component/authPage/AdminLogin.jsx";
 import Dashboard from "./component/admin/Dashboard.jsx";
 import AllRequirements from "./component/tenant/AllRequirements.jsx";
 import RoleProtectedRoute from "./component/commonPage/RouteProtection.jsx";
+import SocketService from "./utils/socket.jsx";
+import { useNotifications } from "./hooks/socket/useGetNotification.jsx";
 
 // // Role-based redirection component
 const AuthRedirector = () => {
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     if (user?.role === "tenant") {
@@ -57,7 +60,10 @@ const AuthRedirector = () => {
 };
 
 function App() {
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user)
+  useNotifications()
+
+
 
   return (
     <div>
@@ -102,7 +108,7 @@ function App() {
           <Route path="/admin/register" element={<AdminRegister />} />
         </Routes>
       </Router>
-      <div className="mt-20 mb-0 flex flex-col">
+      <div className="h-screen mt-20 mb-0 flex flex-col">
         <main className="flex-1">{/* Your page content */}</main>
         <Footer />
       </div>

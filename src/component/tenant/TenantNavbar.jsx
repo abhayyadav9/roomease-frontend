@@ -25,7 +25,7 @@ const TenantNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const tenant = useSelector((state) => state.tenant.data?.data);
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -170,11 +170,11 @@ const TenantNavbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {menuItems.map((item) => (
+            {menuItems?.map((item) => (
               <NavLink
-                key={item.key}
+                key={item?.key}
                 to={
-                  item.key === "home" ? "/tenant/home" : `/tenant/${item.key}`
+                  item?.key === "home" ? "/tenant/home" : `/tenant/${item.key}`
                 }
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
@@ -184,8 +184,8 @@ const TenantNavbar = () => {
                   }`
                 }
               >
-                {item.icon}
-                {item.label}
+                {item?.icon}
+                {item?.label}
               </NavLink>
             ))}
 
@@ -244,7 +244,7 @@ const TenantNavbar = () => {
           mode="inline"
           selectedKeys={[]}
           className="border-0"
-          items={menuItems.map((item) => ({
+          items={menuItems?.map((item) => ({
             key: item.key,
             icon: item.icon,
             label: item.label,

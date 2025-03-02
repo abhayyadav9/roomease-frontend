@@ -49,7 +49,7 @@ const UpdateTenantDetail = () => {
       formData.append("address", values.address);
       if (image) formData.append("file", image);
 
-      const apiUrl = `${BASEURL}/api/v3/update-tenant/${tenant.user._id}`;
+      const apiUrl = `${BASEURL}/api/v3/update-tenant/${tenant?.user?._id}`;
       console.log("Sending request to:", apiUrl);
 
      const res= await axios.put(apiUrl, formData, {
@@ -77,7 +77,7 @@ const UpdateTenantDetail = () => {
             {/* ✅ Tenant Image */}
             <Avatar size={64} src={tenant?.tenantPic} alt="Tenant Profile" />
             <Title level={3} className="text-blue-600">
-              ✏️ Update Tenant - {tenant.name}
+              ✏️ Update Tenant - {tenant?.name}
             </Title>
           </div>
           <Button
