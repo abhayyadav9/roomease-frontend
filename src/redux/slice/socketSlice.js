@@ -1,27 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
-
-const initialState = {
-  socket: null,
-  isConnected: false,
-};
+// redux/slice/socketSlice.js
+import { createSlice } from "@reduxjs/toolkit";
 
 const socketSlice = createSlice({
-  name: 'socket',
-  initialState,
+  name: "socketio",
+  initialState: {
+    socket: null,
+    isConnected: false,
+  },
   reducers: {
-    connectSocket: (state, action) => {
-      state.socket = action.payload;
-      state.isConnected = true;
+    setSocket(state, action) {
+      // Expect action.payload to have the shape: { socket, isConnected }
+      state.socket = action.payload.socket;
+      state.isConnected = action.payload.isConnected;
     },
-    disconnectSocket: (state) => {
-      state.socket = null;
-      state.isConnected = false;
-    },
-    updateConnectionStatus: (state, action) => {
-      state.isConnected = action.payload;
-    }
   },
 });
 
-export const { connectSocket, disconnectSocket, updateConnectionStatus } = socketSlice.actions;
+export const { setSocket } = socketSlice.actions;
 export default socketSlice.reducer;

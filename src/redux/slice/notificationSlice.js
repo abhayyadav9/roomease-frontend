@@ -19,7 +19,9 @@ const notificationSlice = createSlice({
       );
       if (notification && !notification.read) {
         notification.read = true;
+      if(state.unreadCount > 0){
         state.unreadCount -= 1;
+      }
       }
     },
     markAllAsRead: (state) => {

@@ -15,6 +15,7 @@ import AllRooms from "./pages/AllRooms";
 import AllRequirements from "./pages/AllRequirements";
 import useGetTenantDetails from "../../hooks/tenantHooks/usegetTenantDetails";
 import useGetAllRooms from "../../hooks/useGetAllRooms";
+import MessageLayout from "./messagePage/MessageLayout";
 
 const AdminHome = () => {
   useGetAllOwner();
@@ -43,7 +44,11 @@ const AdminHomeWrapper = () => {
         <Route path="settings" element={<Settings />} />
         <Route path="profile" element={<AdminProfile />} />
         <Route path="all-rooms" element={<AllRooms />} />
+
         <Route path="all-requirements" element={<AllRequirements />} />
+      {/* //messages */}
+      <Route path="messages" element={<MessageLayout />} />
+
       </Route>
     </Routes>
   );

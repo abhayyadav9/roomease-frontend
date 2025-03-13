@@ -8,6 +8,7 @@ import {
   MenuUnfoldOutlined,
   TransactionOutlined,
   HomeOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import { Avatar, Switch, Skeleton, Popover, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -138,6 +139,11 @@ const AdminNavbar = ({ children }) => {
                 to: "/admin/all-requirements",
                 icon: <HomeOutlined />,
                 text: "Requirements",
+              },
+              {
+                to: "/admin/messages",
+                icon: <MessageOutlined />,
+                text: "Messages",
               },
             ].map((item) => (
               <motion.div

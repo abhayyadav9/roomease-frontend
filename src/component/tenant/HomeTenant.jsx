@@ -36,12 +36,13 @@ const TenantHome = () => {
         </div>
 
         {/* Protected Content */}
+
         <main className="flex-grow ml-5 p-2 transition-all duration-300">
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Content Container with Glassmorphism Effect */}
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-xl transition-all hover:shadow-2xl">
-              <Outlet />
-            </div>
+            {/* <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-xl transition-all hover:shadow-2xl">
+            </div> */}
+            <Outlet />
           </div>
         </main>
       </div>
@@ -99,6 +100,8 @@ const TenantHomeWrapper = () => {
           }
         />
         <Route path="requirements" element={<AllRequirements />} />
+        <Route path="messages" element={<ChatWindow />} />
+
         <Route
           path="update-requirement/:id"
           element={
@@ -120,6 +123,7 @@ import { useState } from "react";
 import Contact, { Footer } from "../Contact";
 import { useSelector } from "react-redux";
 import SavedRooms from "./SavedRooms";
+import ChatWindow from "../message/ChatWindow";
 
 const RoomEaseLanding = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -138,7 +142,9 @@ const RoomEaseLanding = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+   <>
+
+<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Navbar */}
 
       {/* Hero Section */}
@@ -249,6 +255,12 @@ const RoomEaseLanding = () => {
           ))}
         </div>
       </motion.div>
+      
     </div>
+
+ 
+   
+   
+   </>
   );
 };

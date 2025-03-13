@@ -39,14 +39,17 @@ import AdminLogin from "./component/authPage/AdminLogin.jsx";
 import Dashboard from "./component/admin/Dashboard.jsx";
 import AllRequirements from "./component/tenant/AllRequirements.jsx";
 import RoleProtectedRoute from "./component/commonPage/RouteProtection.jsx";
-import SocketService from "./utils/socket.jsx";
 import { useNotifications } from "./hooks/socket/useGetNotification.jsx";
+import ChatWindow from "./component/message/ChatWindow.jsx";
 
+import useGetRTM from "./hooks/socket/useGetRTM.jsx";
+import SocketInitializer from "./utils/SocketInitializer.js";
 // // Role-based redirection component
 const AuthRedirector = () => {
   const user = useSelector((state) => state.auth.user);
-  const navigate = useNavigate();
+  //  const conversation  = useSelector((state) => state.chat.conversation);
   
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user?.role === "tenant") {
@@ -56,17 +59,34 @@ const AuthRedirector = () => {
     }
   }, []); // Added dependencies
 
+  
+
   return null;
 };
 
 function App() {
-  const user = useSelector((state) => state.auth.user)
-  useNotifications()
+  const user = useSelector((state) => state.auth.user);
+  useNotifications();
+  useGetRTM()
 
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (user) {
+      // Initialize socket connection
+      dispatch({ type: 'socket/connect' });
+      
+      return () => {
+        // Cleanup on unmount
+        dispatch({ type: 'socket/disconnect' });
+      };
+    }
+  }, [user, dispatch]);
 
+  
 
   return (
     <div>
+        <SocketInitializer/>
       <Router>
         {(!user || !["tenant", "admin"].includes(user?.role)) && <Navbar />}
         <AuthRedirector />
@@ -106,11 +126,14 @@ function App() {
 
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
+
+          {/* message Routes */}
+          <Route path="/owner-message" element={<ChatWindow />} />
         </Routes>
       </Router>
-      <div className="h-screen mt-20 mb-0 flex flex-col">
+      <div className="h-full mt-20 mb-0 flex flex-col">
         <main className="flex-1">{/* Your page content */}</main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ const OwnerProfile = () => {
 
       try {
         const response = await axios.get(
-          `${BASEURL}/api/v2/owner-details/${user.id}`,
+          `${BASEURL}/api/v2/owner-details/${user?.id}`,
           { withCredentials: true }
         );
         dispatch(setOwner(response?.data));

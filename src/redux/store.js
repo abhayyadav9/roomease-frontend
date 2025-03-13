@@ -9,7 +9,7 @@ import allOwnerReducer from "./slice/allOwnerSlice"; // Corrected import path
 import allTenantReducer from "./slice/allTenantSlice";
 import notificationReducer from "./slice/notificationSlice";
 import socketSlice from "./slice/socketSlice";
-
+import messageReducer from "./slice/messageSlice";
 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // Uses localStorage
@@ -28,9 +28,10 @@ const persistConfig = {
     "theme",
     "allOwner", // Corrected the persisted state name
     "allTenant",
-    "notification",
-    "socketSlice",
-  ], // Only persist these slices
+    "notifications", // Ensure key matches the reducer key below
+    "message", 
+    // "socketio" removed to avoid serialization issues
+  ],
 };
 
 // Combine Reducers
@@ -43,8 +44,9 @@ const rootReducer = combineReducers({
   theme: themeReducer,
   allOwner: allOwnerReducer, // Added correct allOwner reducer
   allTenant: allTenantReducer, 
-  notifications: notificationReducer,
-  socketio:socketSlice,
+  notifications: notificationReducer, // Note key is "notifications"
+  socketio: socketSlice,
+  message: messageReducer, 
 });
 
 // Create Persisted Reducer

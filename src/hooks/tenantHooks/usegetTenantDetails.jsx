@@ -32,27 +32,27 @@ const useGetTenantDetails = () => {
     }
   }, [user?.id, dispatch]);
 
-  useEffect(() => {
-    let intervalId;
-    const controller = new AbortController();
+  // useEffect(() => {
+  //   let intervalId;
+  //   const controller = new AbortController();
 
-    const initialFetch = async () => {
-      await fetchTenantDetails();
-      // Start polling after initial fetch
-      intervalId = setInterval(fetchTenantDetails, 5000);
-    };
+  //   const initialFetch = async () => {
+  //     await fetchTenantDetails();
+  //     // Start polling after initial fetch
+  //     intervalId = setInterval(fetchTenantDetails, 5000);
+  //   };
 
-    if (user?.id) {
-      initialFetch();
-    }
+  //   if (user?.id) {
+  //     initialFetch();
+  //   }
 
-    return () => {
-      controller.abort();
-      clearInterval(intervalId);
-    };
-  }, [fetchTenantDetails, user?.id]);
+  //   return () => {
+  //     controller.abort();
+  //     clearInterval(intervalId);
+  //   };
+  // }, [fetchTenantDetails]);
 
-  return { tenantDetails, isLoading, error, refresh: fetchTenantDetails };
+  // return { tenantDetails, isLoading, error, refresh: fetchTenantDetails };
 };
 
 export default useGetTenantDetails;
