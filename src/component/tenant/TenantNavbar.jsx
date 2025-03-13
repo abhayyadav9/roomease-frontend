@@ -79,12 +79,14 @@ const TenantNavbar = () => {
             { withCredentials: true }
           );
           dispatch(logoutAction());
-          
+
           // Clear all storage
           localStorage.clear();
           sessionStorage.clear();
-          caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
-          
+          caches
+            .keys()
+            .then((keys) => keys.forEach((key) => caches.delete(key)));
+
           navigate("/login");
         } catch (error) {
           console.error("Logout error:", error);
@@ -156,7 +158,6 @@ const TenantNavbar = () => {
         }))}
       />
       <div className="px-4 gap-4 border-t pt-4 dark:border-gray-700">
-        
         <NavLink
           to="/tenant/profile"
           className="menu-link gap-3 dark:hover:!bg-gray-700"
@@ -171,15 +172,27 @@ const TenantNavbar = () => {
           <AiOutlineSave />
           Saved Rooms
         </NavLink>
-      <div className="mt-4 flex justify-start gap-10">
-      <button
-          onClick={handleLogout}
-          className="w-full menu-link text-red-600 hover:!bg-red-50 dark:text-red-400 dark:hover:!bg-red-900/20"
-        >
-          <LogoutOutlined />
-          Logout
-        </button>
-      </div>
+
+        <div className="flex flex-col  mt-4  gap-4 text-gray-700 dark:text-gray-300">
+          <Link to="/tenant/contact">
+            <MessageOutlined className="text-xl" />
+            <span> Message us </span>
+          </Link>
+          <Link to="/tenant/messages">
+            <ContactsOutlined className="text-xl" />
+            <span> Contact us </span>
+          </Link>
+        </div>
+
+        <div className="mt-4 flex justify-start gap-10">
+          <button
+            onClick={handleLogout}
+            className="w-full menu-link text-red-600 hover:!bg-red-50 dark:text-red-400 dark:hover:!bg-red-900/20"
+          >
+            <LogoutOutlined />
+            Logout
+          </button>
+        </div>
       </div>
     </Drawer>
   );

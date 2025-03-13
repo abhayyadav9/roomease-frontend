@@ -121,12 +121,14 @@ export default TenantHomeWrapper;
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Contact, { Footer } from "../Contact";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SavedRooms from "./SavedRooms";
 import ChatWindow from "../message/ChatWindow";
+import { setSearchQuery } from "../../redux/slice/roomSlice";
 
 const RoomEaseLanding = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -177,15 +179,15 @@ const RoomEaseLanding = () => {
             <motion.div variants={itemVariants} className="relative max-w-md">
               <input
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                // value={searchQuery}
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
                 placeholder="Search by city, neighborhood, or ZIP..."
-                className="w-full px-4 py-4 h-12  rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-6 py-4 h-12  rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 "
               />
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="absolute right-2 h-12 top- bg-blue-600 text-white px-8 py-3 rounded-full"
+              
+                className="absolute  right-1 h-12  bg-blue-600 text-white px-8 rounded-full"
+                onClick={()=> navigate("/tenant/all-rooms")}
               >
                 Search
               </motion.button>
