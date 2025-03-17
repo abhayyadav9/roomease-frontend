@@ -17,9 +17,21 @@ const roomSlice = createSlice({
     },
     setSearchQuery(state, action) {
       state.searchQuery = action.payload;
+    },
+    updateRoomStatus: (state, action) => {
+      const room = state.room.find(r => r._id === action.payload.roomId);
+      if (room) {
+        room.status = action.payload.status;
+      }
+    },
+    updateRoomAvailability: (state, action) => {
+      const room = state.room.find(r => r._id === action.payload.roomId);
+      if (room) {
+        room.availability = action.payload.status;
+      }
     }
   },
 });
 
-export const { setRoom, setSelectedRoom,setSearchQuery } = roomSlice.actions;
+export const { setRoom, setSelectedRoom,setSearchQuery,updateRoomStatus ,updateRoomAvailability} = roomSlice.actions;
 export default roomSlice.reducer;

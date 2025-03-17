@@ -166,9 +166,9 @@ const ViewRoomDetail = ({ onClose }) => {
         <div className="grid grid-cols-2 gap-4 text-gray-700">
           {[
             { label: "Type", value: selectedRoom?.roomType },
-            { label: "Price", value: `$${selectedRoom?.price}/mo` },
+            { label: "Price", value: `Rs. ${selectedRoom?.price}/mo` },
             { label: "Contact", value: selectedRoom?.contactNumber || "N/A" },
-            { label: "Address", value: selectedRoom?.address || "Hidden" },
+            { label: "Location", value: selectedRoom?.address || "Hidden" },
           ].map((item, index) => (
             <motion.div
               key={index}

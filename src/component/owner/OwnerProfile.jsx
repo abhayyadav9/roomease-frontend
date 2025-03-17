@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import useGetOwnerDetails from "../../hooks/ownerHooks/useGetOwnerDetails";
@@ -11,14 +11,18 @@ import BASEURL from "../../utils/BaseUrl";
 import { logout as logoutAction } from "../../redux/slice/authSlice";
 import { CiLogout } from "react-icons/ci";
 import { setError, setLoading, setOwner } from "../../redux/slice/ownerSlice";
+import { Button } from "antd";
+import History from "./History";
 
 const OwnerProfile = () => {
   const owner = useSelector((state) => state.owner?.data?.data);
   const loading = useSelector((state) => state.owner?.loading);
   const error = useSelector((state) => state.owner?.error);
+  const [toggle, setToggle] = useState("ownerrooms");
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (user?.role !== "owner") {
@@ -107,7 +111,6 @@ const OwnerProfile = () => {
   }
 
  
-    // ... (keep error and empty states the same)
   
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-20">
@@ -194,11 +197,46 @@ const OwnerProfile = () => {
   
             {/* Created Rooms Section */}
             <div className="mt-12">
-              <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
+              {/* <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
                 Managed Properties
               </h3>
-              <OwnerCreatedRoom />
+              <OwnerCreatedRoom /> */}
+              <div className="flex gap-5">
+                      <Button
+                        className="mt-6 bg-red-700"
+                        onClick={() => setToggle("ownerrooms")}
+                      >
+                        Your Room
+                      </Button>
+                      <Button className="mt-6 bg-blue-500" onClick={() => setToggle("history")}>
+                        History
+                      </Button>
+                      <Button
+                        className="mt-6 bg-green-700"
+                        onClick={() => setToggle("query")}
+                      >
+                        Apply for Query A
+                      </Button>
+                    </div>
             </div>
+            
+                  <div className="mt-6">
+                    {toggle === "ownerrooms" && (
+                      <div className="space-y-4 mt-6">
+                      
+                          <OwnerCreatedRoom />
+                
+                      </div>
+                    )}
+                    {toggle === "history" && (
+                      <div className="space-y-4 mt-6">
+                   
+                          <History/>
+                       
+                      </div>
+                    )}
+                    {toggle === "query" && <div>Query A Content</div>}
+                  </div>
           </div>
         </div>
       </div>

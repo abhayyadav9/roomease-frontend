@@ -44,6 +44,7 @@ import ChatWindow from "./component/message/ChatWindow.jsx";
 
 import useGetRTM from "./hooks/socket/useGetRTM.jsx";
 import SocketInitializer from "./utils/SocketInitializer.js";
+import History from "./component/owner/History.jsx";
 // // Role-based redirection component
 const AuthRedirector = () => {
   const user = useSelector((state) => state.auth.user);
@@ -109,6 +110,8 @@ function App() {
           <Route path="/all-rooms" element={<AllRooms />} />
           <Route path="/add-room" element={<AddRoom />} />
           <Route path="/edit-room" element={<EditRoom />} />
+          <Route path="/history" element={<History />} />
+
           <Route
             path="/view-room-detail/:roomId"
             element={<ViewRoomDetail />}
