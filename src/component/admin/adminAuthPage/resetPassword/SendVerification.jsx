@@ -3,7 +3,7 @@ import { MailOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BASEURL from "../../../utils/BaseUrl";
+import BASEURL from "../../../../utils/BaseUrl";
 import { motion } from "framer-motion";
 
 const { Title, Text } = Typography;
@@ -29,7 +29,7 @@ const SendVerification = () => {
         content: response.data.message,
         style: { marginTop: '60px' },
       });
-      navigate("/verify-otp");
+      navigate("/admin/verify-otp");
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Unable to process your request.";
       message.error({
@@ -103,7 +103,7 @@ const SendVerification = () => {
             <div className="text-center mt-6">
               <Button
                 type="link"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/admin/login")}
                 className="!text-gray-600 hover:!text-blue-600 !font-medium"
               >
                 <Space>

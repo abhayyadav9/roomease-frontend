@@ -16,6 +16,15 @@ import AllRequirements from "./pages/AllRequirements";
 import useGetTenantDetails from "../../hooks/tenantHooks/usegetTenantDetails";
 import useGetAllRooms from "../../hooks/useGetAllRooms";
 import MessageLayout from "./messagePage/MessageLayout";
+import AdminLogin from "./adminAuthPage/AdminLogin";
+import AdminRegister from "./adminAuthPage/AdminRegister";
+import AccVerify from "./adminAuthPage/AccVerify";
+import SendVerification from "./adminAuthPage/resetPassword/SendVerification";
+import UpdatePassword from "./adminAuthPage/resetPassword/UpdatePassword";
+import VerifyOtp from "./adminAuthPage/resetPassword/VerifyOtp";
+
+
+
 
 const AdminHome = () => {
   useGetAllOwner();
@@ -33,6 +42,15 @@ const AdminHome = () => {
 const AdminHomeWrapper = () => {
   return (
     <Routes>
+          <Route path="/login" element={<AdminLogin />} />
+          <Route path="/register" element={<AdminRegister />} />
+          <Route path="/acc-verify" element={<AccVerify />} />
+          <Route path="/send-verification" element={<SendVerification />} />
+         <Route path="/verify-otp" element={<VerifyOtp />} />
+         <Route path="/update-password" element={<UpdatePassword />} />
+
+
+
       <Route path="/" element={<AdminHome />}>
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />

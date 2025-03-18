@@ -19,10 +19,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../redux/slice/authSlice";
-import BASEURL from "../../utils/BaseUrl";
+import { setUser } from "../../../redux/slice/authSlice";
+import BASEURL from "../../../utils/BaseUrl";
 import { motion } from "framer-motion";
-import "./Auth.css";
 import { Option } from "antd/es/mentions";
 
 const { Title, Text } = Typography;
@@ -50,7 +49,7 @@ const AdminLogin = () => {
       message.success(`Welcome back, ${response.data.user.name}!`);
       dispatch(setUser(response.data?.user));
 
-      navigate("/admin/");
+      navigate("/admin/dashboard");
     } catch (error) {
       message.error(
         error.response?.data?.message ||
@@ -148,7 +147,7 @@ const AdminLogin = () => {
 
           <div className="flex justify-between items-center mb-6">
             <Link
-              to="/send-verification"
+              to="/admin/send-verification"
               className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
             >
               Forgot password?
@@ -156,7 +155,7 @@ const AdminLogin = () => {
             <Text className="text-gray-500 dark:text-gray-300 text-sm">
               New user?{" "}
               <Link
-                to="/register"
+                to="/admin/register"
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400"
               >
                 Create account

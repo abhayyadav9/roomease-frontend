@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, Button, Typography, message, Spin } from "antd";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import BASEURL from "../../../utils/BaseUrl";
+import BASEURL from "../../../../utils/BaseUrl";
 import { motion } from "framer-motion";
 
 const { Title, Text } = Typography;
@@ -34,7 +34,7 @@ const UpdatePassword = () => {
 
       // Redirect to login after successful password update
       setTimeout(() => {
-        navigate("/login");
+        navigate("/admin/login");
       }, 1500);
     } catch (error) {
       message.error(error.response?.data?.message || "Password update failed. Please try again.");

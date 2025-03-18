@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -34,8 +35,8 @@ import TenantHomeWrapper from "./component/tenant/HomeTenant.jsx";
 
 // Admin Components
 import AdminHomeWrapper from "./component/admin/AdminHome.jsx";
-import AdminRegister from "./component/authPage/AdminRegister.jsx";
-import AdminLogin from "./component/authPage/AdminLogin.jsx";
+import AdminRegister from "./component/admin/adminAuthPage/AdminRegister.jsx";
+import AdminLogin from "./component/admin/adminAuthPage/AdminLogin.jsx";
 import Dashboard from "./component/admin/Dashboard.jsx";
 import AllRequirements from "./component/tenant/AllRequirements.jsx";
 import RoleProtectedRoute from "./component/commonPage/RouteProtection.jsx";
@@ -49,7 +50,7 @@ import History from "./component/owner/History.jsx";
 const AuthRedirector = () => {
   const user = useSelector((state) => state.auth.user);
   //  const conversation  = useSelector((state) => state.chat.conversation);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,86 +61,89 @@ const AuthRedirector = () => {
     }
   }, []); // Added dependencies
 
-  
-
   return null;
 };
+
 
 function App() {
   const user = useSelector((state) => state.auth.user);
   useNotifications();
-  useGetRTM()
+  useGetRTM();
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (user) {
       // Initialize socket connection
-      dispatch({ type: 'socket/connect' });
-      
+      dispatch({ type: "socket/connect" });
+
       return () => {
         // Cleanup on unmount
-        dispatch({ type: 'socket/disconnect' });
+        dispatch({ type: "socket/disconnect" });
       };
     }
   }, [user, dispatch]);
 
-  
+  return (
+    <Router>
+      <AppContent user={user} />
+    </Router>
+  );
+}
+
+const AppContent = ({ user }) => {
+  const location = useLocation();
+  const hideNavbarPaths = ["/admin/login" , "/admin/register","/admin/send-verification"];
 
   return (
     <div>
-        <SocketInitializer/>
-      <Router>
-        {(!user || !["tenant", "admin"].includes(user?.role)) && <Navbar />}
-        <AuthRedirector />
+      <SocketInitializer />
+      {/* Conditionally render Navbar */}
+      {(!user || !["tenant", "admin"].includes(user?.role)) &&
+        !hideNavbarPaths.includes(location.pathname) && <Navbar />}
 
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/acc-verify" element={<AccVerify />} />
-          <Route path="/send-verification" element={<SendVerification />} />
-          <Route path="/verify-otp" element={<VerifyOtp />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/room/:roomId" element={<SingleRoom />} />
+      <AuthRedirector />
 
-          {/* Owner Routes */}
-          <Route path="/owner-profile" element={<OwnerProfile />} />
-          <Route path="/update-detail" element={<UpdateOwnerDetail />} />
-          <Route path="/all-rooms" element={<AllRooms />} />
-          <Route path="/add-room" element={<AddRoom />} />
-          <Route path="/edit-room" element={<EditRoom />} />
-          <Route path="/history" element={<History />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/acc-verify" element={<AccVerify />} />
+        <Route path="/send-verification" element={<SendVerification />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/update-password" element={<UpdatePassword />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/room/:roomId" element={<SingleRoom />} />
 
-          <Route
-            path="/view-room-detail/:roomId"
-            element={<ViewRoomDetail />}
-          />
-          <Route path="/all-requirement" element={<AllRequirements />} />
+        {/* Owner Routes */}
+        <Route path="/owner-profile" element={<OwnerProfile />} />
+        <Route path="/update-detail" element={<UpdateOwnerDetail />} />
+        <Route path="/all-rooms" element={<AllRooms />} />
+        <Route path="/add-room" element={<AddRoom />} />
+        <Route path="/edit-room" element={<EditRoom />} />
+        <Route path="/history" element={<History />} />
 
-          {/* Tenant Routes */}
-          {/* Protected Tenant Routes */}
-          <Route element={<RoleProtectedRoute allowedRoles={["tenant"]} />}>
-            <Route path="/tenant/*" element={<TenantHomeWrapper />} />
-          </Route>
+        <Route path="/view-room-detail/:roomId" element={<ViewRoomDetail />} />
+        <Route path="/all-requirement" element={<AllRequirements />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin/*" element={<AdminHomeWrapper />} />
+        {/* Tenant Routes */}
+        <Route element={<RoleProtectedRoute allowedRoles={["tenant"]} />}>
+          <Route path="/tenant/*" element={<TenantHomeWrapper />} />
+        </Route>
 
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/register" element={<AdminRegister />} />
+        {/* Admin Routes */}
+        <Route path="/admin/*" element={<AdminHomeWrapper />} />
 
-          {/* message Routes */}
-          <Route path="/owner-message" element={<ChatWindow />} />
-        </Routes>
-      </Router>
+        {/* Message Routes */}
+        <Route path="/owner-message" element={<ChatWindow />} />
+      </Routes>
+
       <div className="h-full mt-20 mb-0 flex flex-col">
         <main className="flex-1">{/* Your page content */}</main>
-        {/* <Footer /> */}
       </div>
     </div>
   );
-}
+};
 
 export default App;

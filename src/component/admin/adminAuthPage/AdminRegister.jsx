@@ -11,9 +11,8 @@ import {
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import BASEURL from "../../utils/BaseUrl";
+import BASEURL from "../../../utils/BaseUrl";
 import { motion } from "framer-motion";
-import "./Auth.css"
 import { Option } from "antd/es/mentions";
 
 const { Title, Text } = Typography;
@@ -157,7 +156,7 @@ const AdminRegister = () => {
             <Text className="text-gray-500 dark:text-gray-300 text-sm">
               Already have an account?{" "}
               <Link 
-                to="/login" 
+                to="/admin/login" 
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400"
               >
                 Sign in here

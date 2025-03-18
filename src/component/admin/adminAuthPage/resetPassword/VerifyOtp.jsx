@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Flex, Input, Button, Typography, message, Spin } from "antd";
 import axios from "axios";
-import BASEURL from "../../../utils/BaseUrl";
+import BASEURL from "../../../../utils/BaseUrl";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -75,7 +75,7 @@ const VerifyOtp = () => {
 
       message.success(response.data.message || "Verification successful!");
       localStorage.removeItem('otpSent'); // Reset flag after successful verification
-      setTimeout(() => navigate("/update-password"), 1500);
+      setTimeout(() => navigate("/admin/update-password"), 1500);
     } catch (error) {
       const errMsg = error.response?.data?.message || "Verification failed";
       message.error(`${errMsg} (Attempts remaining: ${error.response?.data?.remainingAttempts || 'unknown'})`);
