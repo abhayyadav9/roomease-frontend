@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +35,14 @@ const Home = () => {
     },
   ];
 
+
+  useEffect(() => {
+      if (user?.role === "admin"){
+        navigate("/admin/dashboard");
+      } 
+      
+    }, []); // Added dependencies
+  
   const stats = [
     { id: 1, name: 'Premium Listings', value: '25K+' },
     { id: 2, name: 'Place Covered', value: '50+' },
