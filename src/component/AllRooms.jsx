@@ -27,7 +27,7 @@ const AllRooms = () => {
   const [itemsPerPage] = useState(6);
 
   // Filter active rooms first
-  const activeRooms = rooms?.filter(room => room.status === 'active') || [];
+  const activeRooms = rooms?.filter(room => room.status === 'active').filter((room) =>room.availability != "booked")  || [];
 
   const filteredRooms = activeRooms.filter((room) => {
     const searchLower = searchQuery?.toLowerCase();

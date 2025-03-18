@@ -6,11 +6,6 @@ const History = () => {
   const rooms = useSelector((state) => state.room?.room) || [];
   const filteredRooms = rooms.filter((room) => room.availability === "booked");
 
-  const statusStyles = {
-    completed: 'bg-green-100 text-green-800',
-    active: 'bg-blue-100 text-blue-800',
-    pending: 'bg-orange-100 text-orange-800'
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -19,8 +14,8 @@ const History = () => {
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
             <div className="mb-4 md:mb-0">
-              <h1 className="text-2xl font-semibold text-gray-800">Booking Management</h1>
-              <p className="text-gray-600 mt-1">Track and manage tenant agreements</p>
+              <h1 className="text-2xl font-semibold text-gray-800">Booked History</h1>
+              <p className="text-gray-600 mt-1">All the completed booking</p>
             </div>
             <div className="flex gap-3">
               <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
@@ -35,24 +30,7 @@ const History = () => {
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <div className="flex gap-2">
-            {['All', 'Active', 'Completed'].map((filter) => (
-              <button
-                key={filter}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  filter === 'All' 
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-        </div>
-
+    
         {/* Booking List */}
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -68,7 +46,7 @@ const History = () => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredRooms.length > 0 ? (
-                filteredRooms.map((room) => (
+                filteredRooms?.map((room) => (
                   <tr key={room._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
@@ -93,15 +71,10 @@ const History = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <FiDollarSign className="text-gray-400" />
                         <span className="font-medium">₹{room.price}/mo</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${statusStyles[room.availability] || 'bg-gray-100 text-gray-800'}`}>
-                        {room.availability?.charAt(0).toUpperCase() + room.availability?.slice(1)}
-                      </span>
-                    </td>
+                   
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex-1 h-2 bg-gray-200 rounded-full">
