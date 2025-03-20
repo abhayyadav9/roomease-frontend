@@ -23,8 +23,7 @@ const TenantHome = () => {
   // }, [navigate]);
 
   // Protected hooks (only run if authenticated)
-  useGetTenantDetails();
-  useGetAllRequirement();
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -53,6 +52,7 @@ const TenantHome = () => {
 };
 
 const TenantHomeWrapper = () => {
+
   return (
     <Routes>
       <Route path="/" element={<TenantHome />}>
@@ -99,8 +99,9 @@ const TenantHomeWrapper = () => {
             </div>
           }
         />
-        <Route path="requirements" element={<AllRequirements />} />
+        <Route path="update-requirement" element={<UpdateRequirement />} />
         <Route path="messages" element={<ChatWindow />} />
+        <Route path="requirements" element={<AllRequirements />} />
 
         <Route
           path="update-requirement/:id"

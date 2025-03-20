@@ -87,7 +87,7 @@ const ViewRequirementDetail = ({ requirement, onClose }) => {
         {/* ✅ Edit Button (Only for Tenant's Own Requirements) */}
         {isTenantRequirementOwner && (
           <Button
-            onClick={() => navigate("/update-requirement")}
+            onClick={() => navigate("/tenant/update-requirement")}
             className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg mt-4 transition-all duration-300"
           >
             Edit

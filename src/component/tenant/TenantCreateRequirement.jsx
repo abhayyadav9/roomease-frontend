@@ -2,11 +2,39 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ViewRequirementDetail from "../commonPage/ViewRequirementDetail";
 import { setSelectedRequirement } from "../../redux/slice/requirementSlice";
+import {
+  Popover,
+  Spin,
+  Modal,
+  Button,
+  message,
+  Card,
+  Avatar,
+  Typography,
+  Tag,
+} from "antd";
+import {
+  BsThreeDots,
+  BsPencil,
+  BsTrash,
+  BsInfoCircle,
+  BsXCircle,
+  BsCheckCircle,
+} from "react-icons/bs";
+import {
+  HomeOutlined,
+  UserOutlined,
+  DollarOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import BASEURL from "../../utils/BaseUrl";
+import axios from "axios";
+import useGetAllRequirement from "../../hooks/useGetAllRequirement";
 
-const TenantCreateRequirement = () => {
-  const requirements = useSelector(
-    (state) => state.requirement.requirements.requirement.requirements
-  ); // ✅ Corrected state access
+const { Title, Text } = Typography;
+
+const TenantCreateRequirement = ({tenantRequirements }) => {
+ 
   const loading = useSelector((state) => state.requirement.loading);
   const error = useSelector((state) => state.requirement.error);
   const selectedRequirement = useSelector(
@@ -14,8 +42,10 @@ const TenantCreateRequirement = () => {
   );
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const { refreshData } = useGetAllRequirement();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const handleOpenModal = (requirement) => {
     dispatch(setSelectedRequirement(requirement));
@@ -24,86 +54,232 @@ const TenantCreateRequirement = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    dispatch(setSelectedRequirement(null));
   };
 
-  if (loading) {
-    return <p className="text-center text-gray-600">Loading requirements...</p>;
-  }
+  const handleStatusChange = async (requirementId, newStatus) => {
+    setActionLoading(true);
+    try {
+      await axios.put(
+        `${BASEURL}/api/v3a/requirement/status/${requirementId}`,
+        { status: newStatus },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      refreshData()
 
-  if (error) {
-    return <p className="text-center text-red-500">Error: {error}</p>;
-  }
+      message.success(`Requirement marked as ${newStatus}`);
+    } catch (error) {
+      message.error(`Failed to update status`);
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
-  // ✅ Filter only requirements created by the logged-in tenant
-  const tenantRequirements = requirements.filter(
-    (requirement) => requirement?.tenant?.user === user?.id
+  const handleAvailabilityChange = async (requirementId, newAvailability) => {
+    setActionLoading(true);
+    try {
+      await axios.put(
+        `${BASEURL}/api/v3a/requirement/availability/${requirementId}`,
+        { availability: newAvailability },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      refreshData()
+      message.success(`Availability updated to ${newAvailability}`);
+    } catch (error) {
+      message.error("Failed to update availability");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDelete = async (requirementId) => {
+    // Reuse the status change handler for deletion
+    await handleStatusChange(requirementId, "inactive");
+  };
+
+  const MenuContent = (requirement) => (
+    <div className="space-y-2 p-2 min-w-[120px]">
+      <Button
+        type="text"
+        block
+        className="!flex items-center !justify-start !px-4"
+        onClick={() => handleOpenModal(requirement)}
+      >
+        <BsInfoCircle className="mr-2" />
+        Details
+      </Button>
+
+      <Button
+        type="text"
+        block
+        className="!flex items-center !justify-start !px-4"
+        onClick={() => console.log("Edit:", requirement._id)}
+      >
+        <BsPencil className="mr-2" />
+        Edit
+      </Button>
+
+      {/* Availability Controls */}
+      {requirement.availability === "notfound" && (
+        <Button
+          type="text"
+          block
+          className="!flex items-center !justify-start !px-4 !text-green-600"
+          onClick={() => handleAvailabilityChange(requirement._id, "found")}
+          loading={actionLoading}
+        >
+          <BsCheckCircle className="mr-2" />
+           Found
+        </Button>
+      )}
+
+      {requirement.availability === "found" && (
+        <Button
+          type="text"
+          block
+          className="!flex items-center !justify-start !px-4 !text-orange-600"
+          onClick={() => handleAvailabilityChange(requirement._id, "notfound")}
+          loading={actionLoading}
+        >
+          <BsXCircle className="mr-2" />
+           Not Found
+        </Button>
+      )}
+
+      {/* Delete/Inactive Button */}
+      <Button
+        type="text"
+        danger
+        block
+        className="!flex items-center !justify-start !px-4"
+        onClick={() => handleDelete(requirement._id)}
+        loading={actionLoading}
+      >
+        <BsTrash className="mr-2" />
+        Delete
+      </Button>
+    </div>
   );
 
-  if (tenantRequirements.length === 0) {
-    return <p className="text-center text-gray-600">No requirements found.</p>;
-  }
+  if (loading) return <Spin size="large" className="!block !my-20" />;
+
+  if (error)
+    return (
+      <Text type="danger" className="!block !text-center !my-10">
+        Error loading requirements: {error}
+      </Text>
+    );
+
+
+
+  if (tenantRequirements?.length === 0)
+    return (
+      <Card className="!text-center !py-10 !my-6">
+        <Text type="secondary">No requirements created yet</Text>
+      </Card>
+    );
 
   return (
-    <div className="container mx-auto px-4 py-6 mt-16">
-      <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
-        📌 Your All Created Requirements
-      </h2>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <Title level={3} className="!text-center !mb-8 !text-indigo-900">
+        🏡 Your Property Requirements
+      </Title>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tenantRequirements.map((requirement) => (
-          <div
+        {tenantRequirements?.map((requirement) => (
+          <Card
             key={requirement._id}
-            className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-all hover:scale-105 p-4"
+            className="shadow-xl rounded-2xl hover:shadow-2xl transition-all"
           >
-            <div className="flex items-center gap-4">
-              <img
-                src={
-                  requirement.tenant?.tenantPic ||
-                  "https://via.placeholder.com/100"
-                }
-                alt="Tenant"
-                className="w-16 h-16 rounded-full object-cover border border-gray-300"
-              />
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {requirement.tenant?.name}
-                </h3>
-                <p className="text-sm text-gray-600">{requirement.location}</p>
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex items-center gap-4">
+                <Avatar
+                  size={64}
+                  src={requirement.tenant?.tenantPic}
+                  icon={<UserOutlined />}
+                  className="border-2 border-indigo-100"
+                />
+                <div>
+                  <Title level={5} className="!m-0 !text-indigo-900">
+                    {requirement.tenant?.name}
+                  </Title>
+                  <Text type="secondary">{requirement.location}</Text>
+                </div>
+              </div>
+
+              <Popover
+                content={() => MenuContent(requirement)}
+                trigger="click"
+                placement="bottomRight"
+              >
+                <Button
+                  type="text"
+                  icon={<BsThreeDots className="text-xl text-gray-600" />}
+                  className="!rounded-full"
+                />
+              </Popover>
+            </div>
+
+            <div className="space-y-3 border-t border-indigo-50 pt-4">
+              <div className="flex items-center gap-2">
+                <HomeOutlined className="text-indigo-400" />
+                <Text strong className="!text-indigo-600">
+                  {requirement.requirement}
+                </Text>
+                <Tag color="blue" className="!ml-auto">
+                  {requirement.category}
+                </Tag>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <DollarOutlined className="text-indigo-400" />
+                <Text>₹{requirement.priceRange}</Text>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <TeamOutlined className="text-indigo-400" />
+                <Text>{requirement.numberOfPerson} people</Text>
               </div>
             </div>
 
-            <div className="mt-4">
-              <p className="text-sm text-gray-700">
-                📌 <strong>Requirement:</strong> {requirement.requirement}
-              </p>
-              <p className="text-sm text-gray-700">
-                💰 <strong>Price Range:</strong> ₹{requirement.priceRange}
-              </p>
-              <p className="text-sm text-gray-700">
-                🏠 <strong>Category:</strong> {requirement.category}
-              </p>
-              <p className="text-sm text-gray-700">
-                👥 <strong>Number of Persons:</strong>{" "}
-                {requirement.numberOfPerson}
-              </p>
-            </div>
-
-            <button
-              className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all"
+            <Button
+              type="primary"
+              block
+              className="!mt-4 !rounded-lg !bg-indigo-600 hover:!bg-indigo-700"
               onClick={() => handleOpenModal(requirement)}
             >
-              View Details
-            </button>
-          </div>
+              View Full Details
+            </Button>
+          </Card>
         ))}
       </div>
 
-      {isModalOpen && selectedRequirement && (
-        <ViewRequirementDetail
-          requirement={selectedRequirement}
-          onClose={handleCloseModal}
-        />
-      )}
+      <Modal
+        title="Requirement Details"
+        visible={isModalOpen}
+        onCancel={handleCloseModal}
+        footer={null}
+        className="rounded-2xl"
+        width={800}
+        destroyOnClose
+      >
+        {selectedRequirement && (
+          <ViewRequirementDetail
+            requirement={selectedRequirement}
+            onClose={handleCloseModal}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

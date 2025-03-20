@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setRequirements } from "../redux/slice/requirementSlice";
@@ -6,17 +6,22 @@ import BASEURL from "../utils/BaseUrl";
 
 const useGetAllRequirement = () => {
   const dispatch = useDispatch();
+  const [refresh, setRefresh] = useState(0); // State to trigger refreshes
+
+  const refreshData = () => {
+    setRefresh(prev => prev + 1); // Increment to trigger useEffect
+  };
 
   useEffect(() => {
     const fetchAllRequirement = async () => {
       try {
-        const response = await axios.get(`${BASEURL}/api/v3a//all/requirements`, {
+        const response = await axios.get(`${BASEURL}/api/v3a/all/requirements`, {
           withCredentials: true,
         });
 
-        console.log("API Response:", response.data); // Debugging: Check API response
+        console.log("API Response:", response.data);
 
-        // Dispatch action to store the fetched requirements in Redux state
+        // Dispatch action to update Redux store
         dispatch(setRequirements({ requirement: response?.data || [] }));
 
       } catch (error) {
@@ -25,10 +30,9 @@ const useGetAllRequirement = () => {
     };
 
     fetchAllRequirement();
-  }, [dispatch]);
+  }, [dispatch, refresh]); // Add refresh to dependencies
 
-  // Optional: You can return something if needed, like loading state or fetched data
-  // For example: return { isLoading: true, requirements: data }
+  return { refreshData }; // Return refresh function for external triggers
 };
 
 export default useGetAllRequirement;

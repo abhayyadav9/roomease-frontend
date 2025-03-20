@@ -46,19 +46,19 @@ const TenantNavbar = () => {
       key: "home",
       label: "Home",
       path: "/tenant/home",
-      icon: <HomeOutlined className="text-lg" />,
+      icon: <HomeOutlined  />,
     },
     {
       key: "find-room",
       label: "Find Room",
       path: "/tenant/all-rooms",
-      icon: <SearchOutlined className="text-lg" />,
+      icon: <SearchOutlined  />,
     },
     {
       key: "requirements",
       label: "Requirements",
       path: "/tenant/requirements",
-      icon: <FormOutlined className="text-lg" />,
+      icon: <FormOutlined  />,
     },
   ];
 
@@ -123,6 +123,8 @@ const TenantNavbar = () => {
   );
 
   const renderMobileMenu = () => (
+
+    <> 
     <Drawer
       title={
         <NavLink to="/tenant/home" onClick={closeSidebar}>
@@ -143,6 +145,17 @@ const TenantNavbar = () => {
       width="280px"
       className="dark:bg-gray-800"
     >
+
+<div className="flex  flex-col px-5 border-t dark:border-gray-700">
+       
+       <NavLink
+         to="/tenant/profile"
+         className="menu-link flex gap-3 mt-4 dark:hover:!bg-gray-700"
+       >
+        <img src={tenant?.tenantPic} className="h-4 w-4 rounded-full" />
+         View Profile
+       </NavLink>
+       </div>
       <Menu
         mode="vertical"
         className="border-0 dark:bg-gray-800"
@@ -157,34 +170,29 @@ const TenantNavbar = () => {
           className: "!py-3 hover:!bg-gray-100 dark:hover:!bg-gray-700",
         }))}
       />
-      <div className="px-4 gap-4 border-t pt-4 dark:border-gray-700">
-        <NavLink
-          to="/tenant/profile"
-          className="menu-link gap-3 dark:hover:!bg-gray-700"
-        >
-          <UserOutlined />
-          View Profile
-        </NavLink>
+      <div className="flex  flex-col px-5 border-t dark:border-gray-700">
+       
+       
         <NavLink
           to="/tenant/saved-rooms"
           className="menu-link flex gap-3 mt-4 dark:hover:!bg-gray-700"
         >
-          <AiOutlineSave />
+          <AiOutlineSave  />
           Saved Rooms
         </NavLink>
 
-        <div className="flex flex-col  mt-4  gap-4 text-gray-700 dark:text-gray-300">
-          <Link to="/tenant/contact">
-            <MessageOutlined className="text-xl" />
+   
+          <Link to="/tenant/contact"  className="menu-link flex gap-3 mt-4 dark:hover:!bg-gray-700">
+            <MessageOutlined  />
             <span> Message us </span>
           </Link>
-          <Link to="/tenant/messages">
-            <ContactsOutlined className="text-xl" />
+          <Link to="/tenant/messages"  className="menu-link flex gap-3 mt-4 dark:hover:!bg-gray-700">
+            <ContactsOutlined  />
             <span> Contact us </span>
           </Link>
-        </div>
 
-        <div className="mt-4 flex justify-start gap-10">
+      </div>
+        <div className="mt-10 ">
           <button
             onClick={handleLogout}
             className="w-full menu-link text-red-600 hover:!bg-red-50 dark:text-red-400 dark:hover:!bg-red-900/20"
@@ -193,8 +201,8 @@ const TenantNavbar = () => {
             Logout
           </button>
         </div>
-      </div>
     </Drawer>
+    </>
   );
 
   const profileContent = (
@@ -273,37 +281,87 @@ const TenantNavbar = () => {
           {/* Right Controls */}
           <div className="flex items-center gap-4 ml-auto">
             {/* Service Dropdown */}
+
             <Popover
               content={
-                <div className="flex flex-col gap-2 p-2 w-64 dark:bg-gray-700">
-                  <NavLink
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                    padding: "12px",
+                    backgroundColor: "#fff",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    minWidth: "200px",
+                  }}
+                >
+                  <Link
                     to="/tenant/contact"
-                    className="menu-link dark:hover:!bg-gray-600"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      padding: "8px",
+                      color: "#333",
+                      textDecoration: "none",
+                      borderRadius: "6px",
+                      transition: "background 0.2s",
+                      hover: { background: "#f5f5f5" },
+                    }}
                   >
-                    <ContactsOutlined />
-                    Our Contact
-                  </NavLink>
+                    <ContactsOutlined
+                      style={{ fontSize: "18px", color: "#1890ff" }}
+                    />
+                    <span>Our Contact</span>
+                  </Link>
+
                   {user?.role === "tenant" && (
                     <NavLink
                       to="/tenant/messages"
-                      className="menu-link dark:hover:!bg-gray-600"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                        padding: "8px",
+                        color: "#333",
+                        textDecoration: "none",
+                        borderRadius: "6px",
+                        transition: "background 0.2s",
+                        hover: { background: "#f5f5f5" },
+                      }}
                     >
-                      <MessageOutlined />
-                      Message Us
+                      <MessageOutlined
+                        style={{ fontSize: "18px", color: "#1890ff" }}
+                      />
+                      <span>Message Us</span>
                     </NavLink>
                   )}
                 </div>
               }
               trigger={["click", "hover"]}
               placement="bottomRight"
-              overlayClassName="service-popover"
             >
               <Button
                 type="text"
-                className="hidden lg:flex items-center gap-2 h-10 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  height: "40px",
+                  padding: "0 16px",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  hover: { background: "#f5f5f5" },
+                }}
               >
-                <CustomerServiceFilled className="text-blue-500 dark:text-blue-400" />
-                <span className="text-gray-700 dark:text-gray-300">
+                <CustomerServiceFilled
+                  style={{ fontSize: "18px", color: "#1890ff" }}
+                />
+                <span
+                  style={{ color: "#333", fontSize: "14px", fontWeight: 500 }}
+                >
                   Services
                 </span>
               </Button>

@@ -46,6 +46,8 @@ import ChatWindow from "./component/message/ChatWindow.jsx";
 import useGetRTM from "./hooks/socket/useGetRTM.jsx";
 import SocketInitializer from "./utils/SocketInitializer.js";
 import History from "./component/owner/History.jsx";
+import useGetTenantDetails from "./hooks/tenantHooks/usegetTenantDetails.jsx";
+import useGetAllRequirement from "./hooks/useGetAllRequirement.jsx";
 // // Role-based redirection component
 const AuthRedirector = () => {
   const user = useSelector((state) => state.auth.user);
@@ -64,11 +66,12 @@ const AuthRedirector = () => {
   return null;
 };
 
-
 function App() {
   const user = useSelector((state) => state.auth.user);
   useNotifications();
   useGetRTM();
+  useGetTenantDetails();
+  useGetAllRequirement();
 
   const dispatch = useDispatch();
 
@@ -93,7 +96,11 @@ function App() {
 
 const AppContent = ({ user }) => {
   const location = useLocation();
-  const hideNavbarPaths = ["/admin/login" , "/admin/register","/admin/send-verification"];
+  const hideNavbarPaths = [
+    "/admin/login",
+    "/admin/register",
+    "/admin/send-verification",
+  ];
 
   return (
     <div>
