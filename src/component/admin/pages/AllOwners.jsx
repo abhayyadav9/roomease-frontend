@@ -85,6 +85,7 @@ const AllOwners = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <img
+                        loading="ladzy"
                           src={owner.ownerPic}
                           alt={owner.name}
                           className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
@@ -114,8 +115,7 @@ const AllOwners = () => {
                     </td>
                     <td className="px-6 py-4">
                       <Link
-                        to={`/admin/owner`}
-                        state={{ owner }} // Pass owner data via state
+                        to={`/admin/owner/${owner?.user?._id}`}
                         className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors
     bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50"
                       >

@@ -56,7 +56,7 @@ const AdminHomeWrapper = () => {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="transaction" element={<Transaction />} />
         <Route path="owners" element={<AllOwners />} />
-        <Route path="owner" element={<SingleOwner />} />
+        <Route path="owner/:id" element={<SingleOwner />} />
         <Route path="tenants" element={<AllTTenants />} />
         <Route path="tenant/:userId" element={<SingleTenant />} />
         <Route path="settings" element={<Settings />} />

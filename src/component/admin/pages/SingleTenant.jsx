@@ -18,6 +18,10 @@ const SingleTenant = () => {
 
   return (
     <div className="max-w-6xl mx-auto mt-16 p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      
+<div className="flex justify-center mb-8" >
+        <p className="text-3xl"> Tenant Detail</p>
+        </div>
       {/* Delete Button */}
       <div className="flex justify-end mb-8">
         <button
