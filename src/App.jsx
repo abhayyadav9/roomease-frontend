@@ -48,7 +48,7 @@ import useGetAllRequirement from "./hooks/useGetAllRequirement.jsx";
 import useGetAllRooms from "./hooks/useGetAllRooms.jsx";
 import TenantLayout from "./component/tenant/TenantLayout.jsx";
 import NotFound from "./component/commonPage/NotFound.jsx";
-// // Role-based redirection component
+import axios from "axios";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
@@ -60,6 +60,8 @@ function App() {
 
 
   const dispatch = useDispatch();
+  axios.defaults.withCredentials = true;
+
 
   useEffect(() => {
     
