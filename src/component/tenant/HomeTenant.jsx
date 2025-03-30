@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { setSearchQuery } from "../../redux/slice/roomSlice";
 import { useDispatch } from "react-redux";
 import {motion} from "framer-motion"
+import { Footer } from "../Contact";
 
 const TenantHome = () => {
   const navigate = useNavigate();
@@ -137,6 +138,12 @@ const TenantHome = () => {
       </motion.div>
       
     </div>
+
+    <div className="h-full mt-20 mb-0 flex flex-col">
+        <main className="flex-1">
+          <Footer />
+        </main>
+      </div>
 
  
    

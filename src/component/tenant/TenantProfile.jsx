@@ -107,7 +107,7 @@ const TenantProfile = () => {
   // Component for rendering profile details
   const ProfileSection = () => (
     <Card
-      className="shadow-xl rounded-2xl border-0"
+      className="shadow-xl rounded-2xl border-0 mt-14"
       style={{
         background: "linear-gradient(135deg, #f0f4ff 0%, #f8faff 100%)",
         borderLeft: "6px solid #4f46e5",
@@ -241,14 +241,14 @@ const TenantProfile = () => {
     </div>
   );
 
-  const currentRequirements = requirements.filter(
+  const currentRequirements = requirements?.filter(
     (req) =>
       req?.tenant?.user === user?.id &&
       req.availability === "notfound" &&
       req.status === "active"
   );
 
-  const requirementsHistory = requirements.filter(
+  const requirementsHistory = requirements?.filter(
     (req) =>
       req?.tenant?.user === user?.id &&
       req.availability === "found" &&
@@ -257,7 +257,7 @@ const TenantProfile = () => {
 
   return (
     <Spin spinning={globalLoading} tip="Loading...">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-4xl nt-10">
         <ProfileSection />
 
         <Tabs
