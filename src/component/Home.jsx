@@ -41,7 +41,10 @@ const Home = () => {
   useEffect(() => {
       if (user?.role === "admin"){
         navigate("/admin/dashboard");
-      } 
+      } else if (user?.role === "tenant"){
+        navigate("/tenant/home");
+
+      }
       
     }, []); // Added dependencies
   

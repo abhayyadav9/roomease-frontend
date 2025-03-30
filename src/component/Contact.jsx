@@ -1,11 +1,8 @@
-import React from "react";
 import {
   FiMapPin,
   FiPhone,
   FiMail,
-  FiClock,
   FiCheckCircle,
-  FiUser,
   FiGlobe,
 } from "react-icons/fi";
 import { FaLinkedin, FaTwitter, FaFacebook } from "react-icons/fa";
@@ -342,15 +339,15 @@ export const Footer = () => {
               </ul>
             </div>
 
-            <div>
+            <div >
               <h3 className="text-white font-semibold mb-4">Contact</h3>
-              <ul className="space-y-2">
+              <ul className="space-y-">
                 <li>
                   <a
                     href="mailto:info@company.com"
-                    className="hover:text-blue-400 transition-colors duration-300 hover:pl-2"
+                    className="hover:text-blue-400 transition-colors duration-300 "
                   >
-                  rooease@gmail.com
+                  roomease9@gmail.com
                   </a>
                 </li>
                 <li>9263833367</li>
@@ -368,7 +365,7 @@ export const Footer = () => {
         <div className="mt-8 pt-8 border-t border-gray-800 text-center md:text-left">
           <div className="md:flex md:items-center md:justify-between">
             <p className="text-sm">
-              © {new Date().getFullYear()} YourBrand. All rights reserved.
+              © {new Date().getFullYear()} RoomEase. All rights reserved.
             </p>
 
             <div className="mt-4 md:mt-0 flex justify-center space-x-6">

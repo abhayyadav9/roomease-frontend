@@ -31,7 +31,6 @@ import EditRoom from "./component/owner/EditRoom.jsx";
 import UpdateOwnerDetail from "./component/owner/UpdateOwnerDetail.jsx";
 
 // Tenant Components
-import TenantHomeWrapper from "./component/tenant/HomeTenant.jsx";
 
 // Admin Components
 import AdminHomeWrapper from "./component/admin/AdminHome.jsx";
@@ -46,34 +45,24 @@ import SocketInitializer from "./utils/SocketInitializer.js";
 import History from "./component/owner/History.jsx";
 import useGetTenantDetails from "./hooks/tenantHooks/usegetTenantDetails.jsx";
 import useGetAllRequirement from "./hooks/useGetAllRequirement.jsx";
+import useGetAllRooms from "./hooks/useGetAllRooms.jsx";
+import TenantLayout from "./component/tenant/TenantLayout.jsx";
+import NotFound from "./component/commonPage/NotFound.jsx";
 // // Role-based redirection component
-const AuthRedirector = () => {
-  const user = useSelector((state) => state.auth.user);
-  //  const conversation  = useSelector((state) => state.chat.conversation);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user?.role === "tenant") {
-      navigate("/tenant/home");
-    } else if (!user?.role === "tenant") {
-      navigate("/login");
-    }
-  }, []); // Added dependencies
-
-  return null;
-};
 
 function App() {
   const user = useSelector((state) => state.auth.user);
+  useGetAllRooms()
   useNotifications();
   useGetRTM();
   useGetTenantDetails();
   useGetAllRequirement();
 
+
   const dispatch = useDispatch();
 
   useEffect(() => {
+    
     if (user) {
       // Initialize socket connection
       dispatch({ type: "socket/connect" });
@@ -102,14 +91,16 @@ const AppContent = ({ user }) => {
 
   return (
     <div>
+
       <SocketInitializer />
       {/* Conditionally render Navbar */}
       {(!user || !["tenant", "admin"].includes(user?.role)) &&
         !hideNavbarPaths.includes(location.pathname) && <Navbar />}
 
-      <AuthRedirector />
 
       <Routes>
+      <Route path="*" element={<NotFound />} />
+
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
@@ -134,7 +125,7 @@ const AppContent = ({ user }) => {
 
         {/* Tenant Routes */}
         <Route element={<RoleProtectedRoute allowedRoles={["tenant"]} />}>
-          <Route path="/tenant/*" element={<TenantHomeWrapper />} />
+          <Route path="/tenant/*" element={<TenantLayout />} />
         </Route>
 
         {/* Admin Routes */}
@@ -142,6 +133,7 @@ const AppContent = ({ user }) => {
 
         {/* Message Routes */}
         <Route path="/owner-message" element={<ChatWindow />} />
+
       </Routes>
 
     </div>

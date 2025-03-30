@@ -1,133 +1,10 @@
-import React, { useEffect } from "react";
-import useGetTenantDetails from "../../hooks/tenantHooks/usegetTenantDetails";
-import useGetAllRequirement from "../../hooks/useGetAllRequirement";
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
-import TenantNavbar from "./TenantNavbar";
-import TenantProfile from "./TenantProfile";
-import UpdateTenantDetail from "./UpdateTenantDetail";
-import AddRequirement from "./AddRequirement";
-import UpdateRequirement from "./UpdateRequirement";
-import AllRequirements from "./AllRequirements";
-import AllRooms from "../AllRooms";
+
+import { useNavigate } from "react-router-dom";
+import { setSearchQuery } from "../../redux/slice/roomSlice";
+import { useDispatch } from "react-redux";
+import {motion} from "framer-motion"
 
 const TenantHome = () => {
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.auth?.user);
-
-  // Authentication check
-  // useEffect(() => {
-
-  //   if (!user?.role ==="tenant") {
-  //     navigate("/login", { replace: true });
-  //   }
-  // }, [navigate]);
-
-  // Protected hooks (only run if authenticated)
-
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* Main Content Area */}
-      <div className="flex-1 flex bg-gradient-to-br mt-16 from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
-        {/* Animated Navbar */}
-        <div className="fixed left-0 top-0 h-full z-10 animate-slide-in">
-          <TenantNavbar />
-        </div>
-
-        {/* Protected Content */}
-
-        <main className="flex-grow ml-5 p-2 transition-all duration-300">
-          <div className="max-w-7xl mx-auto space-y-8">
-            {/* Content Container with Glassmorphism Effect */}
-            {/* <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-2xl shadow-xl transition-all hover:shadow-2xl">
-            </div> */}
-            <Outlet />
-          </div>
-        </main>
-      </div>
-
-      {/* Optional: Add your footer component here */}
-    </div>
-  );
-};
-
-const TenantHomeWrapper = () => {
-
-  return (
-    <Routes>
-      <Route path="/" element={<TenantHome />}>
-        <Route path="/home" element={<RoomEaseLanding />} />
-        <Route
-          path="profile"
-          element={
-            <div className="animate-slide-in-right">
-              <TenantProfile />
-            </div>
-          }
-        />
-        <Route
-          path="all-rooms"
-          element={
-            <div className="animate-slide-in-right">
-              <AllRooms />
-            </div>
-          }
-        />
-
-        <Route
-          path="saved-rooms"
-          element={
-            <div className="animate-slide-in-right">
-              <SavedRooms />
-            </div>
-          }
-        />
-
-        <Route
-          path="update-detail"
-          element={
-            <div className="animate-slide-in-left">
-              <UpdateTenantDetail />
-            </div>
-          }
-        />
-        <Route
-          path="add-requirement"
-          element={
-            <div className="animate-fade-in-up">
-              <AddRequirement />
-            </div>
-          }
-        />
-        <Route path="update-requirement" element={<UpdateRequirement />} />
-        <Route path="messages" element={<ChatWindow />} />
-        <Route path="requirements" element={<AllRequirements />} />
-
-        <Route
-          path="update-requirement/:id"
-          element={
-            <div className="animate-fade-in-up">
-              <UpdateRequirement />
-            </div>
-          }
-        />
-        <Route path="contact" element={<Contact />} />
-      </Route>
-    </Routes>
-  );
-};
-
-export default TenantHomeWrapper;
-
-import { motion } from "framer-motion";
-import { useState } from "react";
-import Contact, { Footer } from "../Contact";
-import { useDispatch, useSelector } from "react-redux";
-import SavedRooms from "./SavedRooms";
-import ChatWindow from "../message/ChatWindow";
-import { setSearchQuery } from "../../redux/slice/roomSlice";
-
-const RoomEaseLanding = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
@@ -267,3 +144,6 @@ const RoomEaseLanding = () => {
    </>
   );
 };
+
+
+export default TenantHome;
