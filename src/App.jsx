@@ -35,9 +35,7 @@ import TenantHomeWrapper from "./component/tenant/HomeTenant.jsx";
 
 // Admin Components
 import AdminHomeWrapper from "./component/admin/AdminHome.jsx";
-import AdminRegister from "./component/admin/adminAuthPage/AdminRegister.jsx";
-import AdminLogin from "./component/admin/adminAuthPage/AdminLogin.jsx";
-import Dashboard from "./component/admin/Dashboard.jsx";
+
 import AllRequirements from "./component/tenant/AllRequirements.jsx";
 import RoleProtectedRoute from "./component/commonPage/RouteProtection.jsx";
 import { useNotifications } from "./hooks/socket/useGetNotification.jsx";
@@ -146,9 +144,6 @@ const AppContent = ({ user }) => {
         <Route path="/owner-message" element={<ChatWindow />} />
       </Routes>
 
-      <div className="h-full mt-20 mb-0 flex flex-col">
-        <main className="flex-1">{/* Your page content */}</main>
-      </div>
     </div>
   );
 };

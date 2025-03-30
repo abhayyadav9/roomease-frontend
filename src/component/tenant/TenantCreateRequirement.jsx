@@ -33,7 +33,7 @@ import useGetAllRequirement from "../../hooks/useGetAllRequirement";
 
 const { Title, Text } = Typography;
 
-const TenantCreateRequirement = ({tenantRequirements }) => {
+const TenantCreateRequirement = ({tenantRequirements,role }) => {
  
   const loading = useSelector((state) => state.requirement.loading);
   const error = useSelector((state) => state.requirement.error);
@@ -43,10 +43,21 @@ const TenantCreateRequirement = ({tenantRequirements }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const { refreshData } = useGetAllRequirement();
+  const [activeTab, setActiveTab] = useState("activeRooms");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+    const requirements = useSelector(
+      (state) => state.requirement.requirements.requirement.requirements
+    );
 
+
+  const requirementsHistory = requirements.filter(
+    (req) =>
+      req?.tenant?.user === user?.id &&
+      req.availability === "found" &&
+      req.status === "active"
+  );
   const handleOpenModal = (requirement) => {
     dispatch(setSelectedRequirement(requirement));
     setIsModalOpen(true);
@@ -182,18 +193,46 @@ const TenantCreateRequirement = ({tenantRequirements }) => {
 
 
 
-  if (tenantRequirements?.length === 0)
-    return (
-      <Card className="!text-center !py-10 !my-6">
-        <Text type="secondary">No requirements created yet</Text>
-      </Card>
-    );
+  // if (tenantRequirements?.length === 0)
+  //   return (
+  //     <Card className="!text-center !py-10 !my-6">
+  //       <Text type="secondary">No requirements created yet</Text>
+  //     </Card>
+  //   );
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <Title level={3} className="!text-center !mb-8 !text-indigo-900">
         🏡 Your Property Requirements
       </Title>
+
+
+      <div className="flex justify-center gap-4 mb-6">
+        <Button
+          type={activeTab === "activeRequirement" ? "primary" : "default"}
+          onClick={() => setActiveTab("activeRequirement")}
+          className="px-6 py-2 rounded-lg shadow-md transition-all duration-300"
+        >
+          Active Requirement
+        </Button>
+        <Button
+          type={activeTab === "foundRequirement" ? "primary" : "default"}
+          onClick={() => setActiveTab("foundRequirement")}
+          className="px-6 py-2 rounded-lg shadow-md transition-all duration-300"
+        >
+          Found Rooms
+        </Button>
+       {
+        role === "admin" &&
+        <Button
+        type={activeTab === "deletedRooms" ? "primary" : "default"}
+        onClick={() => setActiveTab("deletedRooms")}
+        className="px-6 py-2 rounded-lg shadow-md transition-all duration-300"
+      >
+        Deleted Rooms
+      </Button>
+       }
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tenantRequirements?.map((requirement) => (

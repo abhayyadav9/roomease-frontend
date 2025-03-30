@@ -262,7 +262,7 @@ export default Contact;
 
 export const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 border-t border-gray-700">
+    <footer className="bg-gray-900 text-gray-300 border-t  border-gray-700">
       <div className="container mx-auto px-2 py-4">
         <div className="md:flex md:justify-between md:items-start">
           {/* Company Info */}

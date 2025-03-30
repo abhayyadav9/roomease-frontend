@@ -22,6 +22,7 @@ import AccVerify from "./adminAuthPage/AccVerify";
 import SendVerification from "./adminAuthPage/resetPassword/SendVerification";
 import UpdatePassword from "./adminAuthPage/resetPassword/UpdatePassword";
 import VerifyOtp from "./adminAuthPage/resetPassword/VerifyOtp";
+import EditRoom from "../owner/EditRoom";
 
 
 
@@ -62,6 +63,8 @@ const AdminHomeWrapper = () => {
         <Route path="settings" element={<Settings />} />
         <Route path="profile" element={<AdminProfile />} />
         <Route path="all-rooms" element={<AllRooms />} />
+        <Route path="edit-room" element={<EditRoom />} />
+
 
         <Route path="all-requirements" element={<AllRequirements />} />
       {/* //messages */}

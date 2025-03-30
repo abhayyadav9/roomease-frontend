@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Select, Typography, message, Divider } from "antd";
-import { 
-  UserOutlined, 
-  MailOutlined, 
-  PhoneOutlined, 
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Typography,
+  message,
+  Divider,
+} from "antd";
+import {
+  UserOutlined,
+  MailOutlined,
+  PhoneOutlined,
   LockOutlined,
   GoogleOutlined,
   FacebookOutlined,
-  GithubOutlined
+  GithubOutlined,
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASEURL from "../../utils/BaseUrl";
 import { motion } from "framer-motion";
-import "./Auth.css"
+import "./Auth.css";
 import { Option } from "antd/es/mentions";
 import { useSelector } from "react-redux";
 
@@ -30,23 +38,22 @@ const Register = () => {
       navigate("/");
     }
   }, [user, navigate]);
-  
-
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${BASEURL}/api/v1/register`,
-        values,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      const response = await axios.post(`${BASEURL}/api/v1/register`, values, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       message.success(response.data.message);
       form.resetFields();
       navigate("/acc-verify");
     } catch (error) {
-      message.error(error.response?.data?.message || "Registration failed. Please try again.");
+      message.error(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -59,14 +66,10 @@ const Register = () => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-8"
       >
-        <div className="text-center mb-8">
-          <img 
-            src="/logo.png" 
-            alt="Company Logo" 
-            className="h-16 mx-auto mb-4"
-          />
+        <div className="text-center mb-2">
+          <img src="loh.jp1g" alt="Company Logo" className="h-16 mx-auto " />
           <Title level={2} className="!mb-2 dark:text-white">
-            Join RoomEase
+            Join Room<span className="text-[#F83002]">Ease</span>
           </Title>
           <Text type="secondary" className="dark:text-gray-300">
             Create your account to manage properties or find your perfect home
@@ -74,15 +77,17 @@ const Register = () => {
         </div>
 
         <Form form={form} layout="vertical" onFinish={onFinish}>
-          <div className="grid gap-4">
+          <div className="grid ">
             <Form.Item
               label="Full Name"
               name="name"
-              rules={[{ required: true, message: "Please enter your full name" }]}
+              rules={[
+                { required: true, message: "Please enter your full name" },
+              ]}
             >
               <Input
                 prefix={<UserOutlined className="text-gray-400" />}
-                placeholder="John Doe"
+                placeholder="user name"
                 size="large"
                 className="rounded-lg"
               />
@@ -93,12 +98,12 @@ const Register = () => {
               name="email"
               rules={[
                 { required: true, message: "Please enter your email address" },
-                { type: "email", message: "Invalid email format" }
+                { type: "email", message: "Invalid email format" },
               ]}
             >
               <Input
                 prefix={<MailOutlined className="text-gray-400" />}
-                placeholder="name@company.com"
+                placeholder="name@email.com"
                 size="large"
                 className="rounded-lg"
               />
@@ -109,12 +114,12 @@ const Register = () => {
               name="phone"
               rules={[
                 { required: true, message: "Please enter your phone number" },
-                { pattern: /^[0-9]{10,15}$/, message: "Invalid phone number" }
+                { pattern: /^[0-9]{10,15}$/, message: "Invalid phone number" },
               ]}
             >
               <Input
                 prefix={<PhoneOutlined className="text-gray-400" />}
-                placeholder="+1 234 567 890"
+                placeholder="+97 9811111111"
                 size="large"
                 className="rounded-lg"
               />
@@ -140,7 +145,7 @@ const Register = () => {
               name="password"
               rules={[
                 { required: true, message: "Please enter your password" },
-                { min: 8, message: "Password must be at least 8 characters" }
+                { min: 8, message: "Password must be at least 8 characters" },
               ]}
             >
               <Input.Password
@@ -154,11 +159,11 @@ const Register = () => {
 
           <Form.Item className="mt-6">
             <Button
-              type="primary"
+              type="warning"
               htmlType="submit"
               size="large"
               loading={loading}
-              className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200"
+              className="w-full text-white rounded-lg bg-[#9933ff] hover:bg-[#b366ff] transition-all shadow-lg hover:shadow-blue-200"
             >
               Create Account
             </Button>
@@ -167,8 +172,8 @@ const Register = () => {
           <div className="flex justify-center items-center mb-6">
             <Text className="text-gray-500 dark:text-gray-300 text-sm">
               Already have an account?{" "}
-              <Link 
-                to="/login" 
+              <Link
+                to="/login"
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400"
               >
                 Sign in here
@@ -181,27 +186,32 @@ const Register = () => {
           </Divider>
 
           <div className="flex justify-center gap-4 mt-6">
-            <Button 
-              shape="circle" 
-              icon={<GoogleOutlined />} 
+            <Button
+              shape="circle"
+              icon={<GoogleOutlined />}
               className="hover:bg-gray-100 dark:hover:bg-gray-700"
             />
-            <Button 
-              shape="circle" 
-              icon={<FacebookOutlined />} 
+            <Button
+              shape="circle"
+              icon={<FacebookOutlined />}
               className="hover:bg-gray-100 dark:hover:bg-gray-700"
             />
-            <Button 
-              shape="circle" 
-              icon={<GithubOutlined />} 
+            <Button
+              shape="circle"
+              icon={<GithubOutlined />}
               className="hover:bg-gray-100 dark:hover:bg-gray-700"
             />
           </div>
 
           <Text className="block mt-8 text-center text-gray-500 dark:text-gray-400 text-xs">
-            By registering, you agree to our {" "}
-            <Link to="/terms" className="hover:text-blue-600">Terms of Service</Link> and {" "}
-            <Link to="/privacy" className="hover:text-blue-600">Privacy Policy</Link>
+            By registering, you agree to our{" "}
+            <Link to="/terms" className="hover:text-blue-600">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link to="/privacy" className="hover:text-blue-600">
+              Privacy Policy
+            </Link>
           </Text>
         </Form>
       </motion.div>

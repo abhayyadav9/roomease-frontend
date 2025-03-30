@@ -13,6 +13,7 @@ import {
 import { Pagination } from "@mui/material";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Footer } from "../Contact";
 
 const AllRequirements = () => {
   const requirements = useSelector(
@@ -127,6 +128,7 @@ const AllRequirements = () => {
   }
 
   return (
+    <div>
     <div className="container mx-auto px-4 py-6 mt-16">
       <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
         📌 Tenant Requirements
@@ -285,6 +287,13 @@ const AllRequirements = () => {
           onClose={() => setIsModalOpen(false)}
         />
       )}
+
+    </div>
+<div className="h-full mt-20 mb-0 flex flex-col">
+        <main className="flex-1">
+          <Footer />
+        </main>
+      </div>
     </div>
   );
 };

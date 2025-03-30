@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ChevronRightIcon, HomeModernIcon, UserGroupIcon, BuildingOfficeIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import Navbar from "./Navbar";
+import Contact, { Footer } from "./Contact.jsx";
+
 
 // Color Palette
 const colors = {
@@ -68,7 +70,8 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div>
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <Navbar />
 
       {/* Animated Hero Section */}
@@ -94,7 +97,7 @@ const Home = () => {
               variants={itemVariants}
               className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl bg-gradient-to-r from-cyan-600 to-violet-600 bg-clip-text text-transparent"
             >
-              Rent Smarter Property
+              Rent Smarter Room
               <br />
               <span className="text-5xl sm:text-7xl">Rental Experience</span>
             </motion.h1>
@@ -242,6 +245,14 @@ onClick={()=>navigate("/all-rooms")}                className="rounded-lg bg-gra
           </div>
         </div>
       </footer> */}
+
+    </div>
+   
+    <div className="h-full mt-20 mb-0 flex flex-col">
+        <main className="flex-1">
+          <Footer />
+        </main>
+      </div>
     </div>
   );
 };

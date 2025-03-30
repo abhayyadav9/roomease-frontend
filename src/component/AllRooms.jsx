@@ -10,6 +10,7 @@ import { FiSearch } from "react-icons/fi";
 import RoomCard from "./commonPage/RoomCard";
 import { FilterCard } from "./commonPage/FilterCard";
 import { LiaSpinnerSolid } from "react-icons/lia";
+import { Footer } from "./Contact";
 
 const AllRooms = () => {
   useGetAllRooms();
@@ -106,7 +107,8 @@ const AllRooms = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 mt-16">
+   <div>
+     <div className="container mx-auto px-4 py-6 mt-16">
       <motion.h2
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -212,12 +214,21 @@ const AllRooms = () => {
             </div>
           )}
         </div>
+        
+     
       </div>
 
       {isModalOpen && selectedRoom && (
         <ViewRoomDetail room={selectedRoom} onClose={handleCloseModal} />
       )}
+      
     </div>
+    <div className="h-full mt-20 mb-0 flex flex-col">
+        <main className="flex-1">
+          <Footer />
+        </main>
+      </div>
+   </div>
   );
 };
 

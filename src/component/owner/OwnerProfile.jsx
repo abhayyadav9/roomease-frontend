@@ -241,7 +241,7 @@ const OwnerProfile = () => {
           <div className="mt-6">
             {toggle === "ownerrooms" && (
               <div className="space-y-4 mt-6">
-                <OwnerCreatedRoom />
+                <OwnerCreatedRoom owner={owner} role={"owner"}/>
               </div>
             )}
             {toggle === "history" && (

@@ -7,15 +7,18 @@ import {
   FaIdBadge,
   FaTrash,
 } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import BASEURL from "../../../utils/BaseUrl";
 import { useParams } from "react-router-dom";
+import OwnerCreatedRoom from "../../owner/OwnerCreatedRoom";
+import { Button } from "antd";
 
 const SingleOwner = () => {
   const dispatch = useDispatch();
   const [owner, setOwner] = useState(null);
   const { id } = useParams();
+  const rooms = useSelector((state) => state.room?.room);
 
   // Delete handler (implement delete logic as needed)
   const handleDelete = () => {
@@ -47,12 +50,17 @@ const SingleOwner = () => {
     );
   }
 
+  const filteredRooms = rooms.filter((room) =>owner?.createdRooms?.includes(room?._id?.toString()))
+  const activeRooms = filteredRooms?.filter((room) => room.status === "active" && room.availability === "available");
+  const bookedRooms = filteredRooms.filter((room) => room.availability === "booked");
+  const totalPrice = bookedRooms.reduce((acc, room) => acc + room.price, 0);
+
+  const totalRooms = activeRooms.length + bookedRooms.length;
   return (
     <div>
       <div className="max-w-6xl mx-auto mt-16 p-8 rounded-2xl shadow-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-
-<div className="flex justify-center mb-8" >
-        <p className="text-3xl"> Owner Detail</p>
+        <div className="flex justify-center mb-8">
+          <p className="text-3xl"> Owner Detail</p>
         </div>
         {/* Delete Button */}
         <div className="flex justify-end mb-8">
@@ -103,45 +111,9 @@ const SingleOwner = () => {
           </div>
         </div>
 
-        {/* Created Rooms Section */}
-        <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-10">
-          <h2 className="text-2xl font-semibold mb-6 flex items-center">
-            <FaHome className="mr-2 text-blue-500 dark:text-blue-400" />
-            Managed Properties
-          </h2>
-
-          {owner?.createdRooms?.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {owner.createdRooms.map((roomId, index) => (
-                <div
-                  key={index}
-                  className="p-6 rounded-xl transition-shadow duration-300 bg-gray-50 dark:bg-gray-800"
-                >
-                  <h3 className="text-xl font-medium mb-2">
-                    Property #{index + 1}
-                  </h3>
-                  <p className="text-sm opacity-75 dark:opacity-90">
-                    Room ID: {roomId}
-                  </p>
-                  <div className="mt-4 flex items-center text-sm text-blue-500 dark:text-blue-400">
-                    <span className="mr-2">📌</span>
-                    Active Listing
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 rounded-xl bg-gray-50 dark:bg-gray-800">
-              <p className="opacity-75 dark:opacity-90 text-lg">
-                No properties listed yet
-              </p>
-            </div>
-          )}
-        </div>
-
         {/* Additional Info Section */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
-          <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-800">
+          <div className="p-6 rounded-xl bg-gray-200 dark:bg-gray-800">
             <h3 className="text-lg font-semibold mb-2 text-blue-500 dark:text-blue-400">
               Member Since
             </h3>
@@ -150,7 +122,31 @@ const SingleOwner = () => {
                 new Date(owner.createdAt).toLocaleDateString()}
             </p>
           </div>
-          <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-800">
+          <div className="p-6 rounded-xl bg-gray-200 dark:bg-gray-800">
+            <h3 className="text-lg font-semibold mb-2 text-blue-500 dark:text-blue-400">
+              Total  Earned
+            </h3>
+            <p className="opacity-75 dark:opacity-90">
+              {totalPrice}
+            </p>
+          </div>
+          <div className="p-6 rounded-xl bg-gray-100 dark:bg-gray-800">
+            <h3 className="text-lg font-semibold mb-2 text-blue-500 dark:text-blue-400">
+              Active Room
+            </h3>
+            <p className="opacity-75 dark:opacity-90">
+              {activeRooms.length}
+            </p>
+          </div>
+          <div className="p-6 rounded-xl bg-gray-100 dark:bg-gray-800">
+            <h3 className="text-lg font-semibold mb-2 text-blue-500 dark:text-blue-400">
+              Booked Room
+            </h3>
+            <p className="opacity-75 dark:opacity-90">
+              {bookedRooms?.length}
+            </p>
+          </div>
+          <div className="p-6 rounded-xl bg-gray-100 dark:bg-gray-800">
             <h3 className="text-lg font-semibold mb-2 text-blue-500 dark:text-blue-400">
               Verification Status
             </h3>
@@ -161,6 +157,23 @@ const SingleOwner = () => {
             </p>
           </div>
         </div>
+
+        <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-10">
+          <h2 className="text-2xl font-semibold mb-6 flex items-center">
+            <FaHome className="mr-2 text-blue-500 dark:text-blue-400" />
+            Managed Properties
+          </h2>
+        </div>
+
+  
+        {/* Room Content */}
+        <div className="mt-4">
+
+        <OwnerCreatedRoom owner={owner} role={"admin"} />
+
+        </div>
+
+        {/* Created Rooms Section */}
       </div>
     </div>
   );
