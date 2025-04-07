@@ -43,8 +43,7 @@ const Login = () => {
           email: values.email,
           password: values.password,
           role: values.role,
-        },
-        { withCredentials: true }
+        }
       );
 
       message.success(`Welcome back, ${response.data.user.name}!`);
