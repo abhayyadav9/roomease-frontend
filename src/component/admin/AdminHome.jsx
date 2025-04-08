@@ -24,9 +24,6 @@ import UpdatePassword from "./adminAuthPage/resetPassword/UpdatePassword";
 import VerifyOtp from "./adminAuthPage/resetPassword/VerifyOtp";
 import EditRoom from "../owner/EditRoom";
 
-
-
-
 const AdminHome = () => {
   useGetAllOwner();
   useGetAllTenant();
@@ -34,23 +31,27 @@ const AdminHome = () => {
   useGetAllRooms();
 
   return (
-    <AdminNavbar>
-      <Outlet />
-    </AdminNavbar>
+    <div className="tenant-layout">
+      <AdminNavbar >
+      <main className="tenant-main">
+        <div className="content-container">
+          <Outlet />
+        </div>
+      </main>
+      </AdminNavbar>
+    </div>
   );
 };
 
 const AdminHomeWrapper = () => {
   return (
     <Routes>
-          <Route path="/login" element={<AdminLogin />} />
-          <Route path="/register" element={<AdminRegister />} />
-          <Route path="/acc-verify" element={<AccVerify />} />
-          <Route path="/send-verification" element={<SendVerification />} />
-         <Route path="/verify-otp" element={<VerifyOtp />} />
-         <Route path="/update-password" element={<UpdatePassword />} />
-
-
+      <Route path="/login" element={<AdminLogin />} />
+      <Route path="/register" element={<AdminRegister />} />
+      <Route path="/acc-verify" element={<AccVerify />} />
+      <Route path="/send-verification" element={<SendVerification />} />
+      <Route path="/verify-otp" element={<VerifyOtp />} />
+      <Route path="/update-password" element={<UpdatePassword />} />
 
       <Route path="/" element={<AdminHome />}>
         <Route index element={<Dashboard />} />
@@ -65,11 +66,9 @@ const AdminHomeWrapper = () => {
         <Route path="all-rooms" element={<AllRooms />} />
         <Route path="edit-room" element={<EditRoom />} />
 
-
         <Route path="all-requirements" element={<AllRequirements />} />
-      {/* //messages */}
-      <Route path="messages" element={<MessageLayout />} />
-
+        {/* //messages */}
+        <Route path="messages" element={<MessageLayout />} />
       </Route>
     </Routes>
   );

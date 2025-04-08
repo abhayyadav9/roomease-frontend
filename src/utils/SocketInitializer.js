@@ -9,7 +9,7 @@ const SocketInitializer = () => {
   const userId = useSelector((state) => state.auth?.user?.id)
   useEffect(() => {
     // Use your backend URL here. If your backend runs on port 5000:
-    const socket = io("http://localhost:3000", {
+    const socket = io("https://myeasebackend.onrender.com", {
       query: { userId },
       transports: ["websocket"],
     });

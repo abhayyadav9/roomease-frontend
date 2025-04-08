@@ -30,7 +30,7 @@ const Messages = ({ messages = [], userId }) => {
                 className={`flex ${isSender ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`relative p-4 max-w-md break-words shadow-md rounded-lg transition-all duration-200 ${
+                  className={`relative p-2 max-w-md break-words shadow-md rounded-lg transition-all duration-200 ${
                     isSender
                       ? "bg-blue-600 text-white rounded-br-none"
                       : "bg-white text-gray-800 rounded-bl-none border border-gray-300"

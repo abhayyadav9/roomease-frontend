@@ -1,107 +1,81 @@
-import * as React from "react";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { Box, styled, Paper, Fade } from "@mui/material";
+import React, { useState } from "react";
 import OwnersMessage from "./OwnersMessage";
 import TenantsMessage from "./TenantsMessage";
 import AdminMessage from "./AdminMessage";
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  "& .MuiToggleButtonGroup-grouped": {
-    margin: theme.spacing(0.5),
-    border: 0,
-    "&.Mui-disabled": {
-      border: 0,
-    },
-    "&:not(:first-of-type)": {
-      borderRadius: theme.shape.borderRadius,
-    },
-    "&:first-of-type": {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}));
-
 const MessageLayout = () => {
-  const [alignment, setAlignment] = React.useState("owner");
+  const [alignment, setAlignment] = useState("owner");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (event, newAlignment) => {
-    if (newAlignment !== null) {
-      setAlignment(newAlignment);
+  const handleChange = (newAlignment) => {
+    if (newAlignment !== alignment) {
+      // Start loading animation
+      setLoading(true);
+      // Simulate a loading delay (e.g., fetching data)
+      setTimeout(() => {
+        setAlignment(newAlignment);
+        setLoading(false);
+      }, 500); // adjust delay as needed
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        height: "85vh",
-        bgcolor: "background.default",
-      }}
-    >
+    <div className="flex flex-col md:flex-row h-[85vh] bg-gray-50 overflow-hidden">
       {/* Left Navigation Panel */}
-      <Paper
-        elevation={4}
-        sx={{
-          width: { xs: "100%", md: 250 },
-          transition: "width 0.3s",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
-      >
-        <Box sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
-          <Box component="h2" sx={{ typography: "h6", fontWeight: "bold" }}>
-            Message Dashboard
-          </Box>
-          <Box component="p" sx={{ typography: "body2", color: "text.secondary", mt: 1 }}>
-            Manage communications
-          </Box>
-        </Box>
+      <div className="w-full md:w-64 shadow-lg flex flex-col h-full border-r border-gray-200">
+        <div className="p-4 border-b border-gray-200">
+          <h2 className="text-xl font-bold">Message Dashboard</h2>
+          <p className="text-sm text-gray-500 mt-1">Manage communications</p>
+        </div>
 
-        <Box >
-          <StyledToggleButtonGroup
-            value={alignment}
-            exclusive
-            onChange={handleChange}
-            aria-label="Message type"
-            fullWidth
-          >
-            <ToggleButton value="owner" aria-label="owner">
+        <div className="p-2 bg-gray-100">
+          <div className="flex flex-row gap-5 ml-5">
+            <button
+              onClick={() => handleChange("owner")}
+              className={`px-4 py-2 rounded-md text-left transition-colors ${
+                alignment === "owner"
+                  ? "bg-blue-500 text-white"
+                  : "hover:bg-gray-300 bg-gray-200"
+              }`}
+            >
               Owner
-            </ToggleButton>
-            <ToggleButton value="tenant" aria-label="tenant">
+            </button>
+            <button
+              onClick={() => handleChange("tenant")}
+              className={`px-4 py-2 rounded-md text-left transition-colors ${
+                alignment === "tenant"
+                  ? "bg-blue-500 text-white"
+                  : "hover:bg-gray-300 bg-gray-200"
+              }`}
+            >
               Tenant
-            </ToggleButton>
-          </StyledToggleButtonGroup>
-        </Box>
+            </button>
+          </div>
+        </div>
 
-        <Box sx={{ flexGrow: 1, }}>
-          <Fade in={alignment === "owner"} timeout={500} unmountOnExit>
-            <Box>
+        <div className="flex-1 overflow-y-auto ">
+          {loading ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+            </div>
+          ) : (
+            <>
               {alignment === "owner" && <OwnersMessage />}
-            </Box>
-          </Fade>
-          <Fade in={alignment === "tenant"} timeout={500} unmountOnExit>
-            <Box>
               {alignment === "tenant" && <TenantsMessage />}
-            </Box>
-          </Fade>
-        </Box>
-      </Paper>
+            </>
+          )}
+        </div>
+      </div>
 
       {/* Main Content Area */}
-      <Box sx={{ flex: 1, ml: { xs: 0, md: 2 }, mt: { xs: 2, md: 0 } }}>
-        <Paper elevation={4} sx={{ height: "100%", borderRadius: 2, overflow: "hidden" }}>
-          <Fade in timeout={500}>
-            <Box sx={{ height: "100%", p: 2 }}>
-              <AdminMessage />
-            </Box>
-          </Fade>
-        </Paper>
-      </Box>
-    </Box>
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full flex flex-col">
+          <div className=" h-full overflow-y-auto">
+            <AdminMessage />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

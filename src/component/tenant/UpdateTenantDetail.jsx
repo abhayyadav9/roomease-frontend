@@ -212,7 +212,7 @@ const UpdateTenantDetail = () => {
                   </Upload>
                   {image && (
                     <Text className="!block !mt-2 !text-indigo-400">
-                      Selected file: {image.name}
+                      Selected file: {image?.name}
                     </Text>
                   )}
                 </Form.Item>
