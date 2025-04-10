@@ -9,10 +9,9 @@ import {
   BuildingOfficeIcon,
   SparklesIcon,
 } from "@heroicons/react/24/outline";
-import Navbar from "./Navbar";
-import Contact, { Footer } from "./Contact.jsx";
-import { useNotifications } from "../hooks/socket/useGetNotification.jsx";
-import useGetRTM from "../hooks/socket/useGetRTM.jsx";
+import Contact, { Footer } from "../Contact.jsx";
+import { useNotifications } from "../../hooks/socket/useGetNotification.jsx";
+import useGetRTM from "../../hooks/socket/useGetRTM.jsx";
 
 // Color Palette
 const colors = {
@@ -22,7 +21,7 @@ const colors = {
   highlight: "#F59E0B", // Amber
 };
 
-const Home = () => {
+const OwnerHome = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
 
@@ -47,15 +46,11 @@ const Home = () => {
     },
   ];
 
-  useEffect(() => {
-    if (user?.role === "admin") {
-      navigate("/admin/dashboard");
-    } else if (user?.role === "tenant") {
-      navigate("/tenant/home");
-    } else if(user?.role === "owner"){
-      navigate("/owner/home")
-    }
-  }, [user.role, navigate]); // Added dependencies
+//   useEffect(() => {
+//     // if (user?.role === "owner") {
+//       navigate("/login");
+//     // } 
+//   }, []); // Added dependencies
 
   const stats = [
     { id: 1, name: "Premium Listings", value: "25K+" },
@@ -84,8 +79,6 @@ const Home = () => {
   return (
     <div>
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-        <Navbar />
-
         {/* Animated Hero Section */}
         <motion.section
           initial={{ opacity: 0 }}
@@ -274,7 +267,7 @@ const Home = () => {
       </footer> */}
       </div>
 
-      <div className="h-full mt-20 mb-0 flex flex-col">
+      <div className="h-full mt-20 mb-20 flex flex-col">
         <main className="flex-1">
           <Footer />
         </main>
@@ -283,4 +276,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default OwnerHome;

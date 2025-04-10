@@ -85,7 +85,7 @@ const AddRoom = () => {
             type="text"
             icon={<ArrowLeftOutlined className="text-white" />}
             className="!text-white hover:!bg-white/10"
-            onClick={() => navigate("/owner-profile")}
+            onClick={() => navigate("/owner/my-rooms")}
           />
         </div>
   
@@ -216,14 +216,14 @@ const AddRoom = () => {
             <div className="flex gap-4 mt-8">
               <Button
                 onClick={() => navigate("/owner-profile")}
-                className="h-12 px-8 rounded-lg bg-red-500 hover:bg-red-600 !text-white !border-0"
+                className="h-12 px-8 rounded-lg bg-red-500 hover:bg-red-600 ite !border-0"
               >
                 Cancel
               </Button>
               <Button
                 htmlType="submit"
                 loading={loading}
-                className="h-12 px-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600  !border-0"
+                className="h-12 px-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600  !border-0 hover:bg-purple-700 "
               >
                 {loading ? "Creating..." : "Create Listing"}
               </Button>

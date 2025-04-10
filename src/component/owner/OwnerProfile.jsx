@@ -123,13 +123,13 @@ const OwnerProfile = () => {
           <h2 className="text-3xl font-bold text-white">Owner Dashboard</h2>
           <div className="flex items-center gap-4">
             <Link
-              to="/update-detail"
+              to="/owner/update-detail"
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             >
               <LiaUserEditSolid className="w-6 h-6 text-white" />
             </Link>
             <Link
-              to="/add-room"
+              to="/owner/add-room"
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             >
               <MdAddCircleOutline className="w-6 h-6 text-white" />

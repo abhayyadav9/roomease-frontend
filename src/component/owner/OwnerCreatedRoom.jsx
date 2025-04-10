@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Popover, Spin, Modal, Button, message } from "antd";
 import axios from "axios";
 import { setSelectedRoom } from "../../redux/slice/roomSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BsThreeDots } from "react-icons/bs";
 import { MdDelete, MdReport } from "react-icons/md";
-import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { IoAddOutline, IoCheckmarkDoneCircle } from "react-icons/io5";
 import BASEURL from "../../utils/BaseUrl";
 import useGetAllRooms from "../../hooks/useGetAllRooms";
 
@@ -37,6 +37,7 @@ const OwnerCreatedRoom = ({ owner, role }) => {
 
   // Get rooms from Redux store
   const rooms = useSelector((state) => state.room?.room) || [];
+  const user = useSelector((state) => state.auth.user);
 
   // Filter rooms that were created by the owner
   const filteredRooms = rooms.filter((room) =>
@@ -60,12 +61,12 @@ const OwnerCreatedRoom = ({ owner, role }) => {
 
   // Redirect to login if no owner exists
   useEffect(() => {
-    if (!owner) navigate("/login");
-  }, [owner, navigate]);
+    if (user.role != "owner") navigate("/login");
+  }, [user.role, navigate]);
 
   // When rooms and owner's createdRooms are loaded, remove the loader
   useEffect(() => {
-    if (rooms.length && owner?.createdRooms?.length) setLoading(false);
+    if (rooms.length) setLoading(false);
   }, [rooms, owner]);
 
   // Function to update room details (status or availability)
@@ -139,12 +140,12 @@ const OwnerCreatedRoom = ({ owner, role }) => {
       {roomStatus === ROOM_STATUS.ACTIVE &&
         roomAvailability !== ROOM_AVAILABILITY.BOOKED && (
           <ActionItem
-            icon={<IoCheckmarkDoneCircle className="text-emerald-500 w-5 h-5" />}
+            icon={
+              <IoCheckmarkDoneCircle className="text-emerald-500 w-5 h-5" />
+            }
             label="Book Room"
             subLabel="Set as unavailable"
-            onClick={() =>
-              handleAvailability(roomId, ROOM_AVAILABILITY.BOOKED)
-            }
+            onClick={() => handleAvailability(roomId, ROOM_AVAILABILITY.BOOKED)}
           />
         )}
       {roomStatus === ROOM_STATUS.ACTIVE &&
@@ -177,7 +178,7 @@ const OwnerCreatedRoom = ({ owner, role }) => {
 
   // Render the main component UI
   return (
-    <div className="container mx-auto px-4 py-6 relative">
+    <div className="container mx-auto px-4 py-6 relative ">
       {/* Loader overlay when navigating */}
       {isNavigating && (
         <div className="fixed inset-0 bg-gray-100 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 flex justify-center items-center z-50">
@@ -185,38 +186,46 @@ const OwnerCreatedRoom = ({ owner, role }) => {
         </div>
       )}
 
-      {/* Header */}
-      <h2 className="text-2xl font-bold text-center mb-6">
-        🏡 Your Created Rooms
-      </h2>
-
-      {/* Tab Buttons */}
-      <div className="flex justify-center gap-4 mb-6">
-        <Button
-          type={activeTab === "activeRooms" ? "primary" : "default"}
-          onClick={() => setActiveTab("activeRooms")}
-          className="px-6 py-2 rounded-lg shadow-md transition-all duration-300"
-        >
-          Active Rooms
-        </Button>
-        <Button
-          type={activeTab === "bookedRooms" ? "primary" : "default"}
-          onClick={() => setActiveTab("bookedRooms")}
-          className="px-6 py-2 rounded-lg shadow-md transition-all duration-300"
-        >
-          Booked Rooms
-        </Button>
-       {
-        role === "admin" &&
-        <Button
+<div className="mt-14 bg-slate-300 rounded-lg shadow-md p-4 flex flex-row justify-between items-center">
+  {/* Tab Buttons */}
+  <div className="flex flex-row flex-wrap gap-4 items-center">
+    <Button
+      type={activeTab === "activeRooms" ? "primary" : "default"}
+      onClick={() => setActiveTab("activeRooms")}
+      className="px-4 py-2 rounded-lg shadow-md transition-all duration-300"
+    >
+      Active Rooms
+    </Button>
+    <Button
+      type={activeTab === "bookedRooms" ? "primary" : "default"}
+      onClick={() => setActiveTab("bookedRooms")}
+      className="px-4 py-2 rounded-lg shadow-md transition-all duration-300"
+    >
+      Booked Rooms
+    </Button>
+    {role === "admin" && (
+      <Button
         type={activeTab === "deletedRooms" ? "primary" : "default"}
         onClick={() => setActiveTab("deletedRooms")}
-        className="px-6 py-2 rounded-lg shadow-md transition-all duration-300"
+        className="px-4 py-2 rounded-lg shadow-md transition-all duration-300"
       >
         Deleted Rooms
       </Button>
-       }
-      </div>
+    )}
+  </div>
+
+  {/* Add Room Link */}
+  <div className="flex items-center gap-1">
+    <IoAddOutline className="text-xl md:text-2xl" />
+    <Link
+      to="/owner/add-room"
+      className="text-sm md:text-lg font-medium text-blue-600 hover:underline"
+    >
+      Add Room
+    </Link>
+  </div>
+</div>
+
 
       {/* Error Message */}
       {error && (
@@ -242,69 +251,86 @@ const OwnerCreatedRoom = ({ owner, role }) => {
       </Modal>
 
       {/* Room Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {activeTab === "activeRooms" &&
-          activeRooms.map((room) => (
-            <RoomCard
-              key={room._id}
-              room={room}
-              onEdit={() => {
-                setIsNavigating(true);
-                dispatch(setSelectedRoom(room));
-                if (role === "owner") {
-                  navigate("/edit-room");
-                } else {
-                  navigate("/admin/edit-room");
-                }
-              }}
-              menuContent={
-                <MenuContent
-                  roomId={room._id}
-                  roomStatus={room.status}
-                  roomAvailability={room.availability}
-                />
-              }
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
+  {activeTab === "activeRooms" ? (
+    activeRooms.length === 0 ? (
+      <div className="col-span-full text-center text-gray-500">Please Add Room</div>
+    ) : (
+      activeRooms.map((room) => (
+        <RoomCard
+          key={room._id}
+          room={room}
+          navigate={navigate}
+          onEdit={() => {
+            setIsNavigating(true);
+            dispatch(setSelectedRoom(room));
+            if (role === "owner") {
+              navigate("/owner/edit-room");
+            } else if (role === "admin") {
+              navigate("/admin/edit-room");
+            }
+          }}
+          menuContent={
+            <MenuContent
+              roomId={room._id}
+              roomStatus={room.status}
+              roomAvailability={room.availability}
             />
-          ))}
-        {activeTab === "bookedRooms" &&
-          bookedRooms.map((room) => (
-            <RoomCard
-              key={room._id}
-              room={room}
-              onEdit={() => {
-                setIsNavigating(true);
-                dispatch(setSelectedRoom(room));
-                navigate("/edit-room");
-              }}
-              menuContent={
-                <MenuContent
-                  roomId={room._id}
-                  roomStatus={room.status}
-                  roomAvailability={room.availability}
-                />
-              }
+          }
+        />
+      ))
+    )
+  ) : activeTab === "bookedRooms" ? (
+    bookedRooms.length === 0 ? (
+      <div className="col-span-full text-center text-gray-500">Please Add Room</div>
+    ) : (
+      bookedRooms.map((room) => (
+        <RoomCard
+          key={room._id}
+          room={room}
+          navigate={navigate}
+          onEdit={() => {
+            setIsNavigating(true);
+            dispatch(setSelectedRoom(room));
+            navigate("/owner/edit-room");
+          }}
+          menuContent={
+            <MenuContent
+              roomId={room._id}
+              roomStatus={room.status}
+              roomAvailability={room.availability}
             />
-          ))}
-        {activeTab === "deletedRooms" &&
-          deletedRooms.map((room) => (
-            <RoomCard
-              key={room._id}
-              room={room}
-              onEdit={() => {
-                setIsNavigating(true);
-                dispatch(setSelectedRoom(room));
-                navigate("/edit-room");
-              }}
-              menuContent={
-                <MenuContent
-                  roomId={room._id}
-                  roomStatus={room.status}
-                  roomAvailability={room.availability}
-                />
-              }
+          }
+        />
+      ))
+    )
+  ) : activeTab === "deletedRooms" ? (
+    deletedRooms.length === 0 ? (
+      <div className="col-span-full text-center text-gray-500">Please Add Room</div>
+    ) : (
+      deletedRooms.map((room) => (
+        <RoomCard
+          key={room._id}
+          room={room}
+          navigate={navigate}
+          onEdit={() => {
+            setIsNavigating(true);
+            dispatch(setSelectedRoom(room));
+            navigate("/owner/edit-room");
+          }}
+          menuContent={
+            <MenuContent
+              roomId={room._id}
+              roomStatus={room.status}
+              roomAvailability={room.availability}
             />
-          ))}
-      </div>
+          }
+        />
+      ))
+    )
+  ) : null}
+</div>
+
 
       {/* Message when no rooms are found */}
       {filteredRooms.length === 0 && (
@@ -331,42 +357,54 @@ const ActionItem = ({ icon, label, subLabel, onClick, danger = false }) => (
 );
 
 // Room card component to display individual room details
-const RoomCard = ({ room, onEdit, menuContent }) => (
+const RoomCard = ({ room, onEdit, menuContent, navigate }) => (
   <div className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-all hover:scale-95 cursor-pointer relative">
     <div className="absolute right-2 top-2 z-10">
-      <Popover content={menuContent} overlayClassName="shadow-lg rounded-xl" trigger="click">
+      <Popover
+        content={menuContent}
+        overlayClassName="shadow-lg rounded-xl"
+        trigger="click"
+      >
         <button className="p-2 bg-white hover:bg-gray-50 rounded-full transition-all shadow-sm hover:shadow-md">
           <BsThreeDots className="text-gray-600 text-xl transform transition-transform hover:scale-110" />
         </button>
       </Popover>
     </div>
     <div className="relative h-48">
-    <img
-  loading="lazy"
-  src={room?.roomImages?.[0] || "https://via.placeholder.com/300"}
-  alt="Room"
-  className="w-full h-full object-cover"
-/>
+      <img
+        loading="lazy"
+        src={room?.roomImages?.[0] || "https://via.placeholder.com/300"}
+        alt="Room"
+        className="w-full h-full object-cover"
+      />
 
       <div
         className={`absolute bottom-2 left-2 px-3 py-1 rounded-full text-sm ${
-          room.status === ROOM_STATUS.ACTIVE
+          room?.status === ROOM_STATUS.ACTIVE
             ? "bg-green-600 text-white"
             : "bg-gray-500 text-white"
         }`}
       >
-        Status: {room.status}
+        Status: {room?.status}
       </div>
     </div>
-    <div className="p-4">
+    <div className=" p-4 gap-4 ">
       <h3 className="text-lg font-semibold truncate">{room.houseName}</h3>
       <p className="text-gray-600 text-sm truncate">{room.address}</p>
-      <Button
-        onClick={onEdit}
-        className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all"
-      >
-        Edit Room
-      </Button>
+      <div className="flex flex-row  gap-4">
+        <Button
+          onClick={onEdit}
+          className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all"
+        >
+          Edit Room
+        </Button>
+        <Button
+          onClick={() => navigate(`/room/${room._id}`)}
+          className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all"
+        >
+          view detail
+        </Button>
+      </div>
     </div>
   </div>
 );

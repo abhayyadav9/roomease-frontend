@@ -49,22 +49,18 @@ import useGetAllRooms from "./hooks/useGetAllRooms.jsx";
 import TenantLayout from "./component/tenant/TenantLayout.jsx";
 import NotFound from "./component/commonPage/NotFound.jsx";
 import axios from "axios";
+import OwnerLayout from "./component/owner/OwnerLayout.jsx";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
-  useGetAllRooms()
-  useNotifications();
-  useGetRTM();
+  useGetAllRooms();
   useGetTenantDetails();
   useGetAllRequirement();
-
 
   const dispatch = useDispatch();
   axios.defaults.withCredentials = true;
 
-
   useEffect(() => {
-    
     if (user) {
       // Initialize socket connection
       dispatch({ type: "socket/connect" });
@@ -93,15 +89,10 @@ const AppContent = ({ user }) => {
 
   return (
     <div>
-
       <SocketInitializer />
-      {/* Conditionally render Navbar */}
-      {(!user || !["tenant", "admin"].includes(user?.role)) &&
-        !hideNavbarPaths.includes(location.pathname) && <Navbar />}
-
 
       <Routes>
-      <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
 
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -115,12 +106,15 @@ const AppContent = ({ user }) => {
         <Route path="/room/:roomId" element={<SingleRoom />} />
 
         {/* Owner Routes */}
-        <Route path="/owner-profile" element={<OwnerProfile />} />
+
+        <Route path="/owner/*" element={<OwnerLayout />} />
+
+        {/* <Route path="/owner-profile" element={<OwnerProfile />} />
         <Route path="/update-detail" element={<UpdateOwnerDetail />} />
-        <Route path="/all-rooms" element={<AllRooms />} />
         <Route path="/add-room" element={<AddRoom />} />
         <Route path="/edit-room" element={<EditRoom />} />
-        <Route path="/history" element={<History />} />
+        <Route path="/history" element={<History />} /> */}
+        <Route path="/all-rooms" element={<AllRooms />} />
 
         <Route path="/view-room-detail/:roomId" element={<ViewRoomDetail />} />
         <Route path="/all-requirement" element={<AllRequirements />} />
@@ -135,9 +129,7 @@ const AppContent = ({ user }) => {
 
         {/* Message Routes */}
         <Route path="/owner-message" element={<ChatWindow />} />
-
       </Routes>
-
     </div>
   );
 };

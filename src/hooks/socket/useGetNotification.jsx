@@ -13,18 +13,18 @@ export const useNotifications = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const { notifications, unreadCount } = useSelector((state) => state.notifications);
+    const owner = useSelector((state) => state.owner?.data?.data);
+  
 
   // Fetch initial notifications from the backend
   const fetchNotifications = async () => {
     if (!user) return;
     try {
       const response = await axios.get(
-        `${BASEURL}/api/v5/get-notifications/${user.id}`,
-        { withCredentials: true }
+        `${BASEURL}/api/v5/get-notifications/${owner?._id}`
       );
       // Assuming notifications are returned in response.data.notifications
       dispatch(setNotifications(response.data.notifications));
-      console.log("Fetched notifications:", response.data.notifications);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
     }
@@ -74,7 +74,7 @@ export const useNotifications = () => {
     return () => {
       socket.disconnect();
     };
-  }, [user, dispatch]);
+  }, [owner, dispatch]);
 
   return {
     notifications,

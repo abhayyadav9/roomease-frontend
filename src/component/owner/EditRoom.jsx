@@ -66,7 +66,7 @@ const EditRoom = () => {
 
       message.success("Room updated successfully!");
       if (user.role === "owner") {
-        navigate("/owner-profile");
+        navigate("/owner/owner-profile");
       } else {
         navigate("/admin/owners");
       }
@@ -96,7 +96,7 @@ const EditRoom = () => {
             className="!text-white hover:!bg-white/10"
             onClick={() =>
               user.role === "owner"
-                ? navigate("/owner-profile")
+                ? navigate("/owner/owner-profile")
                 : navigate("/admin/owners")
             }
           />
@@ -144,7 +144,7 @@ const EditRoom = () => {
               <Form.Item
                 label={
                   <Text strong className="text-gray-700">
-                    🛌 Property Type
+                    🛌 House Type
                   </Text>
                 }
                 name="roomType"
@@ -155,8 +155,8 @@ const EditRoom = () => {
                   className="rounded-lg"
                   dropdownClassName="rounded-lg"
                 >
-                  <Option value="flat">🏢 Apartment</Option>
-                  <Option value="room">🏠 Independent House</Option>
+                  <Option value="flat">🏢 Room</Option>
+                  <Option value="room">🏠 House</Option>
                 </Select>
               </Form.Item>
 
@@ -285,17 +285,18 @@ const EditRoom = () => {
               <Button
                 onClick={() =>
                   user.role === "owner"
-                    ? navigate("/owner-profile")
+                    ? navigate("/owner/owner-profile")
                     : navigate("/admin/owners")
                 }
-                className="h-12 px-8 rounded-lg bg-red-500  !border-0"
+                className="h-12 px-8 rounded-lg text-black bg-red-500  !border-0 hover:bg-red-700 "
+
               >
                 Cancel
               </Button>
               <Button
                 htmlType="submit"
                 loading={loading}
-                className="h-12 px-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600  !border-0"
+                className="h-12 px-8 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600  !border-0 hover:bg-purple-700 "
               >
                 {loading ? "Saving Changes..." : "Update Property"}
               </Button>

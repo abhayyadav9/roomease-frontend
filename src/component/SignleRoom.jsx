@@ -164,12 +164,12 @@ const SingleRoom = () => {
 
             <div className="flex justify-center">
               <Tag
-                color={selectedRoom.status === "active" ? "green" : "red"}
+                color={selectedRoom.availability === "booked" ? "red" : "green"}
                 className="text-lg px-4 py-1 rounded-full"
               >
-                {selectedRoom.status === "active"
-                  ? "Available"
-                  : "Not Available"}
+                {selectedRoom.availability === "booked"
+                  ? "Not Available"
+                  : "Available"}
               </Tag>
             </div>
           </Space>
