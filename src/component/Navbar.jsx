@@ -63,8 +63,8 @@ const Navbar = () => {
   const DesktopNavbar = () => (
     <nav
       className={`hidden lg:flex items-center bg-white dark:bg-gray-800 shadow-lg fixed top-0 w-full ${
-        isScrolled ? "h-16" : "h-20"
-      } transition-all duration-300 z-50`}
+        isScrolled ? "h-12" : "h-16"
+      } transition-all duration-300 z-40`}
     >
       <div className="max-w-7xl w-full mx-auto px-6 flex justify-between items-center">
         {/* Left: Logo */}
@@ -73,8 +73,9 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-2 text-2xl font-bold"
           >
-            <span className="text-blue-600 dark:text-blue-400">Room</span>
-            <span className="text-[#F83002]">Ease</span>
+            <span className="text-blue-600 dark:text-blue-400">
+              Room<span className="text-[#F83002]">Ease</span>
+            </span>
           </NavLink>
         </motion.div>
 

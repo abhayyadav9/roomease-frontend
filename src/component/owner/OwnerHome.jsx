@@ -267,7 +267,7 @@ const OwnerHome = () => {
       </footer> */}
       </div>
 
-      <div className="h-full mt-20 mb-20 flex flex-col">
+      <div className="h-full mt-20 mb-20 md:mb-0 flex flex-col">
         <main className="flex-1">
           <Footer />
         </main>

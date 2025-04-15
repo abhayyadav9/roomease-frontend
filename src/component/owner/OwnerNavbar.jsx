@@ -104,10 +104,7 @@ const OwnerNavbar = () => {
     }, [dispatch, unreadCount]);
 
     return (
-      <motion.div
-    
-        className="flex flex-col gap-3 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl"
-      >
+      <motion.div className="flex flex-col gap-3 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
         {notifications?.length === 0 ? (
           <p className="text-center text-gray-500 dark:text-gray-400 py-4">
             No new notifications
@@ -216,19 +213,20 @@ const OwnerNavbar = () => {
 
   const DesktopNavbar = () => (
     <motion.nav
-      className={`hidden lg:flex items-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-sm fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "h-16" : "h-20"
+      className={`hidden lg:flex items-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg fixed top-0 w-full z-40 transition-all duration-300 ${
+        isScrolled ? "h-12" : "h-16"
       }`}
     >
-      <div className="max-w-7xl w-full mx-auto px-6">
+      <div className="max-w-7xl w-full mx-auto px-5">
         <div className="flex justify-between items-center">
           <motion.div className="flex items-center gap-2">
             <NavLink
               to="/owner/"
               className="flex items-center gap-2 text-2xl font-bold"
             >
-              <span className="text-blue-600 dark:text-blue-400">Room</span>
-              <span className="text-[#F83002]">Ease</span>
+              <span className="text-blue-600 dark:text-blue-400">
+                Room<span className="text-[#F83002]">Ease</span>
+              </span>
             </NavLink>
           </motion.div>
 
@@ -246,9 +244,7 @@ const OwnerNavbar = () => {
                     }`
                   }
                 >
-                  <motion.div
-                    className="flex items-center gap-2"
-                  >
+                  <motion.div className="flex items-center gap-2">
                     {item.icon}
                     <span className="font-small">{item.label}</span>
                   </motion.div>
@@ -326,11 +322,10 @@ const OwnerNavbar = () => {
               <Badge count={unreadCount} color="red" offset={[-10, 10]}>
                 <Button
                   type="text"
-                
                   className="w-10 h-10 flex items-center justify-center"
                 >
                   <BellOutlined className="text-3xl text-gray-600 dark:text-gray-300" />
-                  </Button>
+                </Button>
               </Badge>
             </Popover>
 
@@ -345,9 +340,9 @@ const OwnerNavbar = () => {
                 icon={<UserOutlined />}
                 className="border-2 border-blue-500 cursor-pointer"
               />
-                <span className="text-gray-700 dark:text-gray-300 font-medium">
-                    {user?.name?.split(" ")[0].toUpperCase()}
-                  </span>
+              <span className="text-gray-700 dark:text-gray-300 font-medium">
+                {user?.name?.split(" ")[0].toUpperCase()}
+              </span>
             </Popover>
           </div>
         </div>
@@ -367,12 +362,11 @@ const OwnerNavbar = () => {
                 }`
               }
             >
-              <motion.div className="flex " >
+              <motion.div className="flex ">
                 <div className=" flex flex-col justify-center items-center">
-                <span>{item.icon}</span>
-                <span className="text-xs mt-1 font-medium">{item.label}</span>
+                  <span>{item.icon}</span>
+                  <span className="text-xs mt-1 font-medium">{item.label}</span>
                 </div>
-               
               </motion.div>
             </NavLink>
           ))}

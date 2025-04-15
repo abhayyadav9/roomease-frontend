@@ -79,6 +79,7 @@ function App() {
 const AppContent = ({ user }) => {
   const location = useLocation();
   const hideNavbarPaths = [
+    "login",
     "/admin/login",
     "/admin/register",
     "/admin/send-verification",
@@ -87,7 +88,7 @@ const AppContent = ({ user }) => {
   return (
     <div>
       <SocketInitializer />
-      {user? "":<Navbar/>}
+      {hideNavbarPaths && user? "":<Navbar/>}
 
 
       <Routes>
