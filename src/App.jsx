@@ -24,11 +24,8 @@ import ViewRoomDetail from "./component/commonPage/ViewRoomDetail.jsx";
 import SingleRoom from "./component/SignleRoom.jsx";
 
 // Owner Components
-import OwnerProfile from "./component/owner/OwnerProfile.jsx";
 import AllRooms from "./component/AllRooms.jsx";
-import AddRoom from "./component/owner/AddRoom.jsx";
-import EditRoom from "./component/owner/EditRoom.jsx";
-import UpdateOwnerDetail from "./component/owner/UpdateOwnerDetail.jsx";
+
 
 // Tenant Components
 
@@ -37,12 +34,9 @@ import AdminHomeWrapper from "./component/admin/AdminHome.jsx";
 
 import AllRequirements from "./component/tenant/AllRequirements.jsx";
 import RoleProtectedRoute from "./component/commonPage/RouteProtection.jsx";
-import { useNotifications } from "./hooks/socket/useGetNotification.jsx";
 import ChatWindow from "./component/message/ChatWindow.jsx";
 
-import useGetRTM from "./hooks/socket/useGetRTM.jsx";
 import SocketInitializer from "./utils/SocketInitializer.js";
-import History from "./component/owner/History.jsx";
 import useGetTenantDetails from "./hooks/tenantHooks/usegetTenantDetails.jsx";
 import useGetAllRequirement from "./hooks/useGetAllRequirement.jsx";
 import useGetAllRooms from "./hooks/useGetAllRooms.jsx";
@@ -73,9 +67,12 @@ function App() {
   }, [user, dispatch]);
 
   return (
-    <Router>
-      <AppContent user={user} />
-    </Router>
+
+    <>
+      <Router>
+        <AppContent user={user} />
+      </Router>
+    </>
   );
 }
 
@@ -90,6 +87,8 @@ const AppContent = ({ user }) => {
   return (
     <div>
       <SocketInitializer />
+      {user? "":<Navbar/>}
+
 
       <Routes>
         <Route path="*" element={<NotFound />} />

@@ -55,7 +55,7 @@ const Home = () => {
     } else if(user?.role === "owner"){
       navigate("/owner/home")
     }
-  }, [user.role, navigate]); // Added dependencies
+  }, [user?.role, navigate]); // Added dependencies
 
   const stats = [
     { id: 1, name: "Premium Listings", value: "25K+" },
